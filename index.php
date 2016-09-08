@@ -50,9 +50,9 @@ if ($app->config['padmin.logging']) {
   $app->log('get', $app->routestr, null, $_GET['id']);
 }
 
-if ($app->auth->islogged()) {
+if ($app->auth->isLogged()) {
   $app->layout->enable('user');
-  $user = $app->auth->getuser();
+  $user = $app->auth->getUser()->getValues();
   $app->layout->_UNAME = $user['FULLNAME'];
   
   $menu = new PCTree('menu');
