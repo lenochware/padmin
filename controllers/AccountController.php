@@ -11,12 +11,12 @@ function init() {
 
 function signinAction() {
   $this->title(1, "Přihlášení");
-  return new form('tpl/loginform.tpl');
+  return new PCForm('tpl/loginform.tpl');
 
 }
 
 function loginAction() {
-  $lf = new form('tpl/loginform.tpl');
+  $lf = new PCForm('tpl/loginform.tpl');
   $this->auth->login($lf->values['username'], $lf->values['password']);
   if ($this->auth->errors) {
     $this->app->warning($this->auth->errors);

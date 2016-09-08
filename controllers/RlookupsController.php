@@ -18,7 +18,7 @@ function init() {
 }
 
 function viewAction($lookup) {
-  $grid = new grid('tpl/rlookup.tpl');
+  $grid = new PCGrid('tpl/rlookup.tpl');
   $grid->_LOOKUP = $lookup;
   $grid->_TITLE = $this->title[$lookup];
   $this->title(1, $this->title[$lookup]);
@@ -31,14 +31,14 @@ function viewAction($lookup) {
 
 function addAction($lookup) {
   $this->title(2, 'Nová '.$lookup);
-  $form = new form('tpl/rlookupform.tpl');
+  $form = new PCForm('tpl/rlookupform.tpl');
   $form->_TITLE = $lookup;
   $form->enable('insert');
   return $form;
 }
 
 function editAction($lookup, $id) {
-  $form = new form('tpl/rlookupform.tpl');
+  $form = new PCForm('tpl/rlookupform.tpl');
   $form->values = $this->db->select($this->table[$lookup], pri($id));
   $form->_TITLE = $lookup;
   $this->title(2, 'Editace '.$lookup);
@@ -47,7 +47,7 @@ function editAction($lookup, $id) {
 }
 
 function insertAction($lookup) {
-  $form = new form('tpl/rlookupform.tpl');
+  $form = new PCForm('tpl/rlookupform.tpl');
   if (!$form->validate()) $this->app->error('Chybně vyplněný formulář.');
   
   if ($lookup == 'right')
@@ -79,7 +79,7 @@ function deleteAction($lookup, $id) {
 }
 
 function updateAction($lookup, $id) {
-  $form = new form('tpl/rlookupform.tpl');
+  $form = new PCForm('tpl/rlookupform.tpl');
   if (!$form->validate()) $this->app->error('Chybně vyplněný formulář.');
 
   $form->values['ID'] = $id;

@@ -27,7 +27,7 @@ function install_menuAction() {
   if ($this->db->exists('TREE_LOOKUPS', "TREE_ID='{0}'", PADMIN_MENU_ID))
     $this->app->error("pAdmin menu již existuje.");
 
-  $menu = new tree;
+  $menu = new PCTree;
   $menu->load('_install/menu.txt');
   $menu->addtree(PADMIN_MENU_ID);
 

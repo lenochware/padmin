@@ -1,6 +1,6 @@
 <?php
 
-class BaseController extends App_Controller {
+class BaseController extends PCController {
 
 protected $db;
 

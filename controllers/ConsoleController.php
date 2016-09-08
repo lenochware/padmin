@@ -7,7 +7,7 @@ class ConsoleController extends BaseController {
 private $form;
 
 function init() {
-  $this->form = new form ('tpl/console.tpl');
+  $this->form = new PCForm ('tpl/console.tpl');
   if ($_SESSION['termbuf']) {
     $this->form->_TERM = implode("\n", $_SESSION['termbuf']);
     $this->form->_CMDHIST = $this->gethistory();

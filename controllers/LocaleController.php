@@ -9,7 +9,7 @@ function indexAction() {
 
 function textsAction() {
   $this->title(1, "Texty");
-  $grid = new grid('tpl/texts.tpl');  
+  $grid = new PCGrid('tpl/texts.tpl');  
 
   $grid->setquery(
     "select A.ID TRANSLATOR,B.ID LANG FROM 
@@ -22,7 +22,7 @@ function textsAction() {
 
 function addAction() {
   $this->title(2, 'Formulář jazyka');
-  $form = new form('tpl/langform.tpl');
+  $form = new PCForm('tpl/langform.tpl');
   $form->_TRANSLATOR->noedit = 0;
   $form->_LANG->noedit = 0;
   $form->enable('insert');
@@ -31,8 +31,8 @@ function addAction() {
 }
 
 function insertAction() {
-  $form = new form('tpl/langform.tpl');
-  $translator = new Translator($form->values['TRANSLATOR']);
+  $form = new PCForm('tpl/langform.tpl');
+  $translator = new PCTranslator($form->values['TRANSLATOR']);
   $lang = $translator->createLanguage($form->values['LANG']);
   $tr = $this->getLabelId($form->values['TRANSLATOR'], 1);
   $n = $this->savetexts($tr, $lang, $form->values['TEXTS']);
@@ -48,22 +48,22 @@ function editAction($tr, $lang) {
 }
 
 function updateAction($tr, $lang) {
-  $form = new form('tpl/langform.tpl');
+  $form = new PCForm('tpl/langform.tpl');
   $n = $this->savetexts($tr, $lang, $form->values['TEXTS']);
   $this->app->message("Uloženo $n záznamů.");
   $this->redirect("locale/edit/tr:$tr/lang:$lang");
 }
 
 function deleteAction($tr, $lang) {
-  $form = new form('tpl/langform.tpl');
-  $translator = new Translator($form->values['TRANSLATOR']);
+  $form = new PCForm('tpl/langform.tpl');
+  $translator = new PCTranslator($form->values['TRANSLATOR']);
   $translator->deleteLanguage($form->values['LANG']);
   $this->app->message('Položka byla smazána.');
   $this->reload();
 }
 
 protected function getform($tr = null, $lang = null) {
-  $form = new form('tpl/langform.tpl');
+  $form = new PCForm('tpl/langform.tpl');
   $form->_TRANSLATOR = $this->db->field('TRANSLATOR_LABELS:LABEL', pri($tr));
   $form->_LANG =  $this->db->field('TRANSLATOR_LABELS:LABEL', pri($lang));
   $form->_TEXTS = $this->gettextsxml($tr, $lang);

@@ -13,7 +13,7 @@ function indexAction() {
     $rows[]['name'] = extractPath($name, "%f");
   }
   
-  $grid = new grid('tpl/migrations.tpl');
+  $grid = new PCGrid('tpl/migrations.tpl');
   $grid->_TITLE = "Migrace";
   $grid->setarray($rows);
   return $grid;
@@ -37,7 +37,7 @@ function show_migrationAction($fromFile, $toFile) {
     else $row['status'] = 'same';
     $rows[] = $row;
   }
-  $grid = new grid('tpl/db_tables_diff.tpl');
+  $grid = new PCGrid('tpl/db_tables_diff.tpl');
   $grid->_TITLE = "Migrace $fromFile -> $toFile";
   $grid->setarray($rows);
   return $grid;
@@ -49,7 +49,7 @@ function show_columnsAction($fromFile, $toFile, $table) {
   $data2 = $this->loadMigration($toFile);
   $rows = $this->getColumnsDiff($data1[$table]['columns'], $data2[$table]['columns']);
 
-  $grid = new grid('tpl/db_tables_diff.tpl');
+  $grid = new PCGrid('tpl/db_tables_diff.tpl');
   $grid->_TITLE = "Tabulka $table";
   $grid->setarray($rows);
   return $grid;

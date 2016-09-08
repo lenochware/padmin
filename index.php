@@ -11,12 +11,12 @@ include 'libs/func.php';
 
 session_start();
 
-$app = new app('padmin');
+$app = new PCApp('padmin');
 $app->addconfig('config.php');
 $app->debugMode = $app->config['padmin.debugmode'];
 $app->setlayout('tpl/website.tpl');
 try {
-  $app->db = new db($app->config['padmin.db']);
+  $app->db = new PCDb($app->config['padmin.db']);
 } catch (Exception $e) {
   $app->error(array('Nepodařilo se připojit k databázi.',$e->getMessage()));
 }
@@ -41,12 +41,12 @@ if (!is_installed($app->db)) {
   $app->error('Tabulky PCLIB v databázi neexistují! <b>Spusťte padmin/install</b>.');
 }
 
-$app->auth = new auth();
+$app->auth = new PCAuth;
 
 if (!$app->controller) $app->controller = 'users';
 
 if ($app->config['padmin.logging']) {
-  $app->logger = new logger();
+  $app->logger = new PCLogger();
   $app->log('get', $app->routestr, null, $_GET['id']);
 }
 
@@ -55,8 +55,8 @@ if ($app->auth->islogged()) {
   $user = $app->auth->getuser();
   $app->layout->_UNAME = $user['FULLNAME'];
   
-  $menu = new tree('menu');
-  $menu->gettree(PADMIN_MENU_ID);
+  $menu = new PCTree('menu');
+  $menu->getTree(PADMIN_MENU_ID);
   $app->layout->_MENU = $menu;
   $app->run();
 }
