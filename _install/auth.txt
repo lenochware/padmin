@@ -1,0 +1,7 @@
++right *
++right padmin/*
+
++role admin
+role admin +right *
+
++user admin +role admin +dpassw pclibadmin

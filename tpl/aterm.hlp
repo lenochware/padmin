@@ -1,0 +1,30 @@
+------------------------------------
+help ... show this screen
+cls  ... clear console
+
++/- user  <u>username</u> ... add/remove user
++/- role  <u>rolename</u> ... add/remove role
++/- right <u>rname</u>    ... add/remove right
+
++user  <u>username</u>  "<u>fullname</u>" ...add user, set his fullname
++role  <u>rolename</u>  "<u>annot</u>"    ...add role with annotation
++right <u>rightname</u> "<u>annot</u>"    ...add right with annotation
+
+user <u>username</u> +/- role <u>rolename</u> ... assign/take away role from user
+role <u>rolename</u> +/- right <u>rname</u>   ... grant/revoke right for role
+user <u>username</u> +/- right <u>rname</u>   ... grant/revoke right for user
+
+user/role <u>name</u> +right <u>rname</u> "<u>rval</u>"  ... grant right with value
+
+user <u>username</u> +dpassw            ... enable default password
+user <u>username</u> +dpassw "<u>password</u>" ... set default password
+user <u>username</u> +passw "<u>password</u>"  ... set password for user
+user <u>username</u> +/- active         ...enable/disable user
+
+?user  <u>name/pattern</u> ... return user info / users matching pattern
+?role  <u>name/pattern</u> ... return role info / roles matching pattern
+?right <u>name/pattern</u> ... return right info / rights matching pattern
+
+?user <u>pattern</u> +/- role/right <u>name</u> ... list of users with/without
+                                      particular role/right
+-------------------------------------

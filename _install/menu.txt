@@ -1,0 +1,20 @@
+PATH|ROUTE
+Autentifikace|users
+Autentifikace/Uživatelé|users
+Autentifikace/Role|rlookups/view/lookup:role
+Autentifikace/Oprávnění|rlookups/view/lookup:right
+Autentifikace/Konzole|console
+Číselníky|lookups
+Číselníky/Přehled|lookups
+Číselníky/Přidat nový|lookups/addlookup
+Číselníky/Menu|menu
+Lokalizace|locale/texts
+Lokalizace/Texty|locale/texts
+Logger|logs
+Logger/Záznamy logu|logs
+Logger/Vymazat|logs/cleanup
+Informace|sysinfo
+Informace/PHP|sysinfo/php
+Informace/Database|sysinfo/db
+Informace/PClib|sysinfo/pclib
+Informace/Apache|sysinfo/apache
