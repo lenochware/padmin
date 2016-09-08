@@ -23,7 +23,7 @@ function allowed($perm) {
 }
 
 function title($level, $title) {
-  $this->app->bookmark($level, $title);
+  $this->app->layout->bookmark($level, $title);
   $this->app->layout->_TITLE = $title;
 }
 
