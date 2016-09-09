@@ -66,7 +66,6 @@ else {
 }
 
 $app->layout->_APPNAME = $app->config['padmin.name'];
-$app->layout->_NAVIG = $app->layout->getnavig();
 $app->layout->_VERSION = $app->config['padmin.version'];
 $app->out();
 

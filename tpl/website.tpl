@@ -1,6 +1,8 @@
 <?elements
 string LAST_LOGIN date
-meta HEAD scripts "css/padmin.css,css/menu.css,js/jquery.js,libs/pclib/assets/pclib.js"
+head HEAD scripts "css/padmin.css,css/menu.css,js/jquery.js,libs/pclib/assets/pclib.js"
+messages PRECONTENT
+navigator NAVIG
 block user noprint
 ?>
 <!doctype html>
