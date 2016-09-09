@@ -1,6 +1,9 @@
 <?php
 include 'BaseController.php';
 
+use pclib\extensions\AuthManager;
+use pclib\extensions\AuthConsole;
+
 class InstallController extends BaseController {
 
 function indexAction() {
@@ -39,9 +42,10 @@ function install_menuAction() {
 function install_authAction() {
   if ($this->db->exists('AUTH_USERS'))
     $this->app->error('Uživatelské účty už v databázi existují!');
-  $authMng = new AuthManager;
-  $authMng->executefile('_install/auth.txt');
-  if ($authMng->errors) $this->app->error(implode('<br>', $authMng->errors));
+  $authCon = new AuthConsole(new AuthManager);
+
+  $authCon->executefile('_install/auth.txt');
+  if ($authCon->errors) $this->app->error(implode('<br>', $authCon->errors));
 
   $this->app->message("Konfigurace uživatelských účtů dokončena.");
 }
