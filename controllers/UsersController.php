@@ -58,12 +58,12 @@ function insertAction() {
   if (!$userform->validate()) $this->invalid($userform);
 
   $id = $this->authMng->mkuser($userform->_USERNAME);
-  if (!$id) $this->app->error($this->authMng->errors);
+  if (!$id) $this->app->error(implode('<br>', $this->authMng->errors));
 
   $this->setuser($id, $userform->values);
 
   if ($this->authMng->errors) {
-    $this->app->error($this->authMng->errors);
+    $this->app->error(implode('<br>', $this->authMng->errors));
   }
 
   $this->app->message('Položka byla přidána.');
@@ -77,7 +77,7 @@ function updateAction($id) {
   $this->setuser($id, $userform->values);
 
   if ($this->authMng->errors)
-    $this->app->error($this->authMng->errors);
+    $this->app->error(implode('<br>', $this->authMng->errors));
 
   $this->app->message('Položka byla uložena.');
   $this->reload();

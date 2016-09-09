@@ -58,7 +58,7 @@ function insertAction($lookup) {
     $this->authMng->mkrole($form->values['SNAME'], $form->values['ANNOT']);
 
   if ($this->authMng->errors)
-    $this->app->error($this->authMng->errors);
+    $this->app->error(implode('<br>', $this->authMng->errors));
   else
     $this->app->message('Položka byla uložena.');
     
@@ -73,7 +73,7 @@ function deleteAction($lookup, $id) {
     $this->authMng->rmrole('#'.$id);
 
   if ($this->authMng->errors)
-    $this->app->error($this->authMng->errors);
+    $this->app->error(implode('<br>', $this->authMng->errors));
   else
     $this->app->message('Položka byla odstraněna.');
 
@@ -89,7 +89,7 @@ function updateAction($lookup, $id) {
   else $this->authMng->setrole($form->values);
 
   if ($this->authMng->errors)
-    $this->app->error($this->authMng->errors);
+    $this->app->error(implode('<br>', $this->authMng->errors));
   else
     $this->app->message('Položka byla uložena.');
 
@@ -131,7 +131,7 @@ function rlistAction($lookup, $id) {
 function rupdateAction($lookup, $id) {
   $grid = new GridForm('tpl/rlist.tpl');
 
-  foreach($grid->values as $ra) {
+  foreach($_POST['rowdata'] as $ra) {
     switch ($ra['RSET']) {
       case '1': $rval = '1';  break;
       case '2': $rval = '0';  break;

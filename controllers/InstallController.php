@@ -41,7 +41,7 @@ function install_authAction() {
     $this->app->error('Uživatelské účty už v databázi existují!');
   $authMng = new AuthManager;
   $authMng->executefile('_install/auth.txt');
-  if ($authMng->errors) $this->app->error($authMng->errors);
+  if ($authMng->errors) $this->app->error(implode('<br>', $authMng->errors));
 
   $this->app->message("Konfigurace uživatelských účtů dokončena.");
 }
