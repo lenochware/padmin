@@ -110,7 +110,7 @@ function rlistAction($lookup, $id) {
     $grid->_TITLE = "uživatele ".$this->db->field('AUTH_USERS:USERNAME', pri($id));
   }
   
-  $grid->_STATUS->onprint = array($this, 'getstatus');
+  $grid->_STATUS->onprint = array($this, 'getStatus');
   
   $grid->setquery(
   "select R.*,
@@ -150,16 +150,18 @@ function rupdateAction($lookup, $id) {
   $this->app->redirect("rlookups/rlist/{GET}");
 }
 
-function getstatus($o, $id, $sub, $value) {
+function getStatus($o, $id, $sub, $value) {
   if ($sub) return true;
 
-  $rset = $o->getvalue('RSET');
-  $user_id = $o->getvalue('USER_ID');
+  $rset = $o->getValue('RSET');
+  $user_id = $o->getValue('USER_ID');
 
   if ($rset == '1') print "Povolen";
   else if ($rset == '2') print "<span style='color:red'>Zakázán</span>";
   else if ($user_id) {
-    $x = $this->app->auth->user('#'.$user_id)->hasright($o->getvalue('SNAME'));
+    $userData = $this->authMng->getUser('#'.$user_id);
+    $user = $this->app->auth->getUser($userData['USERNAME']);
+    $x = $user->hasRight($o->getvalue('SNAME'));
     if ($x) print "Povolen R"; else  print "<span style='color:red'>Zakázán</span> R";
   }
 }
