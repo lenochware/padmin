@@ -29,7 +29,7 @@ function phpAction() {
   $output['ZLib'] = $pi['zlib']['ZLib Support'];
   $output['phpinfo'] = implode(' ', array_keys($pi));
 
-  return $this->gettable('PHP', $output);
+  return $this->getTable('PHP', $output);
 }
 
 function dbAction() {
@@ -53,16 +53,16 @@ function dbAction() {
   default: $this->app->error('Neznámá databáze.');
   }
   $title = 'Databáze '.$this->db->drv->extension.' '.$this->db->drv->version();
-  return $this->gettable($title, $output);
+  return $this->getTable($title, $output);
 }
 
 function apacheAction() {
-  return $this->gettable('Apache modules', apache_get_modules());
+  return $this->getTable('Apache modules', apache_get_modules());
 }
 
 function pclibAction() {
   $title = 'PClib '.PCLIB_VERSION;
-  return $this->gettable($title, $this->getconfig());
+  return $this->getTable($title, $this->getconfig());
 
 }
 
@@ -103,8 +103,8 @@ function getconfig() {
   return $output;
 }
 
-function gettable($title, $data) {
-  $table = new tpl('tpl/output.tpl');
+function getTable($title, $data) {
+  $table = new PCTpl('tpl/output.tpl');
   $output = array();
   foreach($data as $k => $v) $output[] = array('KEY' => $k, 'VALUE' => $v);
   $table->_items = $output;

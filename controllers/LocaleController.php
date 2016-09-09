@@ -127,7 +127,7 @@ protected function savetexts($tr, $lang, $xml) {
 
     $stored_text = $stored[$text_id];
     if (!$stored_text) {
-      $this->app->warning("Text #%d nenalezen.", $text_id);
+      $this->app->message("Text #%d nenalezen.", 'warning', $text_id);
       continue;
     }    
 
@@ -140,7 +140,7 @@ protected function savetexts($tr, $lang, $xml) {
     if ($data['TSTEXT'] === '' and $id) {
       //check the dependencies
       if ($lang == 0 and $this->db->exists('TRANSLATOR', "TEXT_ID='{0}' AND LANG<>0", $id)) {
-        $this->app->warning("Text #%d se používá - nelze smazat.", $id);
+        $this->app->message("Text #%d se používá - nelze smazat.", 'warning', $id);
         continue;
       }
       $this->db->delete('TRANSLATOR', pri($id)); 

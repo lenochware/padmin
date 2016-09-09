@@ -19,7 +19,7 @@ function loginAction() {
   $lf = new PCForm('tpl/loginform.tpl');
   $this->auth->login($lf->values['username'], $lf->values['password']);
   if ($this->auth->errors) {
-    $this->app->warning($this->auth->errors);
+    $this->app->message(implode('<br>', $this->auth->errors), 'warning');
     $this->redirect('account/signin');
   }
   $this->redirect('users');
