@@ -1,7 +1,7 @@
 <?php
 include 'BaseController.php';
-include PCLIB_DIR.'extensions/GridForm.php';
-include PCLIB_DIR.'extensions/AuthManager.php';
+
+use pclib\extensions\GridForm;
 
 class RlookupsController extends BaseController {
 
@@ -12,9 +12,11 @@ private $authMng;
 function init() {
   parent::init();
   $lookup = $_GET['lookup'];
-  if (!in_array($lookup, array_keys($this->table)))
+  if (!in_array($lookup, array_keys($this->table))) {
     $this->app->error('Neplatný číselník!');
-  $this->authMng = new AuthManager;
+  }
+
+  $this->authMng = new pclib\extensions\AuthManager;
 }
 
 function viewAction($lookup) {
@@ -96,7 +98,7 @@ function updateAction($lookup, $id) {
 
 function rlistAction($lookup, $id) {
   $this->title(3, 'Práva');
-  $grid = new gridform('tpl/rlist.tpl');
+  $grid = new GridForm('tpl/rlist.tpl');
   
   if ($lookup == 'role') {
     $grid->filter['ROLE_ID'] = $id;
@@ -127,7 +129,7 @@ function rlistAction($lookup, $id) {
 }
 
 function rupdateAction($lookup, $id) {
-  $grid = new gridform('tpl/rlist.tpl');
+  $grid = new GridForm('tpl/rlist.tpl');
 
   foreach($grid->values as $ra) {
     switch ($ra['RSET']) {

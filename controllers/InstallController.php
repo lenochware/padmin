@@ -1,6 +1,5 @@
 <?php
 include 'BaseController.php';
-include PCLIB_DIR.'extensions/AuthManager.php';
 
 class InstallController extends BaseController {
 

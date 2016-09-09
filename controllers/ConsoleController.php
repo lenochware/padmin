@@ -1,6 +1,8 @@
 <?php
 include 'BaseController.php';
-include PCLIB_DIR.'extensions/AuthManager.php';
+
+use pclib\extensions\AuthManager;
+use pclib\extensions\AuthConsole;
 
 class ConsoleController extends BaseController {
 
@@ -22,7 +24,7 @@ function indexAction() {
 }
 
 function submitAction() {
-  $authMng = new AuthManager;
+  $authCon = new AuthConsole(new AuthManager);
   $termbuf = $_SESSION['termbuf'];
   $cmdline = $this->form->values['CMDLINE'];
   if (get_magic_quotes_gpc()) $cmdline = stripslashes($cmdline);
@@ -32,19 +34,19 @@ function submitAction() {
 
   //$cmdline is console command line
   //$termbuf is console history
-  //we execute console command with $authMng->execute($cmdline);
+  //we execute console command with $authCon->execute($cmdline);
   switch ($cmdline) {
     case 'cls' : $termbuf = $welcome; break;
     case 'help': $termbuf[] = file_get_contents('tpl/aterm.hlp'); break;
-    default: $authMng->execute($cmdline); break;
+    default: $authCon->execute($cmdline); break;
   }
 
-  //print authMng messages and errors
-  if ($authMng->messages) $termbuf = array_merge($termbuf, $authMng->messages);
-  if ($authMng->errors)
+  //print authCon messages and errors
+  if ($authCon->messages) $termbuf = array_merge($termbuf, $authCon->messages);
+  if ($authCon->errors)
     $termbuf = array_merge($termbuf,
       array_map(create_function(
-        '$a','return "<span class=\"console-error\">$a</span>";'),$authMng->errors
+        '$a','return "<span class=\"console-error\">$a</span>";'),$authCon->errors
       )
     );
 

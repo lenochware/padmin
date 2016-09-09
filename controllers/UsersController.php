@@ -1,6 +1,5 @@
 <?php
 include 'BaseController.php';
-include PCLIB_DIR.'extensions/AuthManager.php';
 
 class UsersController extends BaseController {
 
@@ -8,7 +7,7 @@ private $authMng;
 
 function init() {
   parent::init();
-  $this->authMng = new AuthManager;
+  $this->authMng = new \pclib\extensions\AuthManager;
 }
 
 function indexAction() {
