@@ -30,9 +30,6 @@ if (is_installed($app->db) and $app->config['padmin.lang']) {
   $app->language = $app->config['padmin.lang'];
 }
 
-if (!$app->config['pclib.auth.secret'])
-  $app->error('V konfiguraci není nastavený klíč <b>pclib.auth.secret</b>.');
-
 if (!is_installed($app->db)) {
   if ($app->controller == 'install') {
     $app->run('install');
