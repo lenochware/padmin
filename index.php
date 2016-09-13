@@ -18,7 +18,7 @@ $app->setlayout('tpl/website.tpl');
 try {
   $app->db = new PCDb($app->config['padmin.db']);
 } catch (Exception $e) {
-  $app->error(array('Nepodařilo se připojit k databázi.',$e->getMessage()));
+  $app->error('Nepodařilo se připojit k databázi. Chyba: %s',null, $e->getMessage());
 }
 
 if (get_class($app->db->drv) == 'pgsql') {
