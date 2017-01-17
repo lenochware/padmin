@@ -12,8 +12,8 @@ function __construct($app) {
 function init() {
   if (!$this->allowed('padmin/'.$this->app->controller))
     $this->app->error(
-      "You have not permission 'padmin/%s'. Access denied.",
-      $this->name
+      "You have not permission 'padmin/%s'. Access denied.", 
+      null, $this->name
     );
 }
 
