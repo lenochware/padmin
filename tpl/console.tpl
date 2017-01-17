@@ -1,7 +1,7 @@
 <?elements
 class form route "console"
 string TERM
-input CMDLINE attr "autocomplete=""off""" size "50/200"
+input CMDLINE html_autocomplete "off" size "50/200"
 button submit lb "Ok"
 ?>
 <style type="text/css">
