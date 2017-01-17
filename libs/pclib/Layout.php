@@ -169,7 +169,7 @@ function print_Messages($id, $sub, $value)
 }
 
 /**
- * Print flash messages.
+ * Print breadcrumb navigator.
  * @copydoc tag-handler
  */
 function print_Navigator($id, $sub, $value)
@@ -196,12 +196,12 @@ function print_Element($id, $sub, $value)
 	}
 }
 
-protected function parseLine($line)
+protected function _init()
 {
-	$id = parent::parseLine($line);
-	if ($this->elements[$id]['type'] == 'head') $this->headTag = $id;
-	if ($this->elements[$id]['type'] == 'messages') $this->messagesTag = $id;
-	return $id;
+	parent::_init();
+	$typelist = $this->elements['pcl_document']['typelist'];
+	$this->headTag = $typelist['head'];
+	$this->messagesTag = $typelist['messages'];
 }
 
 protected function _out($block = null)
