@@ -54,6 +54,8 @@ function addAction() {
 }
 
 function insertAction() {
+  $this->testPerm('padmin/users/insert');
+
   $userform = $this->getform();
   if (!$userform->validate()) $this->invalid($userform);
 
@@ -71,6 +73,8 @@ function insertAction() {
 }
 
 function updateAction($id) {
+  $this->testPerm('padmin/users/update');
+
   $userform = $this->getform();
   if (!$userform->validate()) $this->invalid($userform);
 
@@ -84,6 +88,8 @@ function updateAction($id) {
 }
 
 function deleteAction($id) {
+  $this->testPerm('padmin/users/delete');
+
   $userform = $this->getform();
   if (!$userform->validate()) $this->invalid($userform);
 

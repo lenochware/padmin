@@ -1,5 +1,16 @@
 +right *
 +right padmin/*
++right padmin/users
++right padmin/users/insert
++right padmin/users/update
++right padmin/users/delete
++right padmin/rlookups
++right padmin/console
++right padmin/lookups
++right padmin/menu
++right padmin/locale
++right padmin/logs
++right padmin/sysinfo
 
 +role admin
 role admin +right *

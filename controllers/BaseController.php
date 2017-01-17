@@ -10,16 +10,21 @@ function __construct($app) {
 }
 
 function init() {
-  if (!$this->allowed('padmin/'.$this->app->controller))
-    $this->app->error(
-      "You have not permission 'padmin/%s'. Access denied.", 
-      null, $this->name
-    );
+  $this->testPerm('padmin/'.$this->app->controller);
 }
 
 function allowed($perm) {
   if ($perm == 'padmin/install') return true;
   return $this->app->auth->hasright($perm);
+}
+
+function testPerm($perm) {
+  if (!$this->allowed($perm)) {
+    $this->app->error(
+      "Nemáte oprávnění '%s'. Přístup zamítnut.", 
+      null, $perm
+    );  
+  }
 }
 
 function title($level, $title) {
