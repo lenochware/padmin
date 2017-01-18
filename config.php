@@ -2,19 +2,29 @@
 
 $config = array(
 'padmin.name' => 'padmin',
-'padmin.version' => '1.0.0',
+'padmin.version' => '1.1.0',
 'padmin.debugmode' => false,
 'padmin.logging' => false,
+'padmin.lang' => 'cs',
 
-/* Setup connection to your database, for example 'pdo_mysql://user:password@localhost/my_database' */
-'padmin.db' => '',
+'pclib.security' => array(
+	'tpl-escape' => false, 
+	'csrf' => true, 
+	'form-prevent-mass' => false
+),
 
 'pclib.auth' => array(
 	'algo' => 'md5', 
-	/* Auth secret should be some hard to guess random string. */
-	'secret' => 'write any random string!',
+	'secret' => 'write any random string!', // <-- Set auth secret string (at least 10 random characters)
 	'realm' => ''
 ),
+
+'padmin.db' => '', // <-- Set connection to database. Example: 'pdo_mysql://user:password@localhost/my_database'
+
+);
+
+$production = array(
+	'pclib.errors' => array('display', 'log'),
 );
 
 ?>
