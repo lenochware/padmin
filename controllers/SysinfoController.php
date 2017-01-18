@@ -90,16 +90,15 @@ function phpinfo_array()
 }
 
 function getconfig() {
-  $output = $this->app->config;
-  $hidden = array('pclib.auth.secret');
-  /*if ($output['DSN']) $output['DSN'] = '<i>hidden</i>';
-  if ($output['AUTH_SALT']) $output['AUTH_SALT'] = '<i>hidden</i>';*/
-  foreach($output as $i => $v) {
-    if (is_bool($v)) $output[$i] = $v?'True':'False';
-    if (is_array($v)) $output[$i] = implode(', ', $output[$i]);
-    if (in_array($i, $hidden)) unset($output[$i]);
-    if (strpos($i, 'pclib.') !== 0) unset($output[$i]);
+  $config = $this->app->config;
+  $config['pclib.auth']['secret'] = '-- hidden --';
+  
+  $output = array();
+  foreach($config as $i => $v) {
+    if (strpos($i, 'pclib.') === false) continue;  
+    $output[$i] = json_encode($v, JSON_UNESCAPED_SLASHES);
   }
+
   return $output;
 }
 
