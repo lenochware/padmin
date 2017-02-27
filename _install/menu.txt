@@ -17,4 +17,4 @@ Informace|sysinfo
 Informace/PHP|sysinfo/php
 Informace/Database|sysinfo/db
 Informace/PClib|sysinfo/pclib
-Informace/Apache|sysinfo/apache
+Informace/WebServer|sysinfo/webserver

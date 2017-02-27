@@ -56,8 +56,16 @@ function dbAction() {
   return $this->getTable($title, $output);
 }
 
-function apacheAction() {
-  return $this->getTable('Apache modules', apache_get_modules());
+function webserverAction() {
+  $title = $_SERVER['SERVER_SOFTWARE'];
+  if (function_exists('apache_get_modules')) {
+    $details = apache_get_modules();
+  }
+  else {
+    $details = array('' => 'No details');
+  }
+
+  return $this->getTable($title, $details);
 }
 
 function pclibAction() {
