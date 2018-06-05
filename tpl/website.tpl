@@ -1,6 +1,6 @@
 <?elements
 string LAST_LOGIN date
-head HEAD scripts "css/padmin.css,css/menu.css,js/jquery.js,libs/pclib/assets/pclib.js"
+head HEAD scripts "css/padmin.css,css/menu.css,js/jquery.js,libs/pclib/assets/pclib.js,js/global.js"
 messages PRECONTENT
 navigator NAVIG
 block user noprint
@@ -30,5 +30,8 @@ block user noprint
 {PRECONTENT}{CONTENT}
 </div>
 <div class="site-footer"></div>
+<script>
+$(document).ready(init_global);
+</script>
 </body>
 </html>
