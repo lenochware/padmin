@@ -11,4 +11,10 @@ function is_installed($db) {
   return $db->columns($table)? true:false;
 }
 
+//akce pristupne bez prihlaseni
+function allow_public_access($route)
+{
+	return ($route == 'jobs/run');
+}
+
 ?>
