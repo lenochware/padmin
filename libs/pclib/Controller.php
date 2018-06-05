@@ -62,15 +62,16 @@ function getArgs($actionMethod, array $params)
 		if (!strlen($param_value) and !$param->isOptional()) {
 			$this->app->error('Required parameter "%s" for page "%s" missing.', null, $param->name, get_class($this) .'/'.$this->action);
 		}
-		if (isset($param_value)) $args[] = $param_value;
+		$args[] = isset($param_value)? $param_value : $param->getDefaultValue();
 	}
+
 	return $args;
 }
 
 /*
  * Return name of the action to be actually called.
  */
-function findAction($action)
+function findActionName($action)
 {
 	if (!$action) $action = 'index';
 
@@ -91,7 +92,7 @@ function findAction($action)
 public function run($action)
 {
 	$this->name = $action->controller;
-	$this->action = $this->findAction($action->method);
+	$this->action = $this->findActionName($action->method);
 	$this->init();
 
 	if (!$this->action) {
@@ -100,6 +101,11 @@ public function run($action)
 
 	$action_method = $this->action.$this->ACTION_POSTFIX;
 	$args = $this->getArgs($action_method, $action->params);
+
+	if ($this->action == 'default') {
+		$this->action = $action;
+	}
+
 	return call_user_func_array(array($this, $action_method), $args);
 }
 
@@ -110,5 +116,29 @@ function redirect($route)
 {
 	$this->app->redirect($route);
 }
+
+/**
+ * Return model for table $tableName.
+ **/
+function model($tableName, $id = null)
+{
+	$model = orm\Model::create($tableName, array(), false);
+	if ($id) {
+		$model->find($id);
+	}
+
+	return $model;
+}
+
+/**
+ * Return orm\Selection class.
+ **/
+function selection($from = null)
+{
+	$sel = new orm\Selection;
+	if ($from) $sel->from($from);
+	return $sel;
+}
+
 
 }

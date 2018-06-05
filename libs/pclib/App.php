@@ -68,6 +68,8 @@ public $onBeforeOut;
 /** Occurs after application output. */ 
 public $onAfterOut;
 
+public $plugins;
+
 /**
  * Load config and sessions, read route.
  * @param string $name Unique name of the application.
@@ -223,15 +225,27 @@ function addConfig($source)
 			require $source;
 	}
 
-	$this->config = array_merge($this->config, (array)$config);
+	$this->config = array_replace_recursive($this->config, (array)$config);
 
 	$_env = $this->environment;
 
 	if (is_string($_env) and is_array($$_env)) {
-		$this->config = array_merge($this->config, $$_env);
+		$this->config = array_replace_recursive($this->config, $$_env);
 	}
 
 	$this->configure();
+}
+
+function addPlugins($dir)
+{
+	$this->plugins[] = array();
+  foreach (glob($dir.'/*.php') as $fileName) {
+    require_once($fileName);
+    $pluginName = basename($fileName, '.php');
+    $plugin = new $pluginName($this);
+    $plugin->init();
+   	$this->plugins[] = $plugin;
+  }
 }
 
 /**
@@ -530,8 +544,7 @@ function newController($name)
 
 function newModel($name)
 {
-	$className = $this->getClassName($name, 'model');
-	return $className? new $className($this, $name) : null;
+	return orm\Model::create($name, array(), false);
 }
 
 /**

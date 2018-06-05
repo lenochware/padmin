@@ -603,8 +603,13 @@ function print_Link($id, $sub, $value)
 	if ($sub == 'js') {
 		if ($elem['popup'])
 			$js = $this->getPopup($id, $elem['popup'], $url);
-		else
-			$js = "window.location='$url';";
+		else {
+			$js = "window.location='$url'";
+			if ($elem['hash']) {
+				$js .= "+(document.location.hash || '');";
+			}
+		}
+
 		print $js;
 		return;
 	}
@@ -631,6 +636,11 @@ function print_Link($id, $sub, $value)
 		$lb = (string)$value;
 
 	$tag = array('href' => $url, 'class' => $id, '__attr' => $elem['attr']);
+
+	if ($elem['confirm']) {
+		$tag['onclick'] = "return confirm('".$elem['confirm']."')";
+	}
+
 	if ($elem['html']) $tag = array_merge($tag, $elem['html']);
 	print $this->htmlTag('a', $tag, $lb);
 }
@@ -654,23 +664,29 @@ function print_Env($id, $sub, $value)
  */
 function print_Class($id, $sub, $value)
 {
-	$ignore_list = array('class','block','pager','sort','button');
-
 	if ($id != $this->className) return;
+	$this->eachPrintable(array($this, 'trPrintElement'), $sub);
+}
+
+function eachPrintable($callback, $sub = '')
+{
+	$ignore_list = array('class','block','pager','sort','button');
 
 	foreach($this->elements as $id => $elem) {
 		if ($elem['noprint'] or $elem['skip'] or in_array($elem['type'], $ignore_list)) continue;
-		$this->print_Class_Item($id, $sub);
+		$elem['sub'] = $sub;
+		call_user_func($callback, $elem);
 	}
 }
 
 /**
-	* Implements {tpl.fields} placeholder.
+	* Print element in table layout.
 	* @see print_class();
-	* @copydoc tag-handler
 	*/
-protected function print_Class_Item($id, $sub)
+protected function trPrintElement($elem)
 {
+	$id = $elem['id'];
+
 	print "<tr><td class=\"$id\">";
 	$this->print_Element($id, 'lb', null);
 	print '</td><td>';
@@ -688,6 +704,8 @@ protected function print_Class_Item($id, $sub)
  */
 function print_Action($id, $sub, $value)
 {
+	if (!isset($this->elements[$id]['route'])) return;
+	
 	$rs = $this->replaceParams($this->elements[$id]['route']);
 	$action = new Action($rs);
 	$ct = $this->app->newController($action->controller);
@@ -840,10 +858,31 @@ protected function getUrl($elem)
 function addTag($line)
 {
 	$elem = $this->parser->parseLine($line);
-	$this->elements[$elem['id']] = $elem;
+
+	if ($elem['after']) {
+		$this->elements = $this->insertAfter($this->elements, 
+			array($elem['id'] => $elem), $elem['after']
+		);
+	}
+	else {
+		$this->elements[$elem['id']] = $elem;
+	}
 }
 
 
+private function insertAfter(array $a, array $elem, $after)
+{
+	$pos = array_search($after, array_keys($a));
+	if ($pos === false) {
+		return array_merge($a, $elem);
+	}
+
+	return array_merge(
+    array_slice($a, 0, $pos+1),
+    $elem,
+    array_slice($a, $pos+1, null)
+  );
+}
 
 function htmlTag($name, $attr = array(), $content = null, $startTagOnly = false)
 {

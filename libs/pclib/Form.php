@@ -62,9 +62,9 @@ protected $validator;
 
 protected $hidden;
 
-protected $prepared = false;
-
 private $ajax_id;
+
+private $extraHidden = array();
 
 /** Name of the 'class' element */
 protected $className = 'form';
@@ -270,11 +270,9 @@ protected function getHttpData()
 		elseif($elem['type'] == 'input' and is_string($data[$id])) $data[$id] = trim($data[$id]);
 	}
 
-	if (!$this->fileStorage) {
-		foreach ((array)$_FILES as $id => $aFile) {
-			if($this->elements[$id]['file'] and $aFile['size']) {
-				if (is_string($aFile['name'])) $data[$id] = $aFile['name'];
-			}
+	foreach ((array)$_FILES as $id => $aFile) {
+		if($this->elements[$id]['file'] and $aFile['size']) {
+			if (is_string($aFile['name'])) $data[$id] = $aFile['name'];
 		}
 	}
 
@@ -466,27 +464,30 @@ function print_Errors()
 
 /**
  * Print all form elements at once.
- * Uses simple table layout from presentation.
+ * Uses simple table layout for presentation.
  * Implement {form.fields} placeholder.
  * @copydoc tag-handler
  */
 function print_Class($id, $sub, $value)
 {
-	parent::print_Class($id, 'fields', $value);
+	if ($id != $this->className) return;
+	$printFunc = ($this->header['default_print'] == 'div')? 'divPrintElement' : 'trPrintElement';
 
-	print "<tr><td colspan=\"3\">";
+	$this->eachPrintable(array($this, $printFunc), $sub);		
+
+	print ($printFunc == 'trPrintElement')? "<tr><td colspan=\"3\">" : '<div class="form-group buttons">';
 	foreach($this->elements as $id => $elem) {
 		if ($elem['noprint'] or $elem['skip'] or $elem['type'] != 'button') continue;
 		$this->print_Button($id, '', $this->getValue($id));
 		print ' ';
 	}
-	print '</td></tr>';
+	print ($printFunc == 'trPrintElement')? '</td></tr>' : '</div>';
 }
 
 /** Helper for print_class() */
-protected function print_Class_Item($id, $sub)
+protected function trPrintElement($elem)
 {
-	$elem = $this->elements[$id];
+	$id = $elem['id'];
 	if ($elem['hidden']) return;
 	print "<tr><td class=\"$id\">";
 	$this->print_Element($id, 'lb', null);
@@ -497,6 +498,21 @@ protected function print_Class_Item($id, $sub)
 	print '</td><td>';
 	$this->print_Element($id, 'err', null);
 	print '</td></tr>';
+}
+
+/** Helper for print_class() */
+protected function divPrintElement($elem)
+{
+	$id = $elem['id'];
+	if ($elem['hidden']) return;
+	print "<div class=\"form-group\">";
+	$this->print_Element($id, 'lb', null);
+	$value = $this->getValue($id);
+	if (!$this->fireEventElem('onprint',$id, '', $value)) {
+		$this->print_Element($id, '', $value);
+	}
+	$this->print_Element($id, 'err', null);
+	print '</div>';
 }
 
 /**
@@ -682,7 +698,7 @@ function print_Checkbox($id, $sub, $value, $i = null)
 {
 	$elem  = $this->elements[$id];
 	$cbid = $sub? $sub : 1;
-	$tag = $this->getTag($id, isset($elem['items']));
+	$tag = $this->getTag($id, $elem['items']);
 	$tag['type'] = 'checkbox';
 	$tag['checked'] = in_array($cbid, $value)? 'checked' : null;
 	$tag['value'] = $cbid;
@@ -706,7 +722,7 @@ function print_Radio($id, $sub, $value, $i = null)
 {
 	$elem  = $this->elements[$id];
 	$cbid = $sub? $sub : 1;
-	$tag = $this->getTag($id, isset($elem['items']));
+	$tag = $this->getTag($id, $elem['items']);
 	$tag['type'] = 'radio';
 	$tag['checked'] = ($cbid == $value)? 'checked' : null;
 	$tag['value'] = $cbid;
@@ -740,7 +756,7 @@ function print_ListInput($id, $sub, $value)
 
 	$html .= "<datalist id=\"dl_$tag[id]\">";
 	foreach ($items as $i => $item) {
-		$html .= "<option label=\"$i\" value=\"$item\">";
+		$html .= "<option value=\"$item\">";
 	}
 	$html .= "</datalist>";
 
@@ -787,21 +803,22 @@ function print_Select($id, $sub, $value)
  * Prepare form values for storing into database.
  * Convert date, number, remove unwanted fields etc.
  * @param bool $skipEmpty Remove empty fields?
+ * @return array $values
  */
-function prepare($skipEmpty = false)
+function preparedValues($skipEmpty = false)
 {
-	if (!$this->values) return;
+	if (!$this->values) return array();
+
+	$values = array();
 	foreach ($this->values as $id=>$value) {
 		$elem = $this->elements[$id];
 		if ($id == '' or ($value == '' and $skipEmpty)
 		or $this->getAttr($id, 'nosave')
 		/*or $elem['noprint']*/) {
-			unset($this->values[$id]);
 			continue;
 		}
 
-		if ($this->elements[$id]['file'] and !$this->values[$id]) {
-			unset($this->values[$id]);
+		if ($this->elements[$id]['file'] and (!$this->values[$id] or $this->hasExtraSave($id))) {
 			continue;
 		}
 
@@ -819,10 +836,10 @@ function prepare($skipEmpty = false)
 		if ($elem['onsave']) 
 			$value = $this->fireEventElem('onsave', $id, '', $value);
 
-		$this->values[$id] = $value;
+		$values[$id] = $value;
 	}
 
-	$this->prepared = true;
+	return $values;
 }
 
 private function getTableName($tab)
@@ -843,11 +860,13 @@ protected function uploadFs($tableName, $id)
 		$elem = $this->elements[$file['INPUT_ID']];
 		if (!$elem or $elem['nosave']) continue;
 
-		$file['PREFIX'] = $elem['prefix'] ?: strtolower($tableName).'_';
+		$entity = $elem['entity'] ?: $tableName;
+
+		$file['PREFIX'] = $elem['prefix'] ?: strtolower($entity).'_';
 		$files[] = $file;
 	}
 
-	$fs->save(array($id, $tableName), $files);
+	$fs->save(array($id, $entity), $files);
 
 	$errors = $fs->getUploadErrors();
 	if ($errors) {
@@ -909,8 +928,7 @@ function insert($tab)
 
 	$this->service('db');
 
-	if (!$this->prepared) $this->prepare(1);
-	$id = $this->db->insert($tab, $this->values);
+	$id = $this->db->insert($tab, $this->preparedValues(true));
 	if (count($_FILES)) $this->upload($tab, $id);
 	return $id;
 }
@@ -938,11 +956,10 @@ function update($tab, $cond)
 	}
 
 	if (count($_FILES)) {
-		$this->upload($tab, $old['ID'], $old);
+		$this->upload($tab, $old['ID'] ?: $old['id'], $old);
 	}
 
-	if (!$this->prepared) $this->prepare();
-	$this->db->update($tab, $this->values, $cond, $params);
+	$this->db->update($tab, $this->preparedValues(), $cond, $params);
 }
 
 /**
@@ -973,7 +990,7 @@ function delete($tab, $cond)
 protected function deleteFiles($tableName, $data)
 {
 	if ($this->fileStorage) {
-		$this->fileStorage->deleteEntity(array($data['ID'], $tableName));
+		$this->fileStorage->deleteEntity(array($data['ID'] ?: $data['id'], $tableName));
 	}
 	else {
 		foreach ($this->elements as $id=>$elem) {
@@ -992,14 +1009,14 @@ protected function deleteFiles($tableName, $data)
  */
 function content()
 {
-	if (!$this->values) return;
+	if (!$this->values) return array();
 	$content = array();
 
 	foreach ($this->values as $id=>$value) {
 		$elem = $this->elements[$id];
 		if ($elem['lb'] == '') continue;
-		if (is_array($value)) $value = implode(',', $value);
-		if ($elem['noprint']) continue;
+		//if (is_array($value)) $value = implode(',', $value);
+		if ($this->getAttr($elem['id'], 'noprint')) continue;
 		if ($value == '') {
 			$content[$elem['lb']] = $elem['emptylb'];
 			continue;
@@ -1012,10 +1029,16 @@ function content()
 		elseif ($elem['type'] == 'check') {
 			$value = $this->getValue($id);
 			$items = $this->getItems($id, true);
-			foreach($items as $i => $label) {
-				if (in_array($i,$value)) $labels[] = $label;
+			if ($items) {
+				$labels = array();
+				foreach($items as $i => $label) {
+					if (in_array($i,$value)) $labels[] = $label;
+				}
+				$value = implode(', ', $labels);
 			}
-			$value = implode(', ', $labels);
+			else {
+				$value = $this->t($value[0]? 'yes' : 'no');
+			}
 		}
 
 		$content[$elem['lb']] = $value;
@@ -1090,7 +1113,7 @@ function dbSync($tab)
 	if (!$columns) throw new Exception("Database table '$tab' not found.");
 	foreach($this->elements as $id => $el) {
 		if (!$this->isEditable($id)) continue;
-		if (!$columns[$id]) {
+		if (!$columns[$id] and !$this->hasExtraSave($id)) {
 			$this->elements[$id]['nosave'] = 1;
 			continue;
 		}
@@ -1101,6 +1124,17 @@ function dbSync($tab)
 		if (!$el['size'] or $el['size'] > $columns[$id]['size'])
 			$this->elements[$id]['size'] = $columns[$id]['size'];
 	}
+}
+
+//Has field extra storage for saving?
+protected function hasExtraSave($id)
+{
+	return ($this->elements[$id]['file'] and $this->fileStorage);
+}
+
+function addHidden($name, $value)
+{
+	$this->extraHidden[$name] = $value;
 }
 
 //submit disabled elements too (add hidden field for disabled element)
@@ -1241,7 +1275,8 @@ protected function head()
 
 	$html = $this->htmlTag('form', $tag, null, true)."\n";
 
-	foreach ((array)$hidden as $k => $v) {
+	$hidden = (array)$hidden + $this->extraHidden; 
+	foreach ($hidden as $k => $v) {
 		$html .= "<input type=\"hidden\" name=\"$k\" value=\"$v\"".($this->useXhtml? ' />' : '>')."\n";
 	}
 

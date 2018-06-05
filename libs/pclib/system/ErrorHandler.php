@@ -62,13 +62,18 @@ class ErrorHandler extends BaseObject
 	/**
 	 * Callback for exception handling.
 	 */	
-	function _onException(\Exception $e)
+	function _onException($e)
 	{
 		// disable error capturing to avoid recursive errors
 		restore_exception_handler();
 		$this->onException($e);
 		if (in_array('log', $this->options)) $this->logError($e);
 		if (!in_array('display', $this->options)) return;
+
+		if ($e instanceof \pclib\ApiException) {
+			http_response_code(500);
+			die($e->getMessage());
+		}
 
 		if (in_array('develop', $this->options)) {
 			$this->displayError($e);
@@ -124,7 +129,7 @@ class ErrorHandler extends BaseObject
 	/**
 	 * Callback for warning handling.
 	 */	
-	function _onWarning(\Exception $e)
+	function _onWarning($e)
 	{
 		if (in_array('log', $this->options)) $this->logError($e);
 		if (!in_array('develop', $this->options)) return;
@@ -133,7 +138,7 @@ class ErrorHandler extends BaseObject
 		paramStr($this->MESSAGE_PATTERN, $this->getValues($e)),$e);
 	}
 
-	protected function getValues(\Exception $e)
+	protected function getValues($e)
 	{
 		$values = array(
 			'code' => $e->getCode(),
@@ -149,7 +154,7 @@ class ErrorHandler extends BaseObject
 		return $values;
 	}
 
-	protected function getHtmlTrace(\Exception $e)
+	protected function getHtmlTrace($e)
 	{
 		return $this->service('debugger')->getTrace($e);
 	}
@@ -157,7 +162,7 @@ class ErrorHandler extends BaseObject
 	/**
 	 * Display error in development mode (with stack trace).
 	 */	
-	function displayError(\Exception $e)
+	function displayError($e)
 	{
 		try {
 			//throw new Exception('ErrorHandlerDisplayBug');
@@ -174,7 +179,7 @@ class ErrorHandler extends BaseObject
 	/**
 	 * Display error in production mode (uses template).
 	 */	
-	function displayProductionError(\Exception $e)
+	function displayProductionError($e)
 	{
 		if (!headers_sent()) {
 			header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
@@ -192,7 +197,7 @@ class ErrorHandler extends BaseObject
 		}
 	}
 
-	function logError(\Exception $e)
+	function logError($e)
 	{
 		try {
 			$error = $this->getValues($e);

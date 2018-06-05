@@ -28,6 +28,8 @@ class TplParser extends BaseObject
 
 	public $legacyBlockSyntax = false;
 
+	public $translateAttrib = array('lb' => 1, 'hint' => 1, 'html_title' => 1);
+
 	function __construct()
 	{
 		parent::__construct();
@@ -86,6 +88,11 @@ class TplParser extends BaseObject
 			$line = trim($line);
 			if ($line == '') continue;
 			$elem = $this->parseLine($line);
+			
+			if (isset($elms[$elem['id']])) {
+				throw new \pclib\Exception("Duplicate element '%s'", array($elem['id']));
+			}
+
 			$elms[$elem['id']] = $elem;
 			$typelist[$elem['type']] = $elem['id'];
 		}
@@ -102,7 +109,7 @@ class TplParser extends BaseObject
 	 */
 	function parseLine($line)
 	{
-		$terms = preg_split("/[\s]+/", $line);
+		$terms = preg_split("/[\s]+/u", $line);
 		$type = array_shift($terms);
 		$id = array_shift($terms);
 
@@ -113,16 +120,17 @@ class TplParser extends BaseObject
 
 		while ($term = array_shift($terms)) {
 			$value = ($terms and $terms[0][0] == "\"")? $this->readQTerm($terms) : 1;
+
+			if ($this->translator and isset($this->translateAttrib[$term])) {
+				$value = $this->translator->translate($value);
+			}
+
 			if (strpos($term,'html_')===0) {
 				if ($value === 1) $elem['html'][] = substr($term,5);
 				else $elem['html'][substr($term,5)] = $value;
 			}
 			else
 				$elem[$term] = $value;
-		}
-
-		if ($elem['lb'] and $this->translator) {
-			$elem['lb'] = $this->translator->translate($elem['lb']);
 		}
 
 		return $elem;
@@ -167,23 +175,46 @@ class TplParser extends BaseObject
 
 	protected function getPartials($templ)
 	{
-		return false;
+		preg_match_all("/^\s*(include.+)$/m",$templ[0], $found);
+		return $found[1]? $found[1] : false;
 	}
 
-	protected function mergePartials($templ, $partials)
+	protected function getPath($dir)
 	{
+		global $pclib;
+		if (!$pclib->app) return $dir;
+		return paramStr($dir, $pclib->app->paths);
+	}
+
+	protected function mergePartials($templ, $partials, $level = 1)
+	{
+		if ($level > 10) {
+			throw new \pclib\Exception("Maximum template nesting level of '10' reached, aborting!");
+		}
+
 		foreach ($partials as $line) {
 			$partial = $this->parseLine($line);
 
-			$templateStr = file_get_contents($partial['file']);
+			if (!$partial['file']) {
+				throw new \pclib\NoValueException("Attribute 'file' in 'include' must not be empty.");
+			}
+
+
+			$path = $this->getPath($partial['file']);
+
+			if (!file_exists($path)) {
+				throw new \pclib\FileNotFoundException("Include file '".$path."' not found.");
+			}
+
+			$templateStr = file_get_contents($path);
 			$tpart = $this->split($templateStr);
 
 			if ($tpartPartials = $this->getPartials($tpart)) {
-				$tpart = $this->mergePartials($tpart, $tpartPartials);
+				$tpart = $this->mergePartials($tpart, $tpartPartials, ++$level);
 			}
 
-			$templ[0] .= $tpart[0];
-			$templ[1] .= $tpart[1];
+			$templ[0] = str_replace($line, $tpart[0], $templ[0]);
+			$templ[1] = str_replace('{'.$partial['id'].'}', $tpart[1], $templ[1]);
 		}
 
 		return $templ;

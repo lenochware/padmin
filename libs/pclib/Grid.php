@@ -191,6 +191,11 @@ function setArray(array $dataArray, $totalLength = 0)
 	$this->setLength($totalLength ?: count($this->dataArray));
 }
 
+function setSelection(orm\Selection $sel)
+{
+	$this->setQuery($sel->getSql());
+}
+
 /**
  * Enable summarization rows. When $field value changes, summary block
  * is pushed into %grid output.
@@ -382,8 +387,11 @@ function print_Sort($id, $sub)
  * @see Tpl::print_class()
  * @copydoc tag-handler
  */
-protected function print_Class_Item($id, $sub)
+protected function trPrintElement($elem)
 {
+	$id = $elem['id'];
+	$sub = $elem['sub'];
+
 	if ($sub == 'labels') {
 		print '<th>';
 		$this->print_Element($id, 'lb', null);
@@ -519,7 +527,7 @@ protected function getQuery()
 				continue;
 			}
 			$sort = $this->elements[$id]['sort'];
-			$orderby .= ','.(($sort and $sort != '1')? $sort : $id);
+			$orderby .= ','.$this->getOrderByField($id);
 			if ($id != $sval) $orderby .= ' desc';
 		}
 		if ($orderby) $sql .= ' order by '.substr($orderby, 1);
@@ -533,6 +541,18 @@ protected function getQuery()
 
 	return $this->db->query($sql);
 }
+
+//sort bind alphabetically by labels
+protected function getOrderByField($id)
+{
+	$sort = $this->elements[$id]['sort'];
+	if ($this->elements[$id]['type'] == 'bind') {
+		$sortedIds = array_keys($this->getItems($id));
+		if ($sortedIds) return "FIELD($id, ".implode(',', $sortedIds).')';
+	} 
+	return ($sort and $sort != '1')? $sort : $id;
+}
+
 
 /**
  * Use default template for displaying database table content.
