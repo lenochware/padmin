@@ -63,6 +63,12 @@ class JobsController extends BaseController
 		$this->title(1, 'Plánovač úloh');
 		$grid = new pclib\Grid('tpl/jobs.tpl');
 		$grid->setQuery('select * from jobs');
+
+		if (!$this->app->config['api-key']) {
+			$runUrl = $this->app->request->getUrl() .'/run&key=[api_key]';
+			$this->app->message("Nakonfigurujte CRON na periodické spouštění adresy:<br><code>$runUrl</code>");			
+		}
+
 		return $grid;
 	}
 

@@ -15,7 +15,7 @@ $config = array(
 
 'pclib.auth' => array(
 	'algo' => 'md5', 
-	'secret' => 'write any random string!', // <-- Set auth secret string (at least 10 random characters)
+	'secret' => 'write any random string!', // <-- Set auth secret string (at least 20 random characters)
 	'realm' => ''
 ),
 

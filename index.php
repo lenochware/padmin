@@ -57,6 +57,12 @@ if ($app->auth->isLogged()) {
   if ($app->controller != 'account' and !$app->auth->hasright('padmin/enter')) {
     $app->error('Nemáte oprávnění ke vstupu.');
   }
+
+  $authConf = $app->config['pclib.auth'];
+  if ($authConf['algo'] == 'md5' and $authConf['secret'] == 'write any random string!') {
+    $app->message("Nastavte konfigurační parametr 'pclib.auth.secret', nebo použijte kryptograficky bezpečný algoritmus 'bcrypt'.", 'warning');
+  }
+
   
   $menu = new PCTree('menu');
   $menu->getTree(PADMIN_MENU_ID);
