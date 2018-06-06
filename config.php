@@ -21,6 +21,9 @@ $config = array(
 
 'padmin.db' => '', // <-- Set connection to database. Example: 'pdo_mysql://user:password@localhost/my_database'
 
+'jobs-dir' => 'jobs', // <-- path to directory with your cron-jobs
+'api-key' => '' // <-- Set api-key for external applications access to padmin api (now used for jobs/run)
+
 );
 
 $production = array(
