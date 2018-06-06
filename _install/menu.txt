@@ -13,6 +13,7 @@ Lokalizace/Texty|locale/texts
 Logger|logs
 Logger/Záznamy logu|logs
 Logger/Vymazat|logs/cleanup
+Jobs|jobs
 Informace|sysinfo
 Informace/PHP|sysinfo/php
 Informace/Database|sysinfo/db

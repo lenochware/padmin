@@ -169,3 +169,19 @@ CREATE TABLE FILESTORAGE (
   USER_ID integer,
   DT datetime
 );
+
+CREATE TABLE jobs (
+  id integer primary key,
+  name VARCHAR(50),
+  annotation ntext,
+  job_type VARCHAR(30),
+  job_command ntext,
+  first_run_at datetime,
+  period integer,
+  last_run_at datetime,
+  last_run_result ntext,
+  last_run_duration integer,
+  active integer DEFAULT 1,
+  created_at datetime,
+  author_id integer
+);

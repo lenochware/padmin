@@ -179,3 +179,20 @@ CREATE TABLE filestorage (
   dt timestamp without time zone,
   CONSTRAINT pk_filestorage_id PRIMARY KEY (id)
 );
+
+CREATE TABLE jobs (
+  id serial NOT NULL,
+  name character varying(50) DEFAULT NULL,
+  annotation text,
+  job_type character varying(30) DEFAULT NULL,
+  job_command text,
+  first_run_at timestamp without time zone,
+  period integer DEFAULT NULL,
+  last_run_at timestamp without time zone,
+  last_run_result text,
+  last_run_duration integer DEFAULT NULL,
+  active smallint DEFAULT 1,
+  created_at timestamp without time zone,
+  author_id integer DEFAULT NULL,
+  CONSTRAINT pk_jobs_id PRIMARY KEY (id)
+);

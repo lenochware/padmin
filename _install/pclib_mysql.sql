@@ -173,3 +173,37 @@ CREATE TABLE `FILESTORAGE` (
   `DT` DATETIME DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=MYISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `jobs` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(50) DEFAULT NULL,
+  `annotation` TEXT,
+  `job_type` VARCHAR(30) DEFAULT NULL,
+  `job_command` TEXT,
+  `first_run_at` DATETIME DEFAULT NULL,
+  `period` INT(11) DEFAULT NULL,
+  `last_run_at` DATETIME DEFAULT NULL,
+  `last_run_result` TEXT,
+  `last_run_duration` INT(11) DEFAULT NULL,
+  `active` TINYINT(4) DEFAULT '1',
+  `created_at` DATETIME DEFAULT NULL,
+  `author_id` INT(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MYISAM DEFAULT CHARSET=utf8;
+
+/** Fill lookups for padmin/jobs. */
+
+insert into `LOOKUPS` (`APP`, `ID`, `CNAME`, `LABEL`, `POSITION`) values('padmin','url','job-type','Url','0');
+insert into `LOOKUPS` (`APP`, `ID`, `CNAME`, `LABEL`, `POSITION`) values('padmin','shell','job-type','Shell','0');
+insert into `LOOKUPS` (`APP`, `ID`, `CNAME`, `LABEL`, `POSITION`) values('padmin','function','job-type','Function','0');
+insert into `LOOKUPS` (`APP`, `ID`, `CNAME`, `LABEL`, `POSITION`) values('padmin','class','job-type','Class','0');
+insert into `LOOKUPS` (`APP`, `ID`, `CNAME`, `LABEL`, `POSITION`) values('padmin','phpfile','job-type','Phpfile','0');
+insert into `LOOKUPS` (`APP`, `ID`, `CNAME`, `LABEL`, `POSITION`) values('padmin','batch','job-type','Batch','0');
+insert into `LOOKUPS` (`APP`, `ID`, `CNAME`, `LABEL`, `POSITION`) values('padmin','0','job-period','Jen jednou','1');
+insert into `LOOKUPS` (`APP`, `ID`, `CNAME`, `LABEL`, `POSITION`) values('padmin','600','job-period','Jednou za 10 minut','3');
+insert into `LOOKUPS` (`APP`, `ID`, `CNAME`, `LABEL`, `POSITION`) values('padmin','3600','job-period','Jednou za hodinu','4');
+insert into `LOOKUPS` (`APP`, `ID`, `CNAME`, `LABEL`, `POSITION`) values('padmin','7200','job-period','Jednou za 2 hodiny','5');
+insert into `LOOKUPS` (`APP`, `ID`, `CNAME`, `LABEL`, `POSITION`) values('padmin','86400','job-period','Jednou za den','6');
+insert into `LOOKUPS` (`APP`, `ID`, `CNAME`, `LABEL`, `POSITION`) values('padmin','604800','job-period','Jednou za týden','7');
+insert into `LOOKUPS` (`APP`, `ID`, `CNAME`, `LABEL`, `POSITION`) values('padmin','2592000','job-period','Jednou za měsíc','8');
+insert into `LOOKUPS` (`APP`, `ID`, `CNAME`, `LABEL`, `POSITION`) values('padmin','60','job-period','Jednou za minutu','2');

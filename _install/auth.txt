@@ -11,6 +11,7 @@
 +right padmin/locale
 +right padmin/logs
 +right padmin/sysinfo
++right padmin/jobs
 
 +role admin
 role admin +right *
