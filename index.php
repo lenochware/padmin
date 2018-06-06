@@ -13,6 +13,7 @@ session_start();
 
 $app = new PCApp('padmin');
 $app->addconfig('config.php');
+$pclib->autoloader->addDirectory('libs');
 $app->debugMode = $app->config['padmin.debugmode'];
 $app->setlayout('tpl/website.tpl');
 try {
@@ -48,13 +49,21 @@ if ($app->config['padmin.logging']) {
 }
 
 if ($app->auth->isLogged()) {
+
   $app->layout->enable('user');
   $user = $app->auth->getUser()->getValues();
   $app->layout->_UNAME = $user['FULLNAME'];
+
+  if ($app->controller != 'account' and !$app->auth->hasright('padmin/enter')) {
+    $app->error('Nemáte oprávnění ke vstupu.');
+  }
   
   $menu = new PCTree('menu');
   $menu->getTree(PADMIN_MENU_ID);
   $app->layout->_MENU = $menu;
+  $app->run();
+}
+elseif(allow_public_access($app->routestr)) {
   $app->run();
 }
 else {
