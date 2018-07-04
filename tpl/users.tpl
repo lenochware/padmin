@@ -17,7 +17,9 @@ pager pager pglen "20" nohide
 <table class="grid" id="AUTH_USERS">
   <tr>{grid.labels}<th>{ACTIVE.lb}</th></tr>
 {block items}
-  <tr class="link" onclick="{lnedit.js}" title="{lnedit.lb}">{grid.fields}<td><img src="images/check{ACTIVE}.gif"></td></tr>
+  <tr class="link" onclick="{lnedit.js}" title="{lnedit.lb}">{grid.fields}
+  <td>{if ACTIVE}<i class="fa fa-check-square-o"></i>{/if}{if not ACTIVE}<i class="fa fa-square-o"></i>{/if}</td>
+</tr>
 {/block}
 <tr><td colspan="9">{lnadd}</td></tr>
 </table>

@@ -11,18 +11,19 @@ block user noprint
   <meta charset="utf-8">
   <title>{APPNAME}{if TITLE} | {TITLE}{/if}</title>
   {HEAD}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 <div id="site-top">
-<h1>{APPNAME}</h1>
+<i class="fa fa-cogs" style="font-size:50px;  text-shadow: 2px 2px 4px #333; padding: 10px" aria-hidden="true"></i>
 {block user}
 <div style="position: absolute; top: 80px; right: 10px;">
-  <img src="images/user.gif" class="bullet">
+  <i class="fa fa-user" style="color:orange" aria-hidden="true"></i>
   Uživatel: {UNAME} | <a href="#" onclick="if (confirm('Odhlásit se?')) pclib.redirect('account/logout')">odhlásit</a>
 </div>
 {/block}
 <div style="position: absolute; top: 80px; left: 10px;">» {NAVIG}</div>
-<div style="position: absolute; top: 108px; right: 10px;">v{VERSION}</div>
+<div style="position: absolute; top: 108px; right: 10px;">padmin {if VERSION}v{VERSION}{/if}</div>
 </div>
 <div id="menu">{MENU}</div>
 

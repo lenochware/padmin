@@ -18,7 +18,8 @@ pager pager pglen "20" nohide
 <table class="grid" id="JOBS">
   <tr>{grid.labels}<th>{active.lb}</th></tr>
 {block items}
-  <tr class="link" onclick="{lnedit.js}" title="{lnedit.lb}">{grid.fields}<td><img src="images/check{active}.gif"></td></tr>
+  <tr class="link" onclick="{lnedit.js}" title="{lnedit.lb}">{grid.fields}
+  	<td>{if active}<i class="fa fa-check-square-o"></i>{/if}{if not active}<i class="fa fa-square-o"></i>{/if}</td></tr>
 {block else}
   <tr><td colspan=12>Nenalezeny žádné položky.</td></tr>
 {/block}
