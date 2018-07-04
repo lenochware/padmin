@@ -1,0 +1,17 @@
+{
+	"name": "lenochware/padmin",
+	"description": "pclib administration tool",
+	"type": "project",
+	"keywords": ["pclib", "administration", "tool"],
+	"homepage": "http://pclib.brambor.net",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "lenochware",
+			"email": "lenochware@gmail.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0"
+	}
+}
