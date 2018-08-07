@@ -1,5 +1,6 @@
 <?elements
 class grid
+string ID lb "#"
 string DT lb "Čas"
 string USERNAME lb "Uživatel"
 string LOGGERNAME lb "Logger"
