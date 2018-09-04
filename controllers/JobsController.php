@@ -164,14 +164,21 @@ class JobsController extends BaseController
 	{
 		$job = $this->db->select($this::TABLE, pri($id));
 		$this->jobs->runJob($job['name']);
-		$this->app->message('Úloha spuštěna.');
+		$this->app->message('Úloha byla spuštěna.');
 		$this->redirect('jobs/edit/id:'.$id);
 	}
 
-	public function runAction()
+	public function runAction($job = null)
 	{
-		$this->jobs->run();
-		$this->outputJson(['status' => 'ok', 'message' => 'Úlohy spuštěny.']);
+		if ($job) {
+			$this->jobs->runJob($job);
+			$this->outputJson(['status' => 'ok', 'message' => "Úloha '$job' byla spuštěna."]);
+		}
+		else {
+			$this->jobs->run();
+			$this->outputJson(['status' => 'ok', 'message' => 'Úlohy byly spuštěny.']);
+		}
+
 	}
 
 }
