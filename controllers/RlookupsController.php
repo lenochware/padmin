@@ -98,7 +98,7 @@ function updateAction($lookup, $id) {
 
 function rlistAction($lookup, $id) {
   $this->title(3, 'Práva');
-  $grid = new GridForm('tpl/rlist.tpl');
+  $grid = new GridForm('tpl/rlist.tpl', 'rlist');
   
   if ($lookup == 'role') {
     $grid->filter['ROLE_ID'] = $id;
@@ -123,7 +123,8 @@ function rlistAction($lookup, $id) {
   and
   ~ REG.ROLE_ID = '{ROLE_ID}'
   ~ REG.USER_ID = '{USER_ID}'
-  ~ where R.SNAME like '{SNAME}%'"
+  ~ where R.SNAME like '{SNAME}%'
+  order by R.SNAME"
   );
   return $grid;
 }
