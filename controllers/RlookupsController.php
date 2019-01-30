@@ -120,9 +120,8 @@ function rlistAction($lookup, $id) {
     END as RSET
  from AUTH_RIGHTS R
   left join AUTH_REGISTER REG on REG.RIGHT_ID=R.ID
-  and
-  ~ REG.ROLE_ID = '{ROLE_ID}'
-  ~ REG.USER_ID = '{USER_ID}'
+  ~ and REG.ROLE_ID = '{ROLE_ID}'
+  ~ and REG.USER_ID = '{USER_ID}'
   ~ where R.SNAME like '{SNAME}%'
   order by R.SNAME"
   );
