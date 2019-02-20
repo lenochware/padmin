@@ -2,6 +2,7 @@
 string LAST_LOGIN date
 head HEAD scripts "css/padmin.css,css/menu.css,js/jquery.js,libs/pclib/assets/pclib.js,js/global.js"
 messages PRECONTENT
+string CONTENT noescape
 navigator NAVIG
 block user noprint
 ?>
