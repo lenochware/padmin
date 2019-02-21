@@ -1,6 +1,7 @@
 <?elements
 class form route "console"
-string TERM
+string TERM noescape
+string CMDHIST noescape
 input CMDLINE html_autocomplete "off" size "50/200"
 button submit lb "Ok"
 ?>
