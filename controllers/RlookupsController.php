@@ -136,7 +136,7 @@ function rupdateAction($lookup, $id) {
       case '1': $rval = '1';  break;
       case '2': $rval = '0';  break;
       case '3': $rval = null; break;
-      default: continue;
+      default: continue 2;
     }
 
     $right_id = (int)$ra['ID'];

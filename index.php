@@ -12,7 +12,7 @@ include 'libs/func.php';
 session_start();
 
 $app = new PCApp('padmin');
-$app->addconfig('config.php');
+$app->addconfig('./config.php');
 $pclib->autoloader->addDirectory('libs');
 $app->debugMode = $app->config['padmin.debugmode'];
 $app->setlayout('tpl/website.tpl');

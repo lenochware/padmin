@@ -263,9 +263,32 @@ function getPrimaryId()
  */
 function find($id)
 {
-	$this->values = $this->db->select($this->tableName, array(self::$options['primaryKey'] => $id));
+	$this->values = $this->db->select($this->tableName, array(self::$options['primaryKey'] => $id)) ?: [];
 	$this->isInDb((bool)$this->values);
 	return $this->values? $this : null;
+}
+
+/** 
+ * Return model for table $tableName.
+ **/
+protected function getModel($tableName, $id = null)
+{
+	$model = self::create($tableName, array(), false);
+	if ($id) {
+		$model->find($id);
+	}
+
+	return $model;
+}
+
+/**
+ * Return orm\Selection class.
+ **/
+protected function selection($from = null)
+{
+	$sel = new \pclib\orm\Selection;
+	if ($from) $sel->from($from);
+	return $sel;
 }
 
 /** 
@@ -644,7 +667,7 @@ protected function setCalculated($name, $value)
 function __toString()
 {
 	try {
-		return json_encode($this->getValues());
+		return json_encode($this->getValues(), JSON_UNESCAPED_UNICODE);
 	} catch (\Exception $e) {
 		trigger_error($e->getMessage(), E_USER_ERROR);
 	}	

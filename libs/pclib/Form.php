@@ -1015,8 +1015,7 @@ function content()
 	foreach ($this->values as $id=>$value) {
 		$elem = $this->elements[$id];
 		if ($elem['lb'] == '') continue;
-		//if (is_array($value)) $value = implode(',', $value);
-		if ($this->getAttr($elem['id'], 'noprint')) continue;
+		if ($this->getAttr($elem['id'], 'noprint') or $elem['hidden']) continue;
 		if ($value == '') {
 			$content[$elem['lb']] = $elem['emptylb'];
 			continue;
@@ -1354,7 +1353,7 @@ private function getValidationString()
 		}
 
 		switch($rule) {
-			case 'number': if($options != 'strict') continue; break;
+			case 'number': if($options != 'strict') continue 2; break;
 			case 'date': $options = preg_replace("/[^dmyhms]/i","", $options); break;
 			case 'file': $options = strtr($options, array('.' => '\.', '*' => '.*', '?' => '.')); break;
 		}
