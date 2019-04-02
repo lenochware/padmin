@@ -32,6 +32,19 @@ function phpAction() {
   return $this->getTable('PHP', $output);
 }
 
+function phpExportAction()
+{
+  print 'padmin PHP configuration dump, HOST: '.$_SERVER['HTTP_HOST'].', '.date("Y-m-d H:i:s").'<br>';
+  print 'PHP version: '.phpversion();
+  print '<br><br>';
+  foreach (ini_get_all(null, false) as $key => $value) {
+    if (is_null($value)) $value = 'null';
+    if (is_bool($value)) $value = $value? 'true' : 'false';
+    print $key.': '.$value.'<br>';
+  }
+  die();
+}
+
 function dbAction() {
   switch($this->db->drv->extension) {
   case 'mysql':
