@@ -45,7 +45,11 @@ if (!$app->controller) $app->controller = 'users';
 
 if ($app->config['padmin.logging']) {
   $app->logger = new PCLogger();
-  $app->log('get', $app->routestr, null, $_GET['id']);
+}
+
+if ($_POST) {
+  $a = $app->router->action;  //$app->routestr not work for posts - missing "/method"
+  $app->log('post', 'padmin/' . $a->controller .'/'. $a->method, null,  $_GET['id']);
 }
 
 if ($app->auth->isLogged()) {
