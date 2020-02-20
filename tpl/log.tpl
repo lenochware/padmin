@@ -9,7 +9,7 @@ string CATEGORY lb "Kategorie"
 string UA
 string IP
 string ITEM_ID lb "Položka"
-string MESSAGE size "10" tooltip lb "Zpráva"
+string MESSAGE size "10" tooltip lb "Zpráva" noescape
 pager pager pglen "20" nohide
 ?>
 <h2>Záznamy logu</h2>

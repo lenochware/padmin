@@ -20,7 +20,7 @@ function init() {
 }
 
 function viewAction($lookup) {
-  $grid = new PCGrid('tpl/rlookup.tpl');
+  $grid = new PCGrid('tpl/rlookup.tpl', 'rlookup');
   $grid->_LOOKUP = $lookup;
   $grid->_TITLE = $this->title[$lookup];
   $this->title(1, $this->title[$lookup]);
