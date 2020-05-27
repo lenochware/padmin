@@ -95,13 +95,28 @@ class JobsManager extends pclib\system\BaseObject
 	public function shouldRun($name)
 	{
 		$job = $this->getJob($name);
+
 		if (!$job['active']) {
 			return false;
 		}
 		if ($job['period'] == 0 and $job['last_run_at']) {
 			return false;
 		}
-		return ($this->getTime($job['last_run_at'] ?: $job['first_run_at']) + $job['period'] < $this->currentTime());
+
+
+		//spoustet v pravidelnych intervalech od firsttime, bez ohledu na iregular lasttime
+		$firstTime = $this->getTime($job['first_run_at']);
+		$lastTime = $this->getTime($job['last_run_at']);
+
+		if (!$lastTime) {
+			$nextTime = $firstTime;
+		}
+		else {
+			$p = $job['period'];
+			$nextTime = (floor(($lastTime - $firstTime) / $p) + 1) * $p + $firstTime;
+		}
+
+		return ($nextTime < $this->currentTime());
 	}
 
 	/**
@@ -140,6 +155,7 @@ class JobsManager extends pclib\system\BaseObject
 	 */
 	protected function getTime($mysqlDate)
 	{
+		if (!$mysqlDate) return 0;
 		return strtotime($mysqlDate);
 	}
 
@@ -192,7 +208,9 @@ class JobsManager extends pclib\system\BaseObject
 	{
 		$className = $job['job_command'];
 		$command = new $className($job);
-		return $command->run();
+		$result = $command->run();
+
+		return $command->getOutput().$result;
 	}
 
 	/**
@@ -231,12 +249,24 @@ abstract class Job
 {
 	protected $app;
 	protected $params;
+	protected $output = [];
 
 	function __construct($params)
 	{
 		global $pclib;
 		$this->app = $pclib->app;
 		$this->params = $params;
+	}
+
+	function write($message)
+	{
+		$this->output[] = $message;
+	}
+
+	function getOutput()
+	{
+		if (!$this->output) return '';
+		return implode("\n", $this->output);
 	}
 
 	abstract function run();
