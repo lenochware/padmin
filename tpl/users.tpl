@@ -11,6 +11,7 @@ string DT lb "Dat.vytvoření" sort date
 string ACTIVE lb "Aktivní" sort skip
 link lnedit lb "Editovat" route "users/edit/id:{ID}" skip
 link lnadd lb "Přidat uživatele" route "users/add" skip
+link lnexport lb "Exportovat" route "users/export" skip
 pager pager pglen "20" nohide
 ?>
 <h2>Seznam uživatelů</h2>
@@ -21,6 +22,6 @@ pager pager pglen "20" nohide
   <td>{if ACTIVE}<i class="fa fa-check-square-o"></i>{/if}{if not ACTIVE}<i class="fa fa-square-o"></i>{/if}</td>
 </tr>
 {/block}
-<tr><td colspan="9">{lnadd}</td></tr>
+<tr><td colspan="9">{lnadd} | {lnexport}</td></tr>
 </table>
 <div class="pager">{pager} | {pager.total} záznamů</div>

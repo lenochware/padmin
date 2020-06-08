@@ -28,6 +28,25 @@ function indexAction() {
   return $search.$users;
 }
 
+function exportAction()
+{
+  $users = new PCGrid('tpl/users.tpl', 'users');
+
+  $users->setquery(
+  "SELECT DISTINCT U.* from AUTH_USERS U
+   left join AUTH_USER_ROLE UR on U.ID=UR.USER_ID
+   where 1=1
+   ~ AND UR.ROLE_ID='{ROLE}'
+   ~ AND ACTIVE='{INACTIVE}'
+   ~ AND USERNAME like '%{USERNAME}%'
+   ~ AND ANNOT like '%{ANNOT}%'"
+  );
+  $users->_USERROLES->onprint = array($this, 'userroles');
+    
+  $users->exportCsv('kurzy-users.csv');
+
+}
+
 function editAction($id) {
   $user = $this->getform();
   $user->values = $this->db->select('AUTH_USERS', pri($id));
