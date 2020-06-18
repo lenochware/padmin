@@ -190,7 +190,7 @@ CREATE TABLE jobs (
   period integer DEFAULT NULL,
   last_run_at timestamp without time zone,
   last_run_result text,
-  last_run_duration integer DEFAULT NULL,
+  last_run_duration decimal(10,2) DEFAULT NULL,
   active smallint DEFAULT 1,
   created_at timestamp without time zone,
   author_id integer DEFAULT NULL,

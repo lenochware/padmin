@@ -41,6 +41,7 @@ class JobsManager extends pclib\system\BaseObject
 		if (!$runner) {
 			throw new Exception('Unsupported job type.');
 		}
+		$job['start'] = microtime(true);
 		$job['last_run_result'] = call_user_func($runner, $job);
 		$this->finish($job);
 	}
@@ -127,7 +128,9 @@ class JobsManager extends pclib\system\BaseObject
 		if (!$this->logger) {
 			return;
 		}
-		$this->logger->log('JobsManager', 'job.run', $job['name'] . ' result: ' . $job['last_run_result'], $job['id']);
+		$this->logger->log('JobsManager', 'job.run', $job['name'] . 
+			' result: ' . $job['last_run_result'] . ' ('. $job['last_run_duration'] .'s)', $job['id']
+		);
 	}
 
 	/**
@@ -136,6 +139,9 @@ class JobsManager extends pclib\system\BaseObject
 	protected function finish(array $job)
 	{
 		$job['last_run_at'] = date('Y-m-d H:i:s', $this->currentTime());
+		$job['last_run_duration'] = round(microtime(true) - $job['start'], 2);
+		unset($job['start']);
+ 
 		$this->db->update('jobs', $job, pri($job['id']));
 		$this->jobs[$job['name']] = $job;
 		$this->log($job);

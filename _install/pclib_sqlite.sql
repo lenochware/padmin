@@ -180,7 +180,7 @@ CREATE TABLE jobs (
   period integer,
   last_run_at datetime,
   last_run_result ntext,
-  last_run_duration integer,
+  last_run_duration numeric,
   active integer DEFAULT 1,
   created_at datetime,
   author_id integer

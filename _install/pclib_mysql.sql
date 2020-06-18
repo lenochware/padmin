@@ -184,7 +184,7 @@ CREATE TABLE `jobs` (
   `period` INT(11) DEFAULT NULL,
   `last_run_at` DATETIME DEFAULT NULL,
   `last_run_result` TEXT,
-  `last_run_duration` INT(11) DEFAULT NULL,
+  `last_run_duration` decimal(10,2) DEFAULT NULL,
   `active` TINYINT(4) DEFAULT '1',
   `created_at` DATETIME DEFAULT NULL,
   `author_id` INT(11) DEFAULT NULL,
