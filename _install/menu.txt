@@ -8,8 +8,9 @@ Autentifikace/Konzole|console
 Číselníky/Přehled|lookups
 Číselníky/Přidat nový|lookups/addlookup
 Číselníky/Menu|menu
-Lokalizace|locale/texts
+Lokalizace|locale
 Lokalizace/Texty|locale/texts
+Lokalizace/Import|locale/import
 Logger|logs
 Logger/Záznamy logu|logs
 Logger/Vymazat|logs/cleanup

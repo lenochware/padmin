@@ -47,6 +47,17 @@ function editAction($tr, $lang) {
   return $form;  
 }
 
+function importAction()
+{
+  $form = new PCForm('tpl/langcsvform.tpl');
+  if ($form->submitted) {
+    $this->importCsv($form->values);
+    $this->app->message("Import dokončen.");
+  }
+
+  return $form;
+}
+
 function updateAction($tr, $lang) {
   $form = new PCForm('tpl/langform.tpl');
   $n = $this->savetexts($tr, $lang, $form->values['TEXTS']);
@@ -82,6 +93,50 @@ protected function gettextsxml($tr, $lang, $all = true) {
     $s .= "<text id=\"$id\">".$text[1]."</text>\n";
   }
   return "<texts>\n".$s.'</texts>';
+}
+
+protected function importCsv($input)
+{
+  $tr = $input['TRANSLATOR'];
+  $lang = $input['LANG'];
+  $column = $input['COLUMN'];
+
+  $data = [
+    'TRANSLATOR' => $tr,
+    'LANG' => 0,
+    'PAGE' => 0,
+    'TEXT_ID' => 0,
+    'TSTEXT' => '',
+    'DT' => now(),
+  ];
+
+  $lines = explode("\n", $input['CSV']);
+
+  foreach ($lines as $line)
+  {
+    $fields = explode(';', trim($line));
+    $sSource = $fields[0];
+    $sTrans = $fields[$column];
+
+    if (!$sSource) continue;
+
+    $id = $this->db->field('TRANSLATOR:ID', ['TRANSLATOR' => $tr, 'LANG' => 0, 'TSTEXT' => $sSource]);
+
+    if (!$id) {
+      $data['LANG'] = 0;
+      $data['TSTEXT'] = $sSource;
+      $data['TEXT_ID'] = 0;
+      $id = $this->db->insert('TRANSLATOR', $data);
+    }
+
+    $transId = $this->db->field('TRANSLATOR:ID', ['TRANSLATOR' => $tr, 'LANG' => $lang, 'TEXT_ID' => $id]);
+    if ($transId) $this->db->delete('TRANSLATOR', pri($transId));
+
+    $data['LANG'] = $lang;
+    $data['TSTEXT'] = $sTrans;
+    $data['TEXT_ID'] = $id;
+    $id = $this->db->insert('TRANSLATOR', $data);
+  }
 }
 
 protected function gettexts($tr, $lang) {
