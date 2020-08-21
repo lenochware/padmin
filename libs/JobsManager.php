@@ -42,7 +42,14 @@ class JobsManager extends pclib\system\BaseObject
 			throw new Exception('Unsupported job type.');
 		}
 		$job['start'] = microtime(true);
-		$job['last_run_result'] = call_user_func($runner, $job);
+
+		try {
+			$job['last_run_result'] = call_user_func($runner, $job);
+		}
+		catch(Exception $e) {
+			$job['last_run_result'] = $e->getMessage();
+		}
+		
 		$this->finish($job);
 	}
 
