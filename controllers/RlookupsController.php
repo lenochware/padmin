@@ -12,7 +12,7 @@ private $authMng;
 function init() {
   parent::init();
   $lookup = $_GET['lookup'];
-  if (!in_array($lookup, array_keys($this->table))) {
+  if (isset($lookup) and !in_array($lookup, array_keys($this->table))) {
     $this->app->error('Neplatný číselník!');
   }
 
@@ -30,6 +30,36 @@ function viewAction($lookup) {
   $grid->setquery('select * from '.$this->table[$lookup]);
   return $grid;
 }
+
+function exportAction() {
+  $html = '';
+  $roles = $this->db->selectAll('AUTH_ROLES');
+  foreach ($roles as $role) {
+    $html .= "+role ".$role['SNAME'] . "\n";
+    $html .= $this->getRoleRights($role);
+    $html .= "\n";
+  }
+
+  return "<pre>$html</pre>";
+}
+
+protected function getRoleRights($role)
+{
+  $html = '';
+
+  $rights = $this->db->selectAll(
+    "select r.* from AUTH_REGISTER reg left join AUTH_RIGHTS r on reg.RIGHT_ID=r.ID
+    where reg.ROLE_ID='{0}'", $role['ID']
+  );
+
+  foreach ($rights as $r) {
+    $html .= "role ".$role['SNAME']." +right ".$r['SNAME'] . "\n";
+  }
+
+  return $html;
+}
+
+
 
 function addAction($lookup) {
   $this->title(2, 'Nová '.$lookup);
