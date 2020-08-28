@@ -48,6 +48,24 @@ function editAction($lookup, $id) {
   return $form;
 }
 
+function searchAction() {
+  $this->enablefilter();
+  $this->app->redirect('rlookups/rlist/lookup:{GET.lookup}/id:{GET.id}');
+}
+
+function showallAction() {
+  $this->enablefilter(false);
+  $this->app->redirect('rlookups/rlist/lookup:{GET.lookup}/id:{GET.id}');
+}
+
+function enablefilter($enable = true) {
+  $filter = $enable? $_POST['data'] : null;
+
+  $this->app->setsession('rlist.filter', $filter);
+  $this->app->setsession('rsearch.values', $filter);
+  if (!$filter) $this->app->deletesession('rlist.sortarray');
+}
+
 function insertAction($lookup) {
   $form = new PCForm('tpl/rlookupform.tpl');
   if (!$form->validate()) $this->app->error('Chybně vyplněný formulář.');
@@ -99,6 +117,8 @@ function updateAction($lookup, $id) {
 function rlistAction($lookup, $id) {
   $this->title(3, 'Práva');
   $grid = new GridForm('tpl/rlist.tpl', 'rlist');
+  $search = new PCForm('tpl/rsearch.tpl', 'rsearch');
+
   
   if ($lookup == 'role') {
     $grid->filter['ROLE_ID'] = $id;
@@ -122,10 +142,12 @@ function rlistAction($lookup, $id) {
   left join AUTH_REGISTER REG on REG.RIGHT_ID=R.ID
   ~ and REG.ROLE_ID = '{ROLE_ID}'
   ~ and REG.USER_ID = '{USER_ID}'
-  ~ where R.SNAME like '{SNAME}%'
+  where 1=1
+  ~ and R.SNAME like '%{SNAME}%'
+  ~ and REG.rval is not null {?ALLOWED}
   order by R.SNAME"
   );
-  return $grid;
+  return $search->html().$grid;
 }
 
 function rupdateAction($lookup, $id) {
