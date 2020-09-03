@@ -31,16 +31,48 @@ function viewAction($lookup) {
   return $grid;
 }
 
-function exportAction() {
-  $html = '';
-  $roles = $this->db->selectAll('AUTH_ROLES');
+function exportAction($id = 'roles') {
+  $form = new PCForm('tpl/exportform.tpl');
+  $form->_STEXT = ($id == 'rights')? $this->getRightsExport() : $this->getRolesExport();
+  return $form;
+}
+
+function importAction()
+{
+  $form = new PCForm('tpl/exportform.tpl');
+  $s = $form->values['STEXT'];
+
+  $authCon = new pclib\extensions\AuthConsole($this->authMng);
+  $authCon->executeScript($s);
+
+  $message = implode("<br>", $authCon->messages);
+
+  $this->app->message($message);
+  $this->redirect('rlookups/export');
+}
+
+protected function getRolesExport()
+{
+  $s = '';
+  $roles = $this->db->selectAll('select * from AUTH_ROLES order by DT');
   foreach ($roles as $role) {
-    $html .= "+role ".$role['SNAME'] . "\n";
-    $html .= $this->getRoleRights($role);
-    $html .= "\n";
+    $s .= "+role ".$role['SNAME'] . ($role['ANNOT']? ' "'.$role['ANNOT'].'"': ''). "\n";
+    $s .= $this->getRoleRights($role);
+    $s .= "\n";
   }
 
-  return "<pre>$html</pre>";
+  return $s;
+}
+
+protected function getRightsExport()
+{
+  $s = '';
+  $rights = $this->db->selectAll('select * from AUTH_RIGHTS order by DT', 'order by DT');
+  foreach ($rights as $right) {
+    $s .= "+right ".$right['SNAME'] . ($right['ANNOT']? ' "'.$right['ANNOT'].'"': ''). "\n";
+  }
+
+  return $s;
 }
 
 protected function getRoleRights($role)
@@ -58,8 +90,6 @@ protected function getRoleRights($role)
 
   return $html;
 }
-
-
 
 function addAction($lookup) {
   $this->title(2, 'Nová '.$lookup);

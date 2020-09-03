@@ -2,7 +2,7 @@
 
 $config = array(
 'padmin.name' => 'padmin',
-'padmin.version' => '1.2.4',
+'padmin.version' => '1.2.5',
 'padmin.debugmode' => false,
 'padmin.logging' => false,
 'padmin.lang' => 'cs',
