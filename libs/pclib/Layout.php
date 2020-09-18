@@ -105,7 +105,7 @@ public function addScripts()
 	$scripts = func_get_args();
 	if (is_array($scripts[0])) $scripts = $scripts[0];
 	
-	if (is_array($this->values[$id])) {
+	if (!empty($this->values[$id])) {
 		$this->values[$id] = array_merge($this->values[$id], $scripts);
 	}
 	else $this->values[$id] = $scripts;
@@ -148,21 +148,24 @@ function print_Head($id, $sub, $value)
 		$scripts = array_merge($scripts, (array)$value);
 	}
 
-	foreach(array_unique($scripts) as $script) {
-		if (!file_exists($script)) {
-			throw new FileNotFoundException("File '$script' not found.");
+	foreach(array_unique($scripts) as $script)
+	{	
+		$path = paramStr('{basedir}/'.$script, $this->app->paths);
+
+		if (!file_exists($path)) {
+			throw new FileNotFoundException("File '$path' not found.");
 		}
 		
-		$version = $this->elements[$id]['noversion']? '' : '?v='.filemtime($script);
+		$version = array_get($this->elements[$id], 'noversion')? '' : '?v='.filemtime($script);
 		$ext = substr($script, strrpos($script, '.'));
-		if ($script{0} != '/') $script = BASE_URL.$script;
+		if ($script[0] != '/') $script = BASE_URL.$script;
 		switch($ext) {
 		case '.js': print "<script language=\"JavaScript\" src=\"$script$version\"></script>\n"; break;
 		case '.css': print "<link rel=\"stylesheet\" type=\"text/css\" href=\"$script$version\">\n"; break;
 		}
 	}
 
-	$inline = $this->elements[$id]['inline'];
+	$inline = array_get($this->elements[$id], 'inline');
 	if ($inline) print $inline;
 }
 
