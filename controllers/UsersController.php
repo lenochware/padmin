@@ -51,6 +51,7 @@ function editAction($id) {
   $user = $this->getform();
   $user->values = $this->db->select('AUTH_USERS', pri($id));
   $user->_RINDIV = implode('<br>', $this->getrights($id));
+  $i = 0;
   foreach($this->getroles($id) as $role_id => $tmp) {
     $user->values['ROLE'.(++$i)] = $role_id;
   }
@@ -157,7 +158,7 @@ function enablefilter($enable = true) {
 
   $this->app->setsession('users.filter', $filter);
   $this->app->setsession('usersearch.values', $filter);
-  if (!$filter) $this->app->deletesession('users.sortarray');
+  if (!$filter) $this->app->setsession('users.sortarray', null);
 }
 
 function userroles($o, $id, $sub, $val) {

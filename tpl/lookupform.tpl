@@ -1,6 +1,7 @@
 <?elements
 class form route "lookups/{GET}" html_class "padmin" html5
 input ID lb "Id:" required
+string CNAME skip
 input LABEL lb "Popisek:" required
 input POSITION lb "Pozice:"
 button insert lb "Přidat" noprint

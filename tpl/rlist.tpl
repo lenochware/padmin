@@ -1,11 +1,13 @@
 <?elements
 class gridform
 primary ID
+string TITLE skip
 radio RSET lb "Konfigurace" list "1,Povolit,2,Zakázat,3,Dědit" html_class "inline"
 sort SRSET lb "Konfigurace" sort "RSET"
 string SNAME lb "Název" sort
 string ANNOT lb "Popis" sort
 string STATUS lb "Status"
+string USER_ID
 button rupdate lb "Uložit"
 pager pager pglen "20"
 ?>

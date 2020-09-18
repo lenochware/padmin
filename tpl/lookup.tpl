@@ -1,6 +1,7 @@
 <?elements
 class grid
 string ID lb "#" sort
+string CNAME skip
 string LABEL lb "Popisek" sort
 string POSITION lb "Pozice" sort
 link lnedit lb "Editovat" route "lookups/edit/lookup:{CNAME}/id:{GUID}" skip

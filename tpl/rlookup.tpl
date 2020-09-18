@@ -1,6 +1,7 @@
 <?elements
 class grid
 string ID lb "#" sort
+string TITLE skip
 string SNAME lb "Název" sort
 string ANNOT lb "Popis"
 pager pager pglen "20"

@@ -10,12 +10,15 @@ include 'libs/pclib/pclib.php';
 include 'libs/func.php';
 
 session_start();
+error_reporting(E_ALL);
 
 $app = new PCApp('padmin');
 $app->addconfig('./config.php');
 $pclib->autoloader->addDirectory('libs');
 $app->debugMode = $app->config['padmin.debugmode'];
+
 $app->setlayout('tpl/website.tpl');
+
 try {
   $app->db = new PCDb($app->config['padmin.db']);
 } catch (Exception $e) {

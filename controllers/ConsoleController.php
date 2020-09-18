@@ -28,7 +28,6 @@ function submitAction() {
   $authCon = new AuthConsole(new AuthManager);
   $termbuf = $_SESSION['termbuf'];
   $cmdline = $this->form->values['CMDLINE'];
-  if (get_magic_quotes_gpc()) $cmdline = stripslashes($cmdline);
 
   $termbuf[] = '';
   $termbuf[] = "<span class=\"console-cmd\">authc> $cmdline</span>";

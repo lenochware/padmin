@@ -6,6 +6,8 @@ input DPASSW hidden
 check HASDPASSW lb "Implicitní heslo" default "1"
 input FULLNAME  size "50" lb "Celé jméno:"
 input EMAIL size "40" lb "Email:" email
+string ID
+string RINDIV
 select ROLE1 required lb "Role:"
 select ROLE2
 select ROLE3

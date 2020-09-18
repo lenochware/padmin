@@ -11,7 +11,7 @@ private $authMng;
 
 function init() {
   parent::init();
-  $lookup = $_GET['lookup'];
+  $lookup = array_get($_GET, 'lookup');
   if (isset($lookup) and !in_array($lookup, array_keys($this->table))) {
     $this->app->error('Neplatný číselník!');
   }
@@ -31,7 +31,7 @@ function viewAction($lookup) {
   return $grid;
 }
 
-function exportAction($id = 'roles') {
+function exportAction($id = 'roles') {  
   $form = new PCForm('tpl/exportform.tpl');
   $form->_STEXT = ($id == 'rights')? $this->getRightsExport() : $this->getRolesExport();
   return $form;

@@ -2,7 +2,7 @@
 
 $config = array(
 'padmin.name' => 'padmin',
-'padmin.version' => '1.2.5',
+'padmin.version' => '1.3.0',
 'padmin.debugmode' => false,
 'padmin.logging' => false,
 'padmin.lang' => 'cs',
@@ -15,19 +15,23 @@ $config = array(
 
 'pclib.auth' => array(
 	'algo' => 'md5', 
-	'secret' => 'write any random string!', // <-- Set auth secret string (at least 20 random characters)
-	'realm' => ''
+	'secret' => '5dOPz4g$pQ+',
+	'realm' => 'kurzy'
 ),
 
-'padmin.db' => '', // <-- Set connection to database. Example: 'pdo_mysql://user:password@localhost/my_database'
-
-'jobs-dir' => 'jobs', // <-- path to directory with your cron-jobs
-'api-key' => '' // <-- Set api-key for external applications access to padmin api (now used for jobs/run)
+'padmin.db' => 'pdo_mysql://root@localhost/kurzy/utf8',
+'api-key' => 'X0kY1urj',
+'jobs-dir' => 'jobs',
+'stk-kurzy.zk.api-url' => 'https://www.zk-pk.cz/zakladni/common/portalConnector',
+'stk-kurzy.pk.api-url' => 'https://www.zk-pk.cz/prohlubovaci/common/portalConnector',
 
 );
 
 $production = array(
-	'pclib.errors' => array('display', 'log'),
+	'pclib.errors' => array('display', 'develop', 'log'),
+	'padmin.db' => 'pdo_mysql://dekrakurzy:ZO5kPu2bYK@localhost/dekrakurzy/utf8',
+    'stk-kurzy.zk.api-url' => 'https://www.zk-pk.cz/zakladni/common/portalConnector',
+    'stk-kurzy.pk.api-url' => 'https://www.zk-pk.cz/prohlubovaci/common/portalConnector',
 );
 
 ?>
