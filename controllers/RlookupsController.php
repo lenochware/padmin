@@ -123,7 +123,7 @@ function enablefilter($enable = true) {
 
   $this->app->setsession('rlist.filter', $filter);
   $this->app->setsession('rsearch.values', $filter);
-  if (!$filter) $this->app->deletesession('rlist.sortarray');
+  if (!$filter) $this->app->setsession('rlist.sortarray', null);
 }
 
 function insertAction($lookup) {

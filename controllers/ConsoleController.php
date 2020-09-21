@@ -11,7 +11,7 @@ private $form;
 function init() {
   parent::init();
   $this->form = new PCForm ('tpl/console.tpl');
-  if ($_SESSION['termbuf']) {
+  if (isset($_SESSION['termbuf'])) {
     $this->form->_TERM = implode("\n", $_SESSION['termbuf']);
     $this->form->_CMDHIST = $this->gethistory();
   }
