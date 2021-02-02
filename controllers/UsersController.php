@@ -60,7 +60,7 @@ function editAction($id) {
     $user->_HASDPASSW = 0;
   }
 
-  $user->enable('update', 'delete');
+  $user->enable('update', 'delete', 'impersonate');
   $this->title(2, $user->values['FULLNAME']);
   return $user;
 }
@@ -115,6 +115,20 @@ function deleteAction($id) {
 
   $this->authMng->rmuser('#'.$id);
   $this->app->message('Položka byla smazána.');
+  $this->reload();
+}
+
+function impersonateAction() {
+  $this->testPerm('padmin/users/impersonate');
+
+  $auth = $this->app->auth;
+
+  $userform = $this->getform();
+  if (!$userform->validate()) $this->invalid($userform);
+
+  $user = $auth->getUser($userform->values['USERNAME']);
+  $auth->setLoggedUser($user);
+  $this->app->message('Přihlášení změněno.');
   $this->reload();
 }
 

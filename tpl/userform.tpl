@@ -19,6 +19,7 @@ link lnrights lb "Práva a proměnné" route "rlookups/rlist/id:{ID}/lookup:righ
 button insert lb "Přidat" noprint
 button update lb "Uložit" noprint
 button delete lb "Smazat" noprint
+button impersonate lb "Přihlásit se" confirm "Přihlásit se jako tento uživatel?" noprint
 button back lb "Zpět" onclick "history.back()"
 ?>
 <table>
@@ -45,7 +46,7 @@ button back lb "Zpět" onclick "history.back()"
 Individiální práva:<br>
 <div style="font-weight:bold; color:red">{RINDIV}</div><br>
 &nbsp;{lnrights}<br><br>
-&nbsp;{insert}{update} {delete} {back}<br><br>
+&nbsp;{insert}{update} {delete} {impersonate} {back}<br><br>
 </td></tr>
 </table>
 
