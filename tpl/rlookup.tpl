@@ -18,4 +18,4 @@ link lnadd lb "Přidat" route "rlookups/add/lookup:{LOOKUP}" skip
 {/block}
 <tr><td colspan=8>{lnadd}</td></tr>
 </table>
-<div class="pager">{pager}</div>
+<div class="pager">{pager} &nbsp; {pager.all}</div>

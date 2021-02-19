@@ -31,4 +31,4 @@ pager pager pglen "20"
   {/block}
 </table><br>
 {rupdate}
-<div class="pager">{pager}</div>
+<div class="pager">{pager} &nbsp; {pager.all}</div>
