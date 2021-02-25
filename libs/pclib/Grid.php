@@ -597,7 +597,7 @@ function getExportCsv($options = [])
 
 	$elms = [];
 	foreach($this->elements as $id => $elem) {
-		if ($elem['noprint'] or $elem['skip'] or in_array($elem['type'], $ignore_list)) continue;
+		if (!empty($elem['noprint']) or !empty($elem['skip']) or in_array($elem['type'], $ignore_list)) continue;
 		unset($elem['title'], $elem['size']);
 		$elms[$id] = $elem;
 		$last_id = $id;
@@ -619,7 +619,7 @@ function getExportCsv($options = [])
 			}
 			if ($id != $last_id) print $options['csv-separ'];
 		}
-		if($values[$i+1]) print $options['csv-row-separ'];
+		if(!empty($values[$i+1])) print $options['csv-row-separ'];
 	}
 
 	$this->elements = $elements;
@@ -703,10 +703,15 @@ protected function print_BlockRow($block, $rowno = null)
  */
 private function cmpFunc($id)
 {
-	$dir = ($id == $this->sortArray[$id])? '-1:+1' : '+1:-1';
-	$cmd = "if (\$a['$id'] == \$b['$id']) return 0;\n";
-	$cmd .= "return (\$a['$id'] < \$b['$id']) ? $dir;";
-	return create_function('$a,$b', $cmd);
+	$dir = ($id == $this->sortArray[$id])? 1 : -1;
+
+	$func = function($a, $b) use ($id, $dir)
+	{
+		if ($a[$id] == $b[$id]) return 0;
+		return ($a[$id] < $b[$id]) ? -1*$dir : $dir;
+	};
+
+	return $func;
 }
 
 } // end class
