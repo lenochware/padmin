@@ -1,10 +1,10 @@
 <?elements
 class form html_class "padmin" html5
 text STEXT lb "Definice" size "80x30"
-button import lb "Importovat"
+button import lb "Aktualizovat"
 ?>
 
 <TABLE>
-<tr><td><h1>Importovat</h1></td></tr>
+<tr><td colspan="2"><h1>Obsah číselníku</h1></td></tr>
 {form.fields}
 </TABLE>

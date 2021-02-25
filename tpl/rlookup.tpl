@@ -7,6 +7,7 @@ string ANNOT lb "Popis"
 pager pager pglen "20"
 link lnedit lb "Editovat" route "rlookups/edit/id:{ID}/lookup:{LOOKUP}" skip
 link lnadd lb "Přidat" route "rlookups/add/lookup:{LOOKUP}" skip
+link lnexport lb "Exportovat" route "rlookups/export/lookup:{LOOKUP}" skip
 ?>
 <h2>{TITLE}</h2>
 <table class="grid strips">
@@ -16,6 +17,6 @@ link lnadd lb "Přidat" route "rlookups/add/lookup:{LOOKUP}" skip
 {block else}
   <tr><td colspan=8>Nenalezeny žádné položky.</td></tr>
 {/block}
-<tr><td colspan=8>{lnadd}</td></tr>
+<tr><td colspan=8>{lnadd} | {lnexport}</td></tr>
 </table>
 <div class="pager">{pager} &nbsp; {pager.all}</div>

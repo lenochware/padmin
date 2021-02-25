@@ -31,13 +31,13 @@ function viewAction($lookup) {
   return $grid;
 }
 
-function exportAction($id = 'roles') {  
+function exportAction($lookup) {
   $form = new PCForm('tpl/exportform.tpl');
-  $form->_STEXT = ($id == 'rights')? $this->getRightsExport() : $this->getRolesExport();
+  $form->_STEXT = ($lookup == 'right')? $this->getRightsExport() : $this->getRolesExport();
   return $form;
 }
 
-function importAction()
+function importAction($lookup)
 {
   $form = new PCForm('tpl/exportform.tpl');
   $s = $form->values['STEXT'];
@@ -48,7 +48,7 @@ function importAction()
   $message = implode("<br>", $authCon->messages);
 
   $this->app->message($message);
-  $this->redirect('rlookups/export');
+  $this->redirect('rlookups/export/lookup:'.$lookup);
 }
 
 protected function getRolesExport()
