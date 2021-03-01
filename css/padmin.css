@@ -48,7 +48,8 @@ DIV#site-top A {
 }
 
 DIV.void {}
-DIV.hidden { display:none; }
+
+.hidden { display:none; }
 
 @media print {
   DIV#site-top  { display: none; }

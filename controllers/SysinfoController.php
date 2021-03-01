@@ -3,33 +3,25 @@ include 'BaseController.php';
 
 class SysinfoController extends BaseController {
 
-function phpAction() {
-  $pi = $this->phpinfo_array();
-  $output['PHP Version'] = phpversion();
-  $output['Apache Version'] = @$pi['apache2handler']['Apache Version'];
-  $output['System'] = @$pi['General']['System'];
-  $output['HTTP_USER_AGENT'] = @$pi['Apache Environment']['HTTP_USER_AGENT'];
-  $output['SERVER_ADDR'] = @$pi['Apache Environment']['SERVER_ADDR'];
-  $output['REMOTE_ADDR'] = @$pi['Apache Environment']['REMOTE_ADDR'];
-  $output['mysql API'] = @$pi['mysql']['Client API version'];
-  $output['PDO drivers'] = @$pi['PDO']['PDO drivers'];
-  $output['session.gc_maxlifetime'] = $pi['session']['session.gc_maxlifetime']['local'];
-  $output['display_errors'] = @$pi['PHP Core']['display_errors']['local'];
-  $output['memory_limit'] = @$pi['PHP Core']['memory_limit']['local'];
-  $output['max_execution_time'] = @$pi['PHP Core']['max_execution_time']['local'];
-  $output['safe_mode'] = @$pi['PHP Core']['safe_mode']['local'];
-  $output['HTTP_HOST'] = @$pi['Apache Environment']['HTTP_HOST'];
-  $output['cURL support'] = @$pi['curl']['cURL support'];
-  $output['FTP support'] = @$pi['ftp']['FTP support'];
-  $output['GD Support'] = @$pi['gd']['GD Support'];
-  $output['GD Version'] = @$pi['gd']['GD Version'];
-  $output['iconv support'] = @$pi['iconv']['iconv support'];
-  $output['Multibyte Support'] = @$pi['mbstring']['Multibyte Support'];
-  $output['Zip'] = @$pi['zip']['Zip'];
-  $output['ZLib'] = @$pi['zlib']['ZLib Support'];
-  $output['phpinfo'] = implode(' ', array_keys($pi));
+function phpAction()
+{
+  $pi = $this->getPhpInfo();
 
-  return $this->getTable('PHP', $output);
+  unset($pi['PHP Variables']);
+
+  foreach ($pi as $secName => $secData) {
+    $output["<b>$secName</b>"] = "";
+
+    foreach ($secData as $key => $value) {
+      $output["<span class=\"hidden\">$secName</span> " . $key] = $value;
+    }
+  }
+
+  //dump($pi);
+
+  return $this->getTable('PHP '. phpversion(), $output);
+
+
 }
 
 function phpExportAction()
@@ -45,7 +37,8 @@ function phpExportAction()
   die();
 }
 
-function dbAction() {
+function dbAction()
+{
   switch($this->db->drv->extension) {
   case 'mysql':
   case 'pdo_mysql':
@@ -69,7 +62,8 @@ function dbAction() {
   return $this->getTable($title, $output);
 }
 
-function webserverAction() {
+function webserverAction()
+{
   $title = $_SERVER['SERVER_SOFTWARE'];
   if (function_exists('apache_get_modules')) {
     $details = apache_get_modules();
@@ -81,13 +75,14 @@ function webserverAction() {
   return $this->getTable($title, $details);
 }
 
-function pclibAction() {
+function pclibAction()
+{
   $title = 'PClib '.PCLIB_VERSION;
-  return $this->getTable($title, $this->getconfig());
+  return $this->getTable($title, $this->getConfig());
 
 }
 
-function phpinfo_array()
+function getPhpInfo()
 {
     ob_start();
     phpinfo();
@@ -104,13 +99,15 @@ function phpinfo_array()
         }
         elseif(preg_match("~<tr><td[^>]+>([^<]*)</td><td[^>]+>([^<]*)</td><td[^>]+>([^<]*)</td></tr>~", $line, $val))
         {
-            $info_arr[$cat][trim($val[1])] = array("local" => $val[2], "master" => $val[3]);
+            //$info_arr[$cat][trim($val[1])] = array("local" => $val[2], "master" => $val[3]);
+            $info_arr[$cat][trim($val[1])] = $val[3];
         }
     }
     return $info_arr;
 }
 
-function getconfig() {
+function getConfig()
+{
   $config = $this->app->config;
   $config['pclib.auth']['secret'] = '-- hidden --';
   
@@ -123,7 +120,8 @@ function getconfig() {
   return $output;
 }
 
-function getTable($title, $data) {
+function getTable($title, $data)
+{
   $table = new PCTpl('tpl/output.tpl');
   $output = array();
   foreach($data as $k => $v) $output[] = array('KEY' => $k, 'VALUE' => $v);
