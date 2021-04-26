@@ -8,6 +8,7 @@ string ACTIONNAME lb "Akce"
 string CATEGORY lb "Kategorie"
 string UA
 string IP
+string size_mb
 string ITEM_ID lb "Položka"
 string MESSAGE size "10" tooltip lb "Zpráva" noescape
 pager pager pglen "20" nohide
@@ -21,4 +22,4 @@ pager pager pglen "20" nohide
   <tr><td colspan=9>Nenalezeny žádné položky.</td></tr>
 {/block}
 </table>
-<div class="pager">{pager} | Prvních {pager.total} záznamů.</div>
+<div class="pager">{pager} | Prvních {pager.total} záznamů. Velikost logu: {size_mb} MB</div>

@@ -117,6 +117,11 @@ function getLog($rowCount, array $filter = null)
 	return $this->getStorage()->getLog($rowCount, $filter);
 }
 
+function getSize()
+{
+	return $this->getStorage()->getSize();
+}
+
 /**
  * Remove old records in log. It will keep $keepdays in the log.
  * @param int $keepDays Number of days to keep in the log

@@ -4,7 +4,7 @@ include 'BaseController.php';
 class LogsController extends BaseController {
 
 private $logger;
-private $MAXROWS = 100;
+private $MAXROWS = 500;
 
 function init() {
   parent::init();
@@ -17,6 +17,9 @@ function indexAction() {
   $grid->setarray($this->logger->getlog($this->MAXROWS,
     $this->app->getsession('logfilter'))
   );
+
+  $grid->values['size_mb'] = $this->logger->getSize();
+
   $search = new PCForm('tpl/logsearch.tpl', 'logsearch');
   return $search.$grid;
 }
