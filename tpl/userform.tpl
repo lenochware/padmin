@@ -24,12 +24,18 @@ button back lb "Zpět" onclick "history.back()"
 ?>
 <table>
 <tr>
-  <td colspan="2"><h1>Uživatel {FULLNAME.value}</h1></td>
+  <td colspan="2">
+    <h1>Uživatel {FULLNAME.value}</h1>
+  </td>
 </tr>
 <tr><td>{USERNAME.lb}</td><td>{USERNAME}</td></tr>
-<tr><td>{PASSWORD.lb}</td><td>{PASSWORD} {HASDPASSW}{HASDPASSW.lb}</td></tr>
+<tr><td>{PASSWORD.lb}</td><td>{PASSWORD} {HASDPASSW}{HASDPASSW.lb}
+  <br><a href="#" onclick="dpassw_create()">nové</a></td></tr>
 <tr><td>{FULLNAME.lb}</td><td>{FULLNAME}</td></tr>
-<tr><td>{EMAIL.lb}</td><td>{EMAIL}</td></tr>
+<tr>
+  <td>{EMAIL.lb}</td>
+  <td>{EMAIL} {if EMAIL}<a href="mailto:{EMAIL.value}" style="text-decoration: none">@</a>{/if}</td>
+</tr>
 <tr><td>{ROLE1.lb}</td>
 <td>
 &nbsp;{ROLE1} <a  href="#" onclick="$('#roleplus').toggle()">další...</a>
@@ -72,6 +78,14 @@ function dpassw_change() {
   if ($('#HASDPASSW').is(':checked')) {
     $('#DPASSW').val($('#PASSWORD').val());
   }
+}
+
+function dpassw_create()
+{
+  $.get('?r=users/genPassword', function(data) {
+    $('#PASSWORD').val(data);
+    $('#DPASSW').val(data);
+  });
 }
 
 function init() {

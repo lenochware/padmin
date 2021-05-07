@@ -141,6 +141,13 @@ function showallAction() {
   $this->reload();
 }
 
+/* @ajax */
+function genPasswordAction()
+{
+  $password = $this->authMng->genPassw();
+  die($password);
+}
+
 protected function getroles($user_id = null) {
   if ($user_id) {
     return $this->db->select_pair(
