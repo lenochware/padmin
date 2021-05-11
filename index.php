@@ -10,7 +10,7 @@ include 'libs/pclib/pclib.php';
 include 'libs/func.php';
 
 session_start();
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
 $app = new PCApp('padmin');
 $app->addconfig('./config.php');
