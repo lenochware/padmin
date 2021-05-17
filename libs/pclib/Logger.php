@@ -117,6 +117,10 @@ function getLog($rowCount, array $filter = null)
 	return $this->getStorage()->getLog($rowCount, $filter);
 }
 
+/**
+ * Return size of the log in MB.
+ * @return int $size
+ */
 function getSize()
 {
 	return $this->getStorage()->getSize();

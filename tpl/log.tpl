@@ -8,7 +8,7 @@ string ACTIONNAME lb "Akce"
 string CATEGORY lb "Kategorie"
 string UA
 string IP
-string size_mb
+string size_mb skip
 string ITEM_ID lb "Položka"
 string MESSAGE size "10" tooltip lb "Zpráva" noescape
 pager pager pglen "20" nohide

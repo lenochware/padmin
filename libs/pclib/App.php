@@ -297,20 +297,7 @@ public function configure()
  */
 function redirect($route, $code = null)
 {
-
-	if ($code and function_exists('http_response_code')) {
-		http_response_code($code);
-	}
-
-	if (is_array($route)) {
-		$url = $route['url'];
-	}
-	else {
-		$url = $this->router->createUrl($route);
-	}
-
-	header("Location: $url");
-	exit();
+	$this->router->redirect($route, $code);
 }
 
 /**
@@ -472,11 +459,14 @@ function getSession($name, $ns = null)
 	if (!$ns) $ns = $this->name;
 	if (!isset($_SESSION[$ns])) return null;
 
+	//because of retarded "key does not exists warning"
 	if (strpos($name, '.')) {
 		list($n1,$n2) = explode('.', $name);
-		return @$_SESSION[$ns][$n1][$n2];
+		if (!isset($_SESSION[$ns][$n1])) return null;
+		return array_get($_SESSION[$ns][$n1], $n2);
 	}
-	return @$_SESSION[$ns][$name];
+
+	return array_get($_SESSION[$ns], $name);
 }
 
 /**

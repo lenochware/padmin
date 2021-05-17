@@ -66,16 +66,19 @@ public static function register()
 		'pclib\App.onError' => array($that, 'hook'),
 		'pclib\Db.onBeforeQuery' => array($that, 'hook'),
 		'pclib\Db.onAfterQuery' => array($that, 'hook'),
+		'pclib\Router.onRedirect' => array($that, 'hook'),
 		//'Func.onLogDump' => array($that, 'onLogDump'),
 	);
 
 	$that->addEvents($events);
 	
 	$that->app->loadDefaults();
+	$that->app->router->loadDefaults();
+	
 	if ($that->app->db) {
 		$that->app->db->loadDefaults();
 	}
-
+	
 	$that->startTime = microtime(true);
 	$that->queryTimeSum = 0;
 	$that->registered = true;
@@ -98,6 +101,10 @@ function hook($event)
 
 	if ($this->updating) return;
 
+	if (rand(1,100) == 1) {
+		$this->logger->deleteLog(1);
+	}
+
 	$this->updating = true;
 	$name = $event->name;
 	$this->$name($event);
@@ -113,6 +120,7 @@ function onBeforeOut($event)
 function onAfterOut($event)
 {
 	$message = "Time: ". $this->getTime($this->startTime).' ms, db: '.$this->queryTimeSum.' ms';
+	$message = "<b>$message</b>";
 	$this->logger->log('DEBUG', 'time', $message);
 }
 
@@ -143,7 +151,7 @@ function onAfterQuery($event)
 	$msec = $this->getTime($this->queryTime);
 	$this->queryTimeSum += $msec;
 	$this->logger->log('DEBUG', 'query',
-		preg_replace("/(\s*[\r\n]+\s*)/m", "\\1<br>", $event->data[0]) // \n => <br>
+		preg_replace("/(\s*[\r\n]+\s*)/m", "\\1<br>", htmlspecialchars($event->data[0])) // \n => <br>
 		." <span style=\"color:blue\">($msec ms)</span>"
 	);
 }
@@ -166,28 +174,36 @@ function onLogDump($event)
 	);
 }
 
+function onRedirect($event)
+{
+	$this->logger->log('DEBUG', 'redirect', '<b>Redirect to ' . $event->data[0] . '</b>');
+}
+
 protected function logUrl()
 {
-	if (strpos($this->app->routestr, 'pclib/debuglog') === 0) return;
+	if (strpos($this->app->routestr, 'pclib/debug') === 0) return;
 
 	$this->updating = true;
 
 	$request = $this->app->request;
-	$message = '<b>'
+	$message = date("H:m:s ").'<b>'
 	.($request->isAjax()? 'AJAX ': '')
 	.$request->method
 	.'</b> '
 	.$request->url;
 
-	if ($request->method == 'POST')
-		$message .= '<br>'.$this->app->debugger->getDump(array($_POST));
+	if ($request->method == 'POST') {
+		$message = $this->app->debugger->getDump(array($_POST)) . '<br>' . $message;
+	}
 
-	$this->logger->log('DEBUG', 'url', $message);
+	$this->logger->log('DEBUG', 'url', $message . '<hr>');
 	$this->updating = false;
 }
 
 protected function printLogWindow()
 {
+	print file_get_contents(PCLIB_DIR.'assets/debugmenu.tpl');
+	print '<h4>Query Log</h4>';
 	$grid = new PCGrid(PCLIB_DIR.'assets/debuglog.tpl');
 	$data = $this->logger->getLog(100, array('LOGGERNAME' => $this->logger->name));
 	$grid->setArray($data);
@@ -198,10 +214,10 @@ protected function printLogWindow()
 protected function printInfoWindow()
 {
 	$dbg = $this->app->debugger;
-	print "<a href=\"?r=pclib/debuglog/clear\">Clear debuglog</a><br>";
-	print '<h1>_SESSION</h1>';
+	print file_get_contents(PCLIB_DIR.'assets/debugmenu.tpl');
+	print '<h4>_SESSION</h4>';
 	print $dbg->getDump(array($_SESSION));
-	print '<h1>_COOKIE</h1>';
+	print '<h4>_COOKIE</h4>';
 	print $dbg->getDump(array($_COOKIE));
 	die();
 }

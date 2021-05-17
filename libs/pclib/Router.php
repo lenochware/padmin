@@ -36,6 +36,9 @@ class Router extends system\BaseObject implements IService
 	/** Occurs when url (link) is created from Action. */ 
 	public $onCreateUrl;
 
+	/** Occurs before redirect. */
+	public $onRedirect;
+
 	public $redirects;
 
 
@@ -87,6 +90,28 @@ function followRedirects()
 	$url = $this->createUrl($this->action);
 	header('Location: '. $url, true, $redirect['code']);
 	exit;
+}
+
+/**
+ * Redirect to $route or url.
+ */
+function redirect($route, $code = null)
+{
+	if ($code and function_exists('http_response_code')) {
+		http_response_code($code);
+	}
+
+	if (is_array($route)) {
+		$url = $route['url'];
+	}
+	else {
+		$url = $this->createUrl($route);
+	}
+
+	$this->onRedirect($url);
+
+	header("Location: $url");
+	exit();
 }
 
 /**
@@ -181,7 +206,11 @@ class Action
 
 		foreach($ra as $section) {
 			if ($section == '__GET__') { $params += $_GET; continue; }
-			@list($name,$value) = explode(':', $section);
+
+			$exploded = explode(':', $section);
+			$name = $exploded[0];
+			$value = array_get($exploded, 1);
+						
 			if (isset($value)) $params[$name] = $value;
 			else $path[] = $section;
 		}
