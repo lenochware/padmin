@@ -15,7 +15,7 @@ Logger|logs
 Logger/Záznamy logu|logs
 Logger/Vymazat|logs/cleanup
 Jobs|jobs
-Informace|sysinfo
+Informace|sysinfo/php
 Informace/PHP|sysinfo/php
 Informace/Database|sysinfo/db
 Informace/PClib|sysinfo/pclib

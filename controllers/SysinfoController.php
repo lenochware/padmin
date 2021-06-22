@@ -72,7 +72,11 @@ function webserverAction()
     $details = array('' => 'No details');
   }
 
-  return $this->getTable($title, $details);
+  $cip = $this->app->request->getClientIp();
+  $sip = $this->app->request->getServerIp();
+
+
+  return $this->getTable($title, $details) . "<br>IP - Klient: $cip Server: $sip";
 }
 
 function pclibAction()
