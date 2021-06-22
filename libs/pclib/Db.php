@@ -27,26 +27,11 @@ use pclib;
  */
 class Db extends system\BaseObject implements IService
 {
-/* Log-level: 1:Errors; 2:Each query @deprecated */
-public $logging = 1;
-
 /** If enabled, no query is executed. */
 public $disabled = false;
 
-/* Message buffer. Set logging=2, then var_dump($db->messages)
- * will write all executed sql (up to 100 queries).
- * @deprecated
- */
-public $messages = array();
-
 /** SQL of last executed query. */
 public $lastQuery;
-
-/** Occurs before sql-query is executed. */
-public $onBeforeQuery;
-
-/** Occurs after sql-query is executed. */
-public $onAfterQuery;
 
 /** Create new connection even if connection with same params exists */
 public $forceReconnect = true;
@@ -219,22 +204,16 @@ function query($_sql, $param = null)
 	}
 	$sql = $param? $this->setParams($_sql, $param) : $_sql;
 	
-	$event = $this->onBeforeQuery($sql);
+	$event = $this->trigger('db.before-query', ['sql' => $sql]);
 	if ($event and !$event->propagate) return;
 
 	if (!$this->disabled) {
 		$res = $this->drv->query($sql);
 	}
-	
-	if ($this->logging > 1 and !$this->drv->error) {
-		$this->messages[] = "(n) Proceed $sql";
-	}
-	if ($this->logging and $this->drv->error)
-		$this->messages[] = "(e) ".$this->drv->error;
-	else
-		$this->lastQuery = $sql;
+		
+	$this->lastQuery = $this->drv->error? $this->drv->error : $sql;
 
-  $this->onAfterQuery($sql, $this->drv->error);
+  $this->trigger('db.after-query', ['sql' => $sql, 'query' => $res]);
 	return $res;
 }
 

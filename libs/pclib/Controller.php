@@ -29,9 +29,6 @@ public $name;
 /** Name of the called action without postfix. */
 public $action;
 
-/** Occurs when Controller is initialized. */
-public $onInit;
-
 function __construct(App $app)
 {
 	parent::__construct();
@@ -47,7 +44,7 @@ function __construct(App $app)
  **/
 function init()
 {
-	$this->onInit();
+	$this->trigger('controller.init');
 }
 
 /*
@@ -107,6 +104,34 @@ public function run($action)
 	}
 
 	return call_user_func_array(array($this, $action_method), $args);
+}
+
+/**
+ * Call route $rs and return result of the controller's action.
+ * @param string $rs Route path i.e. 'comment/edit/id:1'
+ * @return string $output
+ */
+function action($rs)
+{
+  $action = new pclib\Action($rs);
+  $ct = $this->app->newController($action->controller);
+
+  if (!$ct) throw new Exception('Build of '.$action->controller.' failed.');
+
+  return $ct->run($action);
+}
+
+/**
+ * Create template $path, populated with $data.
+ * @param string $path Path to template
+ * @param array $data Template values
+ * @return Tpl $template
+ */
+public function template($path, $data = [])
+{
+  $templ = new pclib\Tpl($path);
+  $templ->values = $data;
+  return $templ;
 }
 
 /**

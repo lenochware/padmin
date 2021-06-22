@@ -36,18 +36,6 @@ class Form extends Tpl
  */
 public $submitted;
 
-/** Occurs after validation. */
-public $onValidate;
-
-/** Occurs before uploading of files. */
-public $onUpload;
-
-/** Occurs before inserting or updating database. */
-public $onSave;
-
-/** Occurs before deleting from database. */
-public $onDelete;
-
 public $fileStorage;
 
 /**
@@ -135,6 +123,8 @@ protected function _init()
 	$this->values = $this->getHttpData();
 
 	$this->saveSession();
+
+	$this->trigger('form.submit');
 }
 
 protected function getValidator()
@@ -144,7 +134,7 @@ protected function getValidator()
 		$valid->skipUndefined = true;
 		$valid->skipUndefinedRule = true;
 		$valid->dateTimeFormat = $this->config['pclib.locale']['date'];
-		$valid->onValidateElement[] = array($this, 'validateElementCallback');
+		$valid->on('validate', [$this, 'validateElementCallback']);
 		$this->validator = $valid;
 	}
 
@@ -157,9 +147,11 @@ protected function getValidator()
  */
 protected function _out($block = null)
 {
+	$this->trigger('form.before-out');
 	print $this->head();
 	parent::_out($block);
 	print $this->foot();
+	$this->trigger('form.after-out');
 }
 
 /**
@@ -177,16 +169,16 @@ function validate()
 	$this->invalid = array();
 	$this->getValidator()->validateArray($this->values, $this->elements);
 	$this->invalid = $this->getValidator()->getErrors();
-	$this->onValidate();
+	$this->trigger('form.validate');
 	$this->saveSession();
 
 	return !(bool)$this->invalid;
 }
 
 //skip non-editable fields
-protected function validateElementCallback($event)
+public function validateElementCallback($event)
 {
-	$elem = $event->data[1];
+	$elem = $event->element;
 	$id = array_get($elem, 'id');
 
 	if (!$id or !$this->isEditable($id)) {
@@ -200,7 +192,7 @@ protected function validateElementCallback($event)
 
 		$errorMsg = call_user_func($elem['onvalidate'], $this, $id, null, $value);
 		if ($errorMsg) {
-			$event->sender->setError($elem['id'], $errorMsg, array($id, $value, $rule, $param));
+			$event->target->setError($elem['id'], $errorMsg, array($id, $value, $rule, $param));
 
 			$event->propagate = false;
 			$event->result = false;
@@ -951,9 +943,6 @@ protected function uploadBasic($old = array())
  */
 function upload($tableName, $id, $old = array())
 {
-	$event = $this->onUpload($_FILES, $old);
-	if ($event and !$event->propagate) return;
-
 	if ($this->fileStorage) {
 		$this->uploadFs($tableName, $id);
 	}
@@ -972,7 +961,7 @@ function upload($tableName, $id, $old = array())
 function insert($tab)
 {
 	$tab = $this->getTableName($tab);
-	$event = $this->onSave('insert', $tab);
+	$event = $this->trigger('form.update', ['action' => 'insert', 'table' => $tab]);
 	if ($event and !$event->propagate) return;
 
 	$this->service('db');
@@ -991,7 +980,7 @@ function insert($tab)
 function update($tab, $cond)
 {
 	$tab = $this->getTableName($tab);
-	$event = $this->onSave('update', $tab, $cond);
+	$event = $this->trigger('form.update', ['action' => 'update', 'table' => $tab, 'where' => $cond]);
 	if ($event and !$event->propagate) return;
 
 	$this->service('db');
@@ -1020,7 +1009,7 @@ function update($tab, $cond)
 function delete($tab, $cond)
 {
 	$tab = $this->getTableName($tab);
-	$event = $this->onDelete('delete', $tab, $cond);
+	$event = $this->trigger('form.update', ['action' => 'delete', 'table' => $tab, 'where' => $cond]);
 	if ($event and !$event->propagate) return;
 
 	$this->service('db');
