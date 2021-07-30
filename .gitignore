@@ -1,7 +1,6 @@
 /data/*
 /images/*
 /temp/*
+/vendor/*
 
 *.bak
-padmin.sublime-project
-padmin.sublime-workspace

@@ -6,7 +6,7 @@
  */
 define('PADMIN_MENU_ID', 1);
 
-include 'libs/pclib/pclib.php';
+include 'vendor/autoload.php';
 include 'libs/func.php';
 
 session_start();

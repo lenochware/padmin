@@ -1,6 +1,6 @@
 <?elements
 string LAST_LOGIN date
-head HEAD scripts "css/padmin.css,css/menu.css,js/jquery.js,libs/pclib/assets/pclib.js,js/global.js"
+head HEAD scripts "css/padmin.css,css/menu.css,js/jquery.js,vendor/lenochware/pclib/pclib/assets/pclib.js,js/global.js"
 messages PRECONTENT
 string APPNAME
 string TITLE
