@@ -5,7 +5,7 @@ input SNAME lb "Název:" required
 input ANNOT lb "Popisek:" required
 button insert lb "Přidat" noprint
 button update lb "Uložit" noprint
-button delete lb "Smazat" noprint
+button delete lb "Smazat" noprint confirm "Opravdu smazat?"
 ?>
 <TABLE>
 <tr><td><h1>Položka číselníku {TITLE}</h1></td></tr>

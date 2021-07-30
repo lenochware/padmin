@@ -18,7 +18,7 @@ check ACTIVE lb "Aktivní" default "1"
 link lnrights lb "Práva a proměnné" route "rlookups/rlist/id:{ID}/lookup:right"
 button insert lb "Přidat" noprint
 button update lb "Uložit" noprint
-button delete lb "Smazat" noprint
+button delete lb "Smazat" noprint confirm "Opravdu smazat?"
 button impersonate lb "Přihlásit se" confirm "Přihlásit se jako tento uživatel?" noprint
 button back lb "Zpět" onclick "history.back()"
 ?>
@@ -59,10 +59,7 @@ Individiální práva:<br>
 <br>Pole označená (*) jsou povinná.
 
 <script language="JavaScript">
-//set confirm dialog on delete button
-function deleteprompt() {
-  if(!confirm('Opravdu smazat?')) return false;
-}
+
 function dpassw_toggle() {
   if ($(this).is(':checked')) {
     $('#PASSWORD').val($('#DPASSW').val());
@@ -89,7 +86,6 @@ function dpassw_create()
 }
 
 function init() {
-  $('#delete').click(deleteprompt);
   $('#HASDPASSW').change(dpassw_toggle);
   $('#HASDPASSW').trigger('change');
   $('#PASSWORD').change(dpassw_change);
