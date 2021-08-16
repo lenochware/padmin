@@ -59,7 +59,7 @@ function editAction($id) {
     $user->_HASDPASSW = 0;
   }
 
-  $user->enable('update', 'delete', 'impersonate');
+  $user->enable('copy', 'update', 'delete', 'impersonate');
   $this->title(2, $user->values['FULLNAME']);
   return $user;
 }
@@ -129,6 +129,24 @@ function impersonateAction() {
   $auth->setLoggedUser($user);
   $this->app->message('Přihlášení změněno.');
   $this->reload();
+}
+
+function copyAction()
+{
+  $userform = $this->getform();
+  if (!$userform->validate()) $this->invalid($userform);
+
+  $name = $userform->values['USERNAME'];
+  if (!$name) $this->app->error('Uživatel nenalezen.');
+
+  $uid = $this->authMng->mkUser($name.'_copy');
+ 	$this->authMng->cpUser($name, $name.'_copy');
+  
+  if ($this->authMng->errors)
+    $this->app->error(implode('<br>', $this->authMng->errors));  
+
+	$this->app->message('Uživatel zkopírován.');
+  $this->app->redirect("users/edit/id:$uid");
 }
 
 function searchAction() {
