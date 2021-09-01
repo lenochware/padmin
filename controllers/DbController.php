@@ -21,7 +21,7 @@ function showAction()
 
    $columns = $this->db->columns($table);
 
-   $grid = TemplateFactory::create('tpl/dbgrid.tpl', $columns);
+   $grid = TemplateFactory::create('tpl/system/dbgrid.tpl', $columns);
    $grid->setArray($changes);
    $grid->_htitle = 'Rozdíl';
    $form->values['grid'] = $grid->html();
@@ -62,7 +62,7 @@ protected function getPrimary($table)
 
 protected function getForm()
 {
-  $form = new PCForm('tpl/dbform.tpl', 'admin-dbform');
+  $form = new PCForm('tpl/system/dbform.tpl', 'admin-dbform');
   $keys = array_keys($this->app->config['dbsync']);
 
   $items = [];

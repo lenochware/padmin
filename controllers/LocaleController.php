@@ -9,7 +9,7 @@ function indexAction() {
 
 function textsAction() {
   $this->title(1, "Texty");
-  $grid = new PCGrid('tpl/texts.tpl');  
+  $grid = new PCGrid('tpl/locale/texts.tpl');  
 
   $grid->setquery(
     "select A.ID TRANSLATOR,B.ID LANG FROM 
@@ -22,7 +22,7 @@ function textsAction() {
 
 function addAction() {
   $this->title(2, 'Formulář jazyka');
-  $form = new PCForm('tpl/langform.tpl');
+  $form = new PCForm('tpl/locale/form.tpl');
   $form->_TRANSLATOR->noedit = 0;
   $form->_LANG->noedit = 0;
   $form->enable('insert');
@@ -31,7 +31,7 @@ function addAction() {
 }
 
 function insertAction() {
-  $form = new PCForm('tpl/langform.tpl');
+  $form = new PCForm('tpl/locale/form.tpl');
   $translator = new PCTranslator($form->values['TRANSLATOR']);
   $lang = $translator->createLanguage($form->values['LANG']);
   $tr = $this->getLabelId($form->values['TRANSLATOR'], 1);
@@ -49,7 +49,7 @@ function editAction($tr, $lang) {
 
 function importAction()
 {
-  $form = new PCForm('tpl/langcsvform.tpl');
+  $form = new PCForm('tpl/locale/csvform.tpl');
   if ($form->submitted) {
     $this->importCsv($form->values);
     $this->app->message("Import dokončen.");
@@ -59,14 +59,14 @@ function importAction()
 }
 
 function updateAction($tr, $lang) {
-  $form = new PCForm('tpl/langform.tpl');
+  $form = new PCForm('tpl/locale/form.tpl');
   $n = $this->savetexts($tr, $lang, $form->values['TEXTS']);
   $this->app->message("Uloženo $n záznamů.");
   $this->redirect("locale/edit/tr:$tr/lang:$lang");
 }
 
 function deleteAction($tr, $lang) {
-  $form = new PCForm('tpl/langform.tpl');
+  $form = new PCForm('tpl/locale/form.tpl');
   $translator = new PCTranslator($form->values['TRANSLATOR']);
   $translator->deleteLanguage($form->values['LANG']);
   $this->app->message('Položka byla smazána.');
@@ -74,7 +74,7 @@ function deleteAction($tr, $lang) {
 }
 
 protected function getform($tr = null, $lang = null) {
-  $form = new PCForm('tpl/langform.tpl');
+  $form = new PCForm('tpl/locale/form.tpl');
   $form->_TRANSLATOR = $this->db->field('TRANSLATOR_LABELS:LABEL', pri($tr));
   $form->_LANG =  $this->db->field('TRANSLATOR_LABELS:LABEL', pri($lang));
   $form->_TEXTS = $this->gettextsxml($tr, $lang);

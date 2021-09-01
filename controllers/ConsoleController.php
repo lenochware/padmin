@@ -10,7 +10,7 @@ private $form;
 
 function init() {
   parent::init();
-  $this->form = new PCForm ('tpl/console.tpl');
+  $this->form = new PCForm ('tpl/system/console.tpl');
   if (isset($_SESSION['termbuf'])) {
     $this->form->_TERM = implode("\n", $_SESSION['termbuf']);
     $this->form->_CMDHIST = $this->gethistory();
@@ -37,7 +37,7 @@ function submitAction() {
   //we execute console command with $authCon->execute($cmdline);
   switch ($cmdline) {
     case 'cls' : $termbuf = $welcome; break;
-    case 'help': $termbuf[] = file_get_contents('tpl/aterm.hlp'); break;
+    case 'help': $termbuf[] = file_get_contents('tpl/system/aterm.hlp'); break;
     default: $authCon->execute($cmdline); break;
   }
 

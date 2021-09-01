@@ -5,11 +5,11 @@ class MenuController extends BaseController {
 
 function indexAction() {
   $this->title(1, 'Editace menu');
-  return new PCForm('tpl/menuform.tpl');
+  return new PCForm('tpl/lookups/menu.tpl');
 }
 
 function submitAction() {
-  $form = new PCForm('tpl/menuform.tpl');
+  $form = new PCForm('tpl/lookups/menu.tpl');
   $id = (int)$form->values['TREE_ID'];
   if ($id) {
     $this->db->delete('TREE_LOOKUPS', pri($id));
@@ -28,7 +28,7 @@ function submitAction() {
 }
 
 function deleteAction() {
-  $form = new PCForm('tpl/menuform.tpl');
+  $form = new PCForm('tpl/lookups/menu.tpl');
   $id = (int)$form->values['TREE_ID'];
   if (!$id) $this->app->redirect('menu');
 

@@ -126,7 +126,7 @@ function getConfig()
 
 function getTable($title, $data)
 {
-  $table = new PCTpl('tpl/output.tpl');
+  $table = new PCTpl('tpl/system/output.tpl');
   $output = array();
   foreach($data as $k => $v) $output[] = array('KEY' => $k, 'VALUE' => $v);
   $table->_items = $output;

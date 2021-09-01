@@ -20,7 +20,7 @@ function init() {
 }
 
 function viewAction($lookup) {
-  $grid = new PCGrid('tpl/rlookup.tpl', 'rlookup');
+  $grid = new PCGrid('tpl/lookups/rights/list.tpl', 'rlookup');
   $grid->_LOOKUP = $lookup;
   $grid->_TITLE = $this->title[$lookup];
   $this->title(1, $this->title[$lookup]);
@@ -32,14 +32,14 @@ function viewAction($lookup) {
 }
 
 function exportAction($lookup) {
-  $form = new PCForm('tpl/exportform.tpl');
+  $form = new PCForm('tpl/lookups/export.tpl');
   $form->_STEXT = ($lookup == 'right')? $this->getRightsExport() : $this->getRolesExport();
   return $form;
 }
 
 function importAction($lookup)
 {
-  $form = new PCForm('tpl/exportform.tpl');
+  $form = new PCForm('tpl/lookups/export.tpl');
   $s = $form->values['STEXT'];
 
   $authCon = new pclib\extensions\AuthConsole($this->authMng);
@@ -93,14 +93,14 @@ protected function getRoleRights($role)
 
 function addAction($lookup) {
   $this->title(2, 'Nová '.$lookup);
-  $form = new PCForm('tpl/rlookupform.tpl');
+  $form = new PCForm('tpl/lookups/rights/form.tpl');
   $form->_TITLE = $lookup;
   $form->enable('insert');
   return $form;
 }
 
 function editAction($lookup, $id) {
-  $form = new PCForm('tpl/rlookupform.tpl');
+  $form = new PCForm('tpl/lookups/rights/form.tpl');
   $form->values = $this->db->select($this->table[$lookup], pri($id));
   $form->_TITLE = $lookup;
   $this->title(2, 'Editace '.$lookup);
@@ -127,7 +127,7 @@ function enablefilter($enable = true) {
 }
 
 function insertAction($lookup) {
-  $form = new PCForm('tpl/rlookupform.tpl');
+  $form = new PCForm('tpl/lookups/rights/form.tpl');
   if (!$form->validate()) $this->app->error('Chybně vyplněný formulář.');
   
   if ($lookup == 'right')
@@ -159,7 +159,7 @@ function deleteAction($lookup, $id) {
 }
 
 function updateAction($lookup, $id) {
-  $form = new PCForm('tpl/rlookupform.tpl');
+  $form = new PCForm('tpl/lookups/rights/form.tpl');
   if (!$form->validate()) $this->app->error('Chybně vyplněný formulář.');
 
   $form->values['ID'] = $id;
@@ -176,8 +176,8 @@ function updateAction($lookup, $id) {
 
 function rlistAction($lookup, $id) {
   $this->title(3, 'Práva');
-  $grid = new GridForm('tpl/rlist.tpl', 'rlist');
-  $search = new PCForm('tpl/rsearch.tpl', 'rsearch');
+  $grid = new GridForm('tpl/lookups/rights/edit.tpl', 'rlist');
+  $search = new PCForm('tpl/lookups/rights/search.tpl', 'rsearch');
 
   
   if ($lookup == 'role') {
@@ -211,7 +211,7 @@ function rlistAction($lookup, $id) {
 }
 
 function rupdateAction($lookup, $id) {
-  $grid = new GridForm('tpl/rlist.tpl');
+  $grid = new GridForm('tpl/lookups/rights/edit.tpl');
 
   foreach($_POST['rowdata'] as $ra) {
     switch ($ra['RSET']) {

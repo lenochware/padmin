@@ -13,19 +13,19 @@ function init() {
 
 function indexAction() {
   $this->title(1, 'Záznamy logu');
-  $grid = new PCGrid('tpl/log.tpl');
+  $grid = new PCGrid('tpl/logs/list.tpl');
   $grid->setarray($this->logger->getlog($this->MAXROWS,
     $this->app->getsession('logfilter'))
   );
 
   $grid->values['size_mb'] = $this->logger->getSize();
 
-  $search = new PCForm('tpl/logsearch.tpl', 'logsearch');
+  $search = new PCForm('tpl/logs/search.tpl', 'logsearch');
   return $search.$grid;
 }
 
 function cleanupAction() {
-  return new PCForm ('tpl/logform.tpl');
+  return new PCForm ('tpl/logs/form.tpl');
 }
 
 function deleteAction($period) {

@@ -12,7 +12,7 @@ function init() {
 
 function indexAction() {
   $this->title(1, "Uživatelé");
-  $users = new PCGrid('tpl/users.tpl', 'users');
+  $users = new PCGrid('tpl/users/list.tpl', 'users');
   $users->setquery(
   "SELECT DISTINCT U.* from AUTH_USERS U
    left join AUTH_USER_ROLE UR on U.ID=UR.USER_ID
@@ -23,14 +23,14 @@ function indexAction() {
    ~ AND ANNOT like '%{ANNOT}%'"
   );
   $users->_USERROLES->onprint = array($this, 'userroles');
-  $search = new PCForm('tpl/usersearch.tpl', 'usersearch');
+  $search = new PCForm('tpl/users/search.tpl', 'usersearch');
   
   return $search.$users;
 }
 
 function exportAction()
 {
-  $users = new PCGrid('tpl/users.tpl', 'users');
+  $users = new PCGrid('tpl/users/list.tpl', 'users');
 
   $users->setquery(
   "SELECT DISTINCT U.*, '' as USERROLES from AUTH_USERS U
@@ -232,7 +232,7 @@ function setuser($id, $data) {
 }
 
 protected function getform() {
-  $form = new PCForm('tpl/userform.tpl');
+  $form = new PCForm('tpl/users/form.tpl');
   $roles = $this->getroles();
   for ($i = 1; $i < 6; $i++)
     $form->elements['ROLE'.$i]['items'] = $roles;

@@ -61,7 +61,7 @@ class JobsController extends BaseController
 	public function indexAction()
 	{
 		$this->title(1, 'Plánovač úloh');
-		$grid = new pclib\Grid('tpl/jobs.tpl');
+		$grid = new pclib\Grid('tpl/jobs/list.tpl');
 		$grid->setQuery('select * from jobs');
 
 		if (!$this->app->config['api-key']) {
@@ -77,7 +77,7 @@ class JobsController extends BaseController
 	 */
 	protected function getForm()
 	{
-		return new pclib\Form('tpl/jobform.tpl');
+		return new pclib\Form('tpl/jobs/form.tpl');
 	}
 
 	/**
