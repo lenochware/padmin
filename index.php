@@ -39,7 +39,7 @@ if (!is_installed($app->db)) {
     $app->run('install');
     $app->redirect('users');
   }
-  $app->error('Tabulky PCLIB v databázi neexistují! <b>Spusťte padmin/?r=install</b>.');
+  $app->error('Tabulky PCLIB v databázi neexistují!<br><a href="?r=install">Nainstalovat PClib datastruktury</a>');
 }
 
 $app->auth = new PCAuth;
