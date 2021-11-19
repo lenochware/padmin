@@ -43,7 +43,7 @@ function exportAction()
   );
   $users->_USERROLES->onprint = array($this, 'userroles');
     
-  $users->exportCsv('kurzy-users.csv');
+  $users->exportCsv('users.csv');
 }
 
 function editAction($id) {
