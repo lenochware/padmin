@@ -37,18 +37,7 @@ function deleteAction($period) {
   $this->reload();
 }
 
-function searchAction() {
-  $this->enablefilter();
-  $this->reload();
-}
-
-function showallAction() {
-  $this->enablefilter(false);
-  $this->reload();
-}
-
-function enablefilter($enable = true) {
-  $filter = $enable? $_POST['data'] : null;
+function setFilter($filter) {
   $this->app->setsession('logfilter', $filter);
   $this->app->setsession('logsearch.values', $filter);
 }
