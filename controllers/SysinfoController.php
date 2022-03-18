@@ -42,7 +42,7 @@ function dbAction()
   switch($this->db->drv->extension) {
   case 'mysql':
   case 'pdo_mysql':
-    $output = $this->db->select_pair(
+    $output = $this->db->selectPair(
     'select VARIABLE_NAME,VARIABLE_VALUE from information_schema.GLOBAL_VARIABLES
     order by VARIABLE_NAME'
     );

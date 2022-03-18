@@ -71,8 +71,9 @@ if ($app->auth->isLogged()) {
   }
 
   
-  $menu = new PCTree('menu');
-  $menu->getTree(PADMIN_MENU_ID);
+  $menu = new PCTree();
+  $menu->load(PADMIN_MENU_ID);
+  $menu->values['CSS_CLASS'] = 'menu';
   $app->layout->_MENU = $menu;
   $app->run();
 }

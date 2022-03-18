@@ -140,7 +140,7 @@ protected function importCsv($input)
 }
 
 protected function gettexts($tr, $lang) {
-  $texts = $this->db->select_pair(
+  $texts = $this->db->selectPair(
     "select T0.ID,T0.TSTEXT,T.TSTEXT,T.ID FROM TRANSLATOR T0
     LEFT JOIN TRANSLATOR T ON T.TEXT_ID=T0.ID AND T.LANG='{1}'
     WHERE T0.TRANSLATOR='{0}' AND T0.LANG=0 order by T.ID,T0.ID",

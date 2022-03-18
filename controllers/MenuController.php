@@ -21,8 +21,8 @@ function submitAction() {
   }
 
   $menu = new PCTree;
-  $menu->setstring($form->values['MENU']);
-  $menu->addtree($id);
+  $menu->importText($form->values['MENU']);
+  $menu->save($id);
   $this->app->message('Data byla uložena.');
   $this->redirect('menu');
 }
@@ -40,15 +40,8 @@ function deleteAction() {
 
 function ajax_loadAction($id) {
   $menu = new PCTree;
-  $menu->gettree($id);
-  
-  $smenu = "PATH|ROUTE\n";
-  foreach($menu->nodes as $node) {
-    $branch[$node['LEVEL']] = $node['LABEL'];
-    $smenu .= implode('/', array_slice($branch, 0, $node['LEVEL']+1));
-    $smenu .= '|'.$node['ROUTE']."\n";
-  }
-  die($smenu);
+  $menu->load($id);
+  die($menu->exportText());
 }
 
 }

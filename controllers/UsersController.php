@@ -168,7 +168,7 @@ function genPasswordAction()
 
 protected function getroles($user_id = null) {
   if ($user_id) {
-    return $this->db->select_pair(
+    return $this->db->selectPair(
     "select R.ID, coalesce(R.ANNOT,R.SNAME) from AUTH_USER_ROLE UR
     left join AUTH_ROLES R on R.ID=UR.ROLE_ID
     where UR.USER_ID='{#0}' order by R_PRIORITY desc",
@@ -176,14 +176,14 @@ protected function getroles($user_id = null) {
     );
   }
   else {
-    return $this->db->select_pair(
+    return $this->db->selectPair(
     "select ID,coalesce(ANNOT,SNAME) from AUTH_ROLES"
     );
   }
 }
 
 protected function getrights($user_id) {
-  $data = $this->db->select_one(
+  $data = $this->db->selectOne(
     "select SNAME from AUTH_RIGHTS R
     left join AUTH_REGISTER REG on R.ID=REG.RIGHT_ID
     where REG.USER_ID={#0}", $user_id

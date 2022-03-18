@@ -36,7 +36,7 @@ function submitAction() {
   //$termbuf is console history
   //we execute console command with $authCon->execute($cmdline);
   switch ($cmdline) {
-    case 'cls' : $termbuf = $welcome; break;
+    case 'cls' : $termbuf = []; break;
     case 'help': $termbuf[] = file_get_contents('tpl/system/aterm.hlp'); break;
     default: $authCon->execute($cmdline); break;
   }
@@ -45,8 +45,8 @@ function submitAction() {
   if ($authCon->messages) $termbuf = array_merge($termbuf, $authCon->messages);
   if ($authCon->errors)
     $termbuf = array_merge($termbuf,
-      array_map(create_function(
-        '$a','return "<span class=\"console-error\">$a</span>";'),$authCon->errors
+      array_map(function($a) {
+        return "<span class=\"console-error\">$a</span>"; },$authCon->errors
       )
     );
 
