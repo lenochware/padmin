@@ -18,9 +18,12 @@ function indexAction() {
    left join AUTH_USER_ROLE UR on U.ID=UR.USER_ID
    where 1=1
    ~ AND UR.ROLE_ID='{ROLE}'
-   ~ AND ACTIVE='{INACTIVE}'
+   ~ AND ACTIVE='{ACTIVE}'
    ~ AND USERNAME like '%{USERNAME}%'
-   ~ AND ANNOT like '%{ANNOT}%'"
+   ~ AND ANNOT like '%{ANNOT}%'
+   ~ AND U.DT>NOW() - INTERVAL 1 month {?new_users}
+   ~ AND (U.LAST_LOGIN<NOW() - INTERVAL 1 year or LAST_LOGIN is null) order by LAST_LOGIN {?inactive}
+   "
   );
   $users->_USERROLES->onprint = array($this, 'userroles');
   $search = new PCForm('tpl/users/search.tpl', 'usersearch');

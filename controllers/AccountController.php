@@ -17,6 +17,11 @@ function signinAction() {
 
 function loginAction() {
   $lf = new PCForm('tpl/loginform.tpl');
+
+  if (!$lf->validate()) {
+    $this->app->error("Chybně vyplněný formulář.");
+  }
+
   $this->auth->login($lf->values['username'], $lf->values['password']);
   if ($this->auth->errors) {
     $this->app->message(implode('<br>', $this->auth->errors), 'warning');

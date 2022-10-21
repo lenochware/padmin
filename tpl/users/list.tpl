@@ -18,8 +18,12 @@ pager pager pglen "20" nohide
 <table class="grid" id="AUTH_USERS">
   <tr>{grid.labels}<th>{ACTIVE.lb}</th></tr>
 {block items}
-  <tr class="link" onclick="{lnedit.js}" title="{lnedit.lb}">{grid.fields}
+<tr class="link" onclick="{lnedit.js}" title="{lnedit.lb}">{grid.fields}
   <td>{if ACTIVE}<i class="fa fa-check-square-o"></i>{/if}{if not ACTIVE}<i class="fa fa-square-o"></i>{/if}</td>
+</tr>
+{block else}
+<tr>
+  <td colspan="10" align="center">Nenalezeny žádné položky.</td>
 </tr>
 {/block}
 <tr><td colspan="9">{lnadd} | {lnexport}</td></tr>
