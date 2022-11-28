@@ -62,6 +62,21 @@ function dbAction()
   return $this->getTable($title, $output);
 }
 
+function dbsizeAction()
+{
+   $name = $this->db->dbName();
+   $output = $this->db->selectPair(
+    'select table_name, ROUND(((data_length + index_length) / 1024 / 1024), 2)
+    FROM information_schema.TABLES
+    WHERE table_schema = "{0}"
+    ORDER BY (data_length + index_length) DESC', $name
+  );
+
+  $title = "Velikost db tabulek v MB ($name)";
+
+  return $this->getTable($title, $output);
+}
+
 function webserverAction()
 {
   $title = $_SERVER['SERVER_SOFTWARE'];
