@@ -160,3 +160,7 @@ label.required:before {
 }
 
 .inline div {float:left}
+
+.active {
+  font-weight: bold;
+}
