@@ -161,6 +161,20 @@ label.required:before {
 
 .inline div {float:left}
 
-.active {
+.page-item a {
+  padding: 4px;
+  text-decoration: none;
+  color: #06c;
+}
+
+.page-item a:hover {
+  color: black;
+}
+
+.page-item.active {
   font-weight: bold;
+}
+
+.page-item.active a {
+  color: black;
 }
