@@ -181,12 +181,14 @@ function rlistAction($lookup, $id) {
 
   
   if ($lookup == 'role') {
+    $grid->filter['USER_ID'] = null;    
     $grid->filter['ROLE_ID'] = $id;
     $grid->_TITLE = "roli ".$this->db->field('AUTH_ROLES:SNAME', pri($id));
   }
   else {
     $grid->_USER_ID = $id;
     $grid->filter['USER_ID'] = $id;
+    $grid->filter['ROLE_ID'] = null;
     $grid->_TITLE = "uživatele ".$this->db->field('AUTH_USERS:USERNAME', pri($id));
   }
   
