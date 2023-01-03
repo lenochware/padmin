@@ -84,7 +84,7 @@ function insertAction() {
   $id = $this->authMng->mkuser($userform->_USERNAME);
   if (!$id) $this->app->error(implode('<br>', $this->authMng->errors));
 
-  $this->setuser($id, $userform->values);
+  $this->setuser($id, $userform->preparedValues());
 
   if ($this->authMng->errors) {
     $this->app->error(implode('<br>', $this->authMng->errors));
@@ -100,7 +100,7 @@ function updateAction($id) {
   $userform = $this->getform();
   if (!$userform->validate()) $this->invalid($userform);
 
-  $this->setuser($id, $userform->values);
+  $this->setuser($id, $userform->preparedValues());
 
   if ($this->authMng->errors)
     $this->app->error(implode('<br>', $this->authMng->errors));

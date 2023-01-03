@@ -30,7 +30,7 @@ if (get_class($app->db->drv) == 'pgsql') {
   $app->db->drv->noquote = 1;
 }
 
-if (is_installed($app->db) and $app->config['padmin.lang']) {
+if (is_installed($app->db) and isset($app->config['padmin.lang'])) {
   $app->language = $app->config['padmin.lang'];
 }
 
@@ -52,7 +52,7 @@ if ($app->config['padmin.logging']) {
 
 if ($_POST) {
   $a = $app->router->action;  //$app->routestr not work for posts - missing "/method"
-  $app->log('post', 'padmin/' . $a->controller .'/'. $a->method, null,  $_GET['id']);
+  $app->log('post', 'padmin/' . $a->controller .'/'. $a->method, null,  array_get($_GET, 'id'));
 }
 
 if ($app->auth->isLogged()) {

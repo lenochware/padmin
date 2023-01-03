@@ -26,7 +26,7 @@ function indexAction() {
 
 function submitAction() {
   $authCon = new AuthConsole(new AuthManager);
-  $termbuf = $_SESSION['termbuf'];
+  $termbuf = $_SESSION['termbuf'] ?: [];
   $cmdline = $this->form->values['CMDLINE'];
 
   $termbuf[] = '';

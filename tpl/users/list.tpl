@@ -6,7 +6,7 @@ string FULLNAME lb "Jméno a příjmení"
 string USERROLES lb "Role"
 string EMAIL lb "Email"
 string ANNOT lb "Poznámka"
-string LAST_LOGIN lb "Posl. přihlášení" sort date "%d.%m.%Y %H:%M"
+string LAST_LOGIN lb "Posl. přihlášení" sort date "d.m.Y H:i"
 string DT lb "Dat.vytvoření" sort date
 string ACTIVE lb "Aktivní" sort skip
 link lnedit lb "Editovat" route "users/edit/id:{ID}" skip
