@@ -100,7 +100,7 @@ protected function importLookups($s)
 
   foreach ($rows as $row) {
     $in = explode(";", trim($row));
-    if (!$in[1]) continue;
+    if (!isset($in[1])) continue;
 
     $data = ['APP' => $in[0], 'CNAME' => $in[1], 'ID' => $in[2]];
     $guid = $this->db->field('LOOKUPS:GUID', $data);
