@@ -6,17 +6,25 @@ use pclib\extensions\AuthConsole;
 
 class InstallController extends BaseController {
 
-function indexAction() {
-  $this->app->db->codepage('utf8');
-  $this->install_tablesAction();
-  $this->install_menuAction();
-  $this->install_authAction();
+function indexAction()
+{
+  $this->installPclib();
 }
 
-function install_tablesAction() {
-  if (is_installed($this->db))
+function installPclib()
+{
+  if (is_installed($this->db)) {
     $this->app->error('Tabulky PCLIB už v databázi existují!');
+  }
 
+  $this->db->codepage('utf8');
+  $this->createTables();
+  $this->addMenu();
+  $this->addAccounts();  
+}
+
+protected function createTables()
+{
   $dname = str_replace('pdo_', '', $this->db->drv->extension);
   $dumpfile = '_install/pclib_'.$dname.'.sql';
 
@@ -25,23 +33,23 @@ function install_tablesAction() {
   $this->app->message("Ok, vykonáno $n dotazů.");
 }
 
-function install_menuAction() {
-  if ($this->db->exists('TREE_LOOKUPS', "TREE_ID='{0}'", PADMIN_MENU_ID))
-    $this->app->error("pAdmin menu již existuje.");
+protected function addMenu()
+{
+  $menu = new PCTree();
+  
+  $text = file_get_contents('_install/menu.txt');
+  $menu->importText($text);
 
-  $menu = new PCTree;
-  $menu->load('_install/menu.txt');
-  $menu->addtree(PADMIN_MENU_ID);
+  $menu->save(PADMIN_MENU_ID);
 
-  $li = array('ID' => PADMIN_MENU_ID, 'APP' => 'padmin', 'CNAME' => 'tree', 'LABEL' => 'pAdmin menu');
+  $li = ['ID' => PADMIN_MENU_ID, 'APP' => 'padmin', 'CNAME' => 'tree', 'LABEL' => 'pAdmin menu'];
   $this->db->insert('LOOKUPS', $li);
 
   $this->app->message("Menu aplikace vytvořeno.");
 }
 
-function install_authAction() {
-  if ($this->db->exists('AUTH_USERS'))
-    $this->app->error('Uživatelské účty už v databázi existují!');
+protected function addAccounts()
+{
   $authCon = new AuthConsole(new AuthManager);
 
   $authCon->executefile('_install/auth.txt');
@@ -50,6 +58,6 @@ function install_authAction() {
   $this->app->message("Konfigurace uživatelských účtů dokončena.");
 }
 
-} //class
+}
 
 ?>
