@@ -62,7 +62,8 @@ function dbAction()
   }
   
   $title = 'Databáze '.$this->db->drv->extension.' '.$this->db->drv->version();
-  return $this->getTable($title, $output);
+  $info = paramStr("Databáze: {dbname}, Host: {host}, Uživatel: {user}", $this->db->info);
+  return $this->getTable($title, $output, $info);
 }
 
 function dbsizeAction()
@@ -93,8 +94,10 @@ function webserverAction()
   $cip = $this->app->request->getClientIp();
   $sip = $this->app->request->getServerIp();
 
+  $info = "IP - Klient: $cip Server: $sip";
 
-  return $this->getTable($title, $details) . "<br>IP - Klient: $cip Server: $sip";
+
+  return $this->getTable($title, $details, $info);
 }
 
 function pclibAction()
