@@ -19,7 +19,7 @@ pager pager pglen "20" nohide
 {block items}
   <tr>{grid.fields}</tr>
 {block else}
-  <tr><td colspan=9>Nenalezeny žádné položky.</td></tr>
+  <tr><td colspan="20" align="center">Nenalezeny žádné položky.</td></tr>
 {/block}
 </table>
 <div class="pager">{pager} | Prvních {pager.total} záznamů. Velikost logu: {size_mb} MB</div>

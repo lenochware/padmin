@@ -40,24 +40,27 @@ function phpExportAction()
 function dbAction()
 {
   switch($this->db->drv->extension) {
-  case 'mysql':
-  case 'pdo_mysql':
-    $output = $this->db->selectPair(
-    'select VARIABLE_NAME,VARIABLE_VALUE from information_schema.GLOBAL_VARIABLES
-    order by VARIABLE_NAME'
-    );
-    break;
-  case 'pgsql':
-    $output = array();
-    $q = $this->db->query('show all');
-    while($row = $this->db->fetch($q, 'r')) $output[$row[0]] = $row[1];
-    break;
+    case 'mysql':
+    case 'pdo_mysql':
+      $output = $this->db->selectPair(
+      'select VARIABLE_NAME,VARIABLE_VALUE from information_schema.GLOBAL_VARIABLES
+      order by VARIABLE_NAME'
+      );
+      break;
+    
+    case 'pgsql':
+      $output = array();
+      $q = $this->db->query('show all');
+      while($row = $this->db->fetch($q, 'r')) $output[$row[0]] = $row[1];
+      break;
 
-  case 'pdo_sqlite':
-    $output = array();
-    break;
-  default: $this->app->error('Neznámá databáze.');
+    case 'pdo_sqlite':
+      $output = array();
+      break;
+
+    default: $this->app->error('Neznámá databáze.');
   }
+  
   $title = 'Databáze '.$this->db->drv->extension.' '.$this->db->drv->version();
   return $this->getTable($title, $output);
 }
@@ -139,13 +142,18 @@ function getConfig()
   return $output;
 }
 
-function getTable($title, $data)
+function getTable($title, $data, $info = '')
 {
   $table = new PCTpl('tpl/system/output.tpl');
-  $output = array();
-  foreach($data as $k => $v) $output[] = array('KEY' => $k, 'VALUE' => $v);
+  $output = [];
+  foreach($data as $k => $v) {
+    $output[] = ['KEY' => $k, 'VALUE' => $v];
+  }
+
   $table->_items = $output;
   $table->_TITLE = $title;
+  $table->_TOP_INFO = $info;
+
   return $table;
 }
 

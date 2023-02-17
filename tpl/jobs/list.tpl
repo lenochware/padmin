@@ -21,7 +21,7 @@ pager pager pglen "20" nohide
   <tr class="link" onclick="{lnedit.js}" title="{lnedit.lb}">{grid.fields}
   	<td>{if active}<i class="fa fa-check-square-o"></i>{/if}{if not active}<i class="fa fa-square-o"></i>{/if}</td></tr>
 {block else}
-  <tr><td colspan=12>Nenalezeny žádné položky.</td></tr>
+  <tr><td colspan="12" align="center">Nenalezeny žádné položky.</td></tr>
 {/block}
 <tr><td colspan="12">{lnadd}</td></tr>
 </table>

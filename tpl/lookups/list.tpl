@@ -1,6 +1,6 @@
 <?elements
 class grid
-string CNAME lb "Číselník"
+string CNAME lb "Číselník" sort
 link lnedit lb "Editovat" route "lookups/view/lookup:{CNAME}" skip
 link lnadd lb "Přidat číselník" route "lookups/addlookup" skip
 pager pager pglen "20"
