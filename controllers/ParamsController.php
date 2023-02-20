@@ -3,13 +3,6 @@ include 'BaseController.php';
 
 class ParamsController extends BaseController {
 
-protected function getForm()
-{
-  $form = parent::getForm();
-  if ($_GET['editor']) $form->enable('editor');
-  return $form;
-}
-
 function indexAction()
 {
   $this->title(1, 'Parametry aplikace');
@@ -22,6 +15,25 @@ function indexAction()
   $search = new SearchForm($grid, ['PARAM_NAME']);
 
   return $search.$grid;
+}
+
+function editAction($id)
+{
+  $param = $this->db->select('APP_PARAMS', pri($id));
+  if (!$param) $this->app->error('Parametr nenalezen.');
+
+  $form = new PCForm('tpl/params/form.tpl');
+  $form->values = $param;
+  $form->enable('update');
+  return $form;
+}
+
+function updateAction($id)
+{
+  $form = new PCForm('tpl/params/form.tpl');
+  $form->update('APP_PARAMS', pri($id));
+  $this->app->message('Položka byla uložena.');
+  $this->reload();  
 }
 
 function setFilter($filter) {
