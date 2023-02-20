@@ -1,13 +1,7 @@
 <?php
+include 'BaseController.php';
 
 class ParamsController extends BaseController {
-
-function init()
-{
-  parent::init();
-  $this->TABLE = 'app_params';
-  $this->templateName = 'params';
-}
 
 protected function getForm()
 {
@@ -18,18 +12,21 @@ protected function getForm()
 
 function indexAction()
 {
-  $this->title(1, 'Nastavení');
+  $this->title(1, 'Parametry aplikace');
 
-  $grid = new PCGrid('tpl/lookups/'.$this->templateName.'.tpl', $this->templateName);
-  $grid->_TITLE = $this->title();
+  $grid = new PCGrid('tpl/params/list.tpl', 'params');
   $grid->setQuery(
-    "select * from {0} where 1=1
-    ~ and param_name like '{param_name}%'", $this->TABLE
-  );
+    "select * from APP_PARAMS where 1=1
+    ~ and PARAM_NAME like '{PARAM_NAME}%'");
 
-  $search = new SearchForm($grid, ['param_name']);
+  $search = new SearchForm($grid, ['PARAM_NAME']);
 
   return $search.$grid;
+}
+
+function setFilter($filter) {
+  $this->app->setsession('params.filter', $filter);
+  $this->app->setsession('search-params.values', $filter);
 }
 
 }
