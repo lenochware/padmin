@@ -8,6 +8,7 @@ Autentifikace/Konzole|console
 Číselníky/Přehled|lookups
 Číselníky/Přidat nový|lookups/addlookup
 Číselníky/Menu|menu
+Číselníky/App. parametry|params
 Lokalizace|locale
 Lokalizace/Texty|locale/texts
 Lokalizace/Import|locale/import

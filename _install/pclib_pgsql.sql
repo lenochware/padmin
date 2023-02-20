@@ -163,6 +163,19 @@ CREATE TABLE tree_lookups (
   CONSTRAINT pk_tree_lookups_id PRIMARY KEY (id)
 );
 
+-- Table structure for table APP_PARAMS
+
+CREATE TABLE app_params (
+  id serial NOT NULL,
+  param_name character varying(100) DEFAULT NULL,
+  param_value character varying(255) DEFAULT NULL,
+  title character varying(255) DEFAULT NULL,
+  created_at timestamp without time zone,
+  updated_at timestamp without time zone,
+  author_id integer DEFAULT NULL,
+  CONSTRAINT pk_app_params_id PRIMARY KEY (id)
+);
+
 -- Table structure for table FILESTORAGE
 
 CREATE TABLE filestorage (
