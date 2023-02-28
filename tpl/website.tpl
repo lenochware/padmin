@@ -10,6 +10,7 @@ string VERSION
 string CONTENT noescape
 navigator NAVIG
 block user noprint
+link lnmore route "install/more" glyph "fa fa-bars" lb "Další akce"
 ?>
 <!doctype html>
 <html>
@@ -29,7 +30,11 @@ block user noprint
 </div>
 {/block}
 <div style="position: absolute; top: 80px; left: 10px;">» {NAVIG}</div>
-<div style="position: absolute; top: 108px; right: 10px;">padmin {if VERSION}v{VERSION}{/if}</div>
+<div style="position: absolute; top: 108px; right: 10px;">
+padmin {if VERSION}v{VERSION}{/if}
+{lnmore}
+
+</div>
 </div>
 <div id="menu">{MENU}</div>
 
