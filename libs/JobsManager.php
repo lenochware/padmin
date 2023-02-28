@@ -41,7 +41,8 @@ class JobsManager extends pclib\system\BaseObject
 		if (!$runner) {
 			throw new Exception('Unsupported job type.');
 		}
-		$job['start'] = microtime(true);
+
+		$job = $this->start($job);
 
 		try {
 			$job['last_run_result'] = call_user_func($runner, $job);
@@ -124,7 +125,7 @@ class JobsManager extends pclib\system\BaseObject
 			$nextTime = (floor(($lastTime - $firstTime) / $p) + 1) * $p + $firstTime;
 		}
 
-		return ($nextTime < $this->currentTime());
+		return ($nextTime <= $this->currentTime());
 	}
 
 	/**
@@ -140,12 +141,22 @@ class JobsManager extends pclib\system\BaseObject
 		);
 	}
 
+	protected function start(array $job)
+	{
+		$job['start'] = microtime(true);
+		$time = date('Y-m-d H:i:s', $this->currentTime());
+		$job['last_run_at'] = $time;
+
+		$this->db->update('jobs', ['last_run_at' => $time, 'last_run_result' => 'Job started...'], pri($job['id']));
+
+		return $job;
+	}
+
 	/**
 	 * @param array $job
 	 */
 	protected function finish(array $job)
 	{
-		$job['last_run_at'] = date('Y-m-d H:i:s', $this->currentTime());
 		$job['last_run_duration'] = round(microtime(true) - $job['start'], 2);
 		unset($job['start']);
  
@@ -220,6 +231,10 @@ class JobsManager extends pclib\system\BaseObject
 	protected function runClassJob(array $job)
 	{
 		$className = $job['job_command'];
+		if (!class_exists($className)) {
+			throw new Exception("Class '$className' not found.");
+		}
+
 		$command = new $className($job);
 		$result = $command->run();
 
