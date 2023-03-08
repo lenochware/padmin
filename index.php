@@ -56,11 +56,6 @@ if ($app->auth->isLogged()) {
     $app->error('Nemáte oprávnění ke vstupu.');
   }
 
-  $authConf = $app->config['pclib.auth'];
-  if ($authConf['algo'] == 'md5' and $authConf['secret'] == 'write any random string!') {
-    $app->message("Nastavte konfigurační parametr 'pclib.auth.secret', nebo použijte kryptograficky bezpečný algoritmus 'bcrypt'.", 'warning');
-  }
-
   $menu = new PCTree();
   $menu->load(PADMIN_MENU_ID);
   $menu->values['CSS_CLASS'] = 'menu';
