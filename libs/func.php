@@ -11,6 +11,20 @@ function is_installed($db) {
   return $db->columns($table)? true:false;
 }
 
+function make_install($app)  
+{
+  if ($app->routestr == 'install/createdb') {
+    $app->run();
+    $app->redirect('users');
+  }
+  else {
+    $app->error(
+      'Tabulky PCLIB v databázi neexistují!<br>'
+      .'<a href="?r=install/createdb">Nainstalovat PClib</a>'
+    );
+  }
+}
+
 //akce pristupne bez prihlaseni
 function allow_public_access($route)
 {

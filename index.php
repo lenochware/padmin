@@ -10,13 +10,13 @@ include 'vendor/autoload.php';
 include 'libs/func.php';
 
 safe_session_start();
-//error_reporting(E_ALL);
 
 $app = new PCApp('padmin');
 $app->addConfig('./config.php');
 $pclib->autoloader->addDirectory('libs');
 
 $app->setLayout('tpl/website.tpl');
+$app->layout->_VERSION = $app->config['padmin.version'];
 
 try {
   $app->db = new PCDb($app->config['padmin.db']);
@@ -29,16 +29,7 @@ if ($app->db->info['driver'] == 'pgsql') {
   $app->db->drv->noquote = 1;
 }
 
-if (!is_installed($app->db))
-{
-  if ($app->routestr == 'install/createdb') {
-    $app->run();
-    $app->redirect('users');
-  }
-  else {
-    $app->error('Tabulky PCLIB v databázi neexistují!<br><a href="?r=install/createdb">Nainstalovat PClib datastruktury</a>');
-  }
-}
+if (!is_installed($app->db)) make_install($app);
 
 $app->auth = new PCAuth();
 
@@ -70,7 +61,6 @@ if ($app->auth->isLogged()) {
     $app->message("Nastavte konfigurační parametr 'pclib.auth.secret', nebo použijte kryptograficky bezpečný algoritmus 'bcrypt'.", 'warning');
   }
 
-  
   $menu = new PCTree();
   $menu->load(PADMIN_MENU_ID);
   $menu->values['CSS_CLASS'] = 'menu';
@@ -85,8 +75,6 @@ else {
   else $app->run('account/signin');
 }
 
-$app->layout->_APPNAME = $app->config['padmin.name'];
-$app->layout->_VERSION = $app->config['padmin.version'];
 $app->out();
 
 ?>

@@ -1,7 +1,7 @@
 <?elements
 class form route "users/{GET}" html_class "padmin" html5
 input USERNAME required lb "Uživ. jméno:"
-input PASSWORD lb "Heslo:" required
+input PASSWORD lb "Heslo:" required html_autocomplete "new-password"
 input DPASSW hidden
 check HASDPASSW lb "Implicitní heslo" default "1"
 input FULLNAME  size "50" lb "Celé jméno:"

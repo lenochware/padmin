@@ -1,10 +1,8 @@
 <?php
 
 $config = array(
-'padmin.name' => 'padmin',
 'padmin.version' => '2.2.0',
 'padmin.logging' => false,
-/*'padmin.lang' => 'cs',*/
 
 'pclib.security' => array(
 	'tpl-escape' => true, 

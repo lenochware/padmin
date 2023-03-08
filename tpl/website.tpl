@@ -2,7 +2,6 @@
 string LAST_LOGIN date
 head HEAD scripts "css/padmin.css,css/menu.css,js/jquery.js,vendor/lenochware/pclib/pclib/assets/pclib.js,js/global.js"
 messages PRECONTENT
-string APPNAME
 string TITLE
 string UNAME
 string MENU
@@ -16,7 +15,7 @@ link lnmore route "install/more" glyph "fa fa-bars" lb "Další akce"
 <html>
 <head>
   <meta charset="utf-8">
-  <title>{APPNAME}{if TITLE} | {TITLE}{/if}</title>
+  <title>padmin{if TITLE} | {TITLE}{/if}</title>
   {HEAD}
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
