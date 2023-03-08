@@ -46,8 +46,8 @@ if ($_POST) {
   $app->log('post', 'padmin/' . $a->controller .'/'. $a->method, null,  array_get($_GET, 'id'));
 }
 
-if ($app->auth->isLogged()) {
-
+if ($app->auth->isLogged())
+{
   $app->layout->enable('user');
   $user = $app->auth->getUser()->getValues();
   $app->layout->_UNAME = $user['FULLNAME'];
@@ -62,12 +62,11 @@ if ($app->auth->isLogged()) {
   $app->layout->_MENU = $menu;
   $app->run();
 }
-elseif(allow_public_access($app->routestr)) {
+elseif(is_public($app->routestr)) {
   $app->run();
 }
 else {
-  if($app->controller == 'account') $app->run();
-  else $app->run('account/signin');
+  $app->run('account/signin');
 }
 
 $app->out();

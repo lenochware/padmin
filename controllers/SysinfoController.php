@@ -68,8 +68,8 @@ function dbAction()
 
 function dbsizeAction()
 {
-   $name = $this->db->dbName();
-   $output = $this->db->selectPair(
+  $name = $this->db->dbName();
+  $output = $this->db->selectPair(
     'select table_name, ROUND(((data_length + index_length) / 1024 / 1024), 2)
     FROM information_schema.TABLES
     WHERE table_schema = "{0}"

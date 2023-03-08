@@ -26,9 +26,9 @@ function make_install($app)
 }
 
 //akce pristupne bez prihlaseni
-function allow_public_access($route)
+function is_public($route)
 {
-	return ($route == 'jobs/run');
+	return in_array($route, ['jobs/run', 'account/login', 'account']);
 }
 
 ?>
