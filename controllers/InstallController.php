@@ -6,17 +6,17 @@ use pclib\extensions\AuthConsole;
 
 class InstallController extends BaseController {
 
-function indexAction()
+function createdbAction()
 {
+  if (is_installed($this->db)) {
+    $this->app->error('Instalace už byla dokončena!');
+  }
+
   $this->installPclib();
 }
 
 function installPclib()
 {
-  if (is_installed($this->db)) {
-    $this->app->error('Tabulky PCLIB už v databázi existují!');
-  }
-
   $this->db->codepage('utf8');
   $this->createTables();
   $this->addMenu();

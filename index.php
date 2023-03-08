@@ -9,15 +9,14 @@ define('PADMIN_MENU_ID', 1);
 include 'vendor/autoload.php';
 include 'libs/func.php';
 
-session_start();
+safe_session_start();
 //error_reporting(E_ALL);
 
 $app = new PCApp('padmin');
-$app->addconfig('./config.php');
+$app->addConfig('./config.php');
 $pclib->autoloader->addDirectory('libs');
-$app->debugMode = $app->config['padmin.debugmode'];
 
-$app->setlayout('tpl/website.tpl');
+$app->setLayout('tpl/website.tpl');
 
 try {
   $app->db = new PCDb($app->config['padmin.db']);
@@ -25,26 +24,27 @@ try {
   $app->error('Nepodařilo se připojit k databázi. Chyba: %s',null, $e->getMessage());
 }
 
-if (get_class($app->db->drv) == 'pgsql') {
+if ($app->db->info['driver'] == 'pgsql') {
   $app->db->drv->ucase = 1;
   $app->db->drv->noquote = 1;
 }
 
-if (is_installed($app->db) and isset($app->config['padmin.lang'])) {
-  $app->language = $app->config['padmin.lang'];
-}
-
-if (!is_installed($app->db)) {
-  if ($app->controller == 'install') {
-    $app->run('install');
+if (!is_installed($app->db))
+{
+  if ($app->routestr == 'install/createdb') {
+    $app->run();
     $app->redirect('users');
   }
-  $app->error('Tabulky PCLIB v databázi neexistují!<br><a href="?r=install">Nainstalovat PClib datastruktury</a>');
+  else {
+    $app->error('Tabulky PCLIB v databázi neexistují!<br><a href="?r=install/createdb">Nainstalovat PClib datastruktury</a>');
+  }
 }
 
-$app->auth = new PCAuth;
+$app->auth = new PCAuth();
 
-if (!$app->controller) $app->controller = 'users';
+if (!$app->controller) {
+  $app->controller = 'users';
+}
 
 if ($app->config['padmin.logging']) {
   $app->logger = new PCLogger();
