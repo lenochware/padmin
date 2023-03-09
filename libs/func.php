@@ -19,7 +19,7 @@ function make_install($app)
   }
   else {
     $app->error(
-      'Tabulky PCLIB v databázi neexistují!<br>'
+      'Tabulky PCLIB v databÃ¡zi neexistujÃ­!<br>'
       .'<a href="?r=install/createdb">Nainstalovat PClib</a>'
     );
   }
