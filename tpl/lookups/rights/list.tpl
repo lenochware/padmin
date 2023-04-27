@@ -4,13 +4,16 @@ string ID lb "#" sort
 string TITLE skip
 string SNAME lb "Název" sort
 string ANNOT lb "Popis"
-pager pager pglen "20"
+pager pager pglen "20" nohide
 link lnedit lb "Editovat" route "rlookups/edit/id:{ID}/lookup:{LOOKUP}" skip
 link lnadd lb "Přidat" route "rlookups/add/lookup:{LOOKUP}" skip
 link lnexport lb "Exportovat" route "rlookups/export/lookup:{LOOKUP}" skip
 ?>
 <h2>{TITLE}</h2>
-<table class="grid strips">
+<input type="text" id="search" onkeyup="filterTable('mainList')" placeholder="Hledat..">
+<br><br>
+
+<table id="mainList" class="grid strips">
   <tr>{grid.labels}</tr>
 {block items}
   <tr class="link" onclick="{lnedit.js}">{grid.fields}</tr>

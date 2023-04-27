@@ -29,3 +29,21 @@ function init_datepicker()
     });
 }
 
+function filterTable(name)
+{
+  let input = document.getElementById("search");
+  let filter = input.value.toUpperCase();
+  let table = document.getElementById(name);
+  let tr = table.getElementsByTagName("tr");
+
+  $('#'+name).toggleClass('strips', filter.length == 0);
+
+  for (let i = 1; i < tr.length; i++) {
+  let txtValue = tr[i].textContent;
+  if (txtValue.toUpperCase().indexOf(filter) > -1) {
+    tr[i].style.display = "";
+  } else {
+    tr[i].style.display = "none";
+  }
+  }
+}   
