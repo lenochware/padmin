@@ -3,9 +3,9 @@ class grid
 string ID lb "#"
 string USERNAME lb "Uživatelské jméno" sort
 string FULLNAME lb "Jméno a příjmení"
-string USERROLES lb "Role"
-string EMAIL lb "Email"
-string ANNOT lb "Poznámka"
+string USERROLES lb "Role" size "20" tooltip
+string EMAIL lb "Email" size "20" tooltip
+string ANNOT lb "Poznámka" size "20" tooltip
 string LAST_LOGIN lb "Posl. přihlášení" sort date "d.m.Y H:i"
 string DT lb "Dat.vytvoření" sort date
 string ACTIVE lb "Aktivní" sort skip

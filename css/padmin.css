@@ -161,6 +161,13 @@ label.required:before {
 
 .inline div {float:left}
 
+.truncate {
+  /*max-width: 150px;*/
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} 
+
 .page-item a {
   padding: 4px;
   text-decoration: none;

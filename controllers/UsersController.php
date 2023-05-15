@@ -25,7 +25,8 @@ function indexAction() {
    ~ AND (U.LAST_LOGIN<NOW() - INTERVAL 1 year or LAST_LOGIN is null) order by LAST_LOGIN {?inactive}
    "
   );
-  $users->_USERROLES->onprint = array($this, 'userroles');
+
+  $users->_USERROLES->onprint = [$this, 'userroles'];
   $search = new PCForm('tpl/users/search.tpl', 'usersearch');
   
   return $search.$users;
@@ -36,17 +37,21 @@ function exportAction()
   $users = new PCGrid('tpl/users/list.tpl', 'users');
 
   $users->setquery(
-  "SELECT DISTINCT U.*, '' as USERROLES from AUTH_USERS U
+  "SELECT DISTINCT U.* from AUTH_USERS U
    left join AUTH_USER_ROLE UR on U.ID=UR.USER_ID
    where 1=1
    ~ AND UR.ROLE_ID='{ROLE}'
    ~ AND ACTIVE='{INACTIVE}'
    ~ AND USERNAME like '%{USERNAME}%'
-   ~ AND ANNOT like '%{ANNOT}%'"
+   ~ AND ANNOT like '%{ANNOT}%'
+   ~ AND U.DT>NOW() - INTERVAL 1 month {?new_users}
+   ~ AND (U.LAST_LOGIN<NOW() - INTERVAL 1 year or LAST_LOGIN is null) order by LAST_LOGIN {?inactive}
+   "
   );
-  $users->_USERROLES->onprint = array($this, 'userroles');
+
+  $users->_USERROLES->onprint = [$this, 'userroles'];
     
-  $users->exportCsv('users.csv');
+  $users->exportExcel('users.csv');
 }
 
 function editAction($id) {
@@ -204,8 +209,11 @@ function enablefilter($enable = true) {
 
 function userroles($o, $id, $sub, $val) {
   if ($sub) return true;
+
   $user_id = (int)$o->getvalue('ID');
-  print implode(',', array_values($this->getroles($user_id)));
+  if (!$user_id) return;
+  
+  $o->print_String('USERROLES', '', implode(',', array_values($this->getroles($user_id))));
 }
 
 protected function setroles($uid, $roles) {
