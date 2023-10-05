@@ -2,8 +2,6 @@
 class form route "users/{GET}" html_class "padmin" html5
 input USERNAME required lb "Uživ. jméno:"
 input PASSWORD lb "Heslo:" required html_autocomplete "new-password"
-input DPASSW hidden
-check HASDPASSW lb "Implicitní heslo" default "1"
 input FULLNAME  size "50" lb "Celé jméno:"
 input EMAIL size "40" lb "Email:" email
 string ID
@@ -30,12 +28,16 @@ button back lb "Zpět" onclick "history.back()"
   </td>
 </tr>
 <tr><td>{USERNAME.lb}</td><td>{USERNAME}</td></tr>
-<tr><td>{PASSWORD.lb}</td><td>{PASSWORD} {HASDPASSW}{HASDPASSW.lb}
-  <br><a href="#" onclick="dpassw_create()">nové</a></td></tr>
+<tr>
+  <td>{PASSWORD.lb}</td><td>{PASSWORD} 
+    <a href="#" onclick="passwordGenerate()">Vygenerovat heslo</a>
+    | <a href="#" onclick="passwordToClipboard()">Kopírovat</a>
+  </td>
+</tr>
 <tr><td>{FULLNAME.lb}</td><td>{FULLNAME}</td></tr>
 <tr>
   <td>{EMAIL.lb}</td>
-  <td>{EMAIL} {if EMAIL}<a href="mailto:{EMAIL.value}" style="text-decoration: none">@</a>{/if}</td>
+  <td>{EMAIL} {if EMAIL}<a href="mailto:{EMAIL.value}">Otevřít</a>{/if}</td>
 </tr>
 <tr><td>{ROLE1.lb}</td>
 <td>
@@ -61,35 +63,28 @@ Individiální práva:<br>
 
 <script language="JavaScript">
 
-function dpassw_toggle() {
-  if ($(this).is(':checked')) {
-    $('#PASSWORD').val($('#DPASSW').val());
-    document.getElementById('PASSWORD').type = 'text';
-  }
-  else {
-    $('#PASSWORD').val('{PASSWORD.value}');
-    document.getElementById('PASSWORD').type = 'password';
-  }
-}
-
-function dpassw_change() {
-  if ($('#HASDPASSW').is(':checked')) {
-    $('#DPASSW').val($('#PASSWORD').val());
-  }
-}
-
-function dpassw_create()
+function passwordGenerate()
 {
+  document.getElementById('PASSWORD').type = 'text';
   $.get('?r=users/genPassword', function(data) {
     $('#PASSWORD').val(data);
-    $('#DPASSW').val(data);
   });
 }
 
-function init() {
-  $('#HASDPASSW').change(dpassw_toggle);
-  $('#HASDPASSW').trigger('change');
-  $('#PASSWORD').change(dpassw_change);
+function passwordToClipboard()
+{
+  let input = document.getElementById("PASSWORD");
+
+  input.select();
+  input.setSelectionRange(0, 99999);
+
+   // Copy the text inside the text field
+  navigator.clipboard.writeText(input.value);
+} 
+
+function init()
+{
+  document.getElementById('PASSWORD').type = 'password';
 }
 
 $(document).ready(init);

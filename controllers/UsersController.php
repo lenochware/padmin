@@ -64,7 +64,6 @@ function editAction($id) {
   }
   if ($user->values['PASSW']) {
     $user->_PASSWORD = '(hidden)';
-    $user->_HASDPASSW = 0;
   }
 
   $user->enable('copy', 'update', 'delete', 'impersonate');
@@ -74,7 +73,6 @@ function editAction($id) {
 
 function addAction() {
   $user = $this->getform();
-  $user->_DPASSW = $this->authMng->genpassw();
   $user->enable('insert');
   $this->title(2, 'Nový uživatel');
   return $user;
@@ -225,7 +223,7 @@ protected function setroles($uid, $roles) {
 }
 
 function setuser($id, $data) {
-  $userparams = array('USERNAME','FULLNAME','EMAIL','DPASSW','ANNOT','ACTIVE');
+  $userparams = array('USERNAME','FULLNAME','EMAIL','ANNOT','ACTIVE','STK_ID','SME_ID');
 
   $u = array();
   $r = array();
@@ -238,8 +236,7 @@ function setuser($id, $data) {
   $this->setroles($id, $r);
 
   $password = $data['PASSWORD'];
-  if ($data['HASDPASSW']) $this->authMng->setpassw('#'.$id, '');
-  elseif($password != '(hidden)')  $this->authMng->setpassw('#'.$id, $password);
+  if($password != '(hidden)')  $this->authMng->setPassw('#'.$id, $password);
 }
 
 protected function getform() {

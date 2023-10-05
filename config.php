@@ -1,7 +1,7 @@
 <?php
 
 $config = array(
-'padmin.version' => '2.2.0',
+'padmin.version' => '2.2.1',
 'padmin.logging' => false,
 
 'pclib.security' => array(
@@ -26,7 +26,7 @@ $config = array(
 );
 
 $production = array(
-	'pclib.errors' => array('display', 'log'),
+	'pclib.errors' => array('log'),
 );
 
 ?>
