@@ -23,11 +23,10 @@ function installPclib()
   $this->addAccounts();  
 }
 
-function moreAction()
+function serviceJobsAction()
 {
-  $t = $this->template('tpl/install/view.tpl');
-  if ($this->app->config['pclib.auth']['algo'] == 'md5') $t->enable('b_hash');
-  return $t;
+  $n = $this->db->runDump('_install/service_jobs.sql');
+  $this->app->message("Ok, vykonáno $n dotazů.");
 }
 
 protected function createTables()
