@@ -39,7 +39,7 @@ function reload() {
 function invalid($form) {
   $e = array();
   foreach($form->invalid as $id => $message) $e[] = $id.': '.$message;
-  $this->app->error($e);
+  $this->app->error(implode('<br>',$e));
 }
 
 public function outputJson(array $data)
