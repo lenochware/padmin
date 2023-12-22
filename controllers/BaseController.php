@@ -42,7 +42,7 @@ function invalid($form) {
   $this->app->error(implode('<br>',$e));
 }
 
-public function outputJson(array $data)
+public function outputJson(array $data, $code = '')
 {
   header('Content-Type: application/json; charset=utf-8');
   die(json_encode($data, JSON_UNESCAPED_UNICODE/*|JSON_PRETTY_PRINT*/));
