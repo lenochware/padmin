@@ -11,8 +11,10 @@ select ROLE2
 select ROLE3
 select ROLE4
 select ROLE5
-input ANNOT size "50" lb "Anotace:"
+text ANNOT lb "Anotace:" maxlength "255" size "60x2"
 check ACTIVE lb "Aktivní" default "1"
+string LAST_LOGIN lb "Posl. přihlášení" sort date "d.m.Y H:i"
+string DT lb "Dat.vytvoření" sort date
 link lnrights lb "Práva a proměnné" route "rlookups/rlist/id:{ID}/lookup:right"
 button insert lb "Přidat" noprint
 button copy lb "Kopírovat" noprint confirm "Kopírovat uživatele?"
@@ -56,6 +58,10 @@ Individiální práva:<br>
 <div style="font-weight:bold; color:red">{RINDIV}</div><br>
 &nbsp;{lnrights}<br><br>
 &nbsp;{insert}{update} {copy} {delete} {impersonate} {back}<br><br>
+</td></tr>
+
+<tr><td colspan="2" style="color:gray">
+  Vytvořeno: {DT}, Poslední přihlášení: {LAST_LOGIN}
 </td></tr>
 </table>
 
