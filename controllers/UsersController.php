@@ -223,7 +223,7 @@ protected function setroles($uid, $roles) {
 }
 
 function setuser($id, $data) {
-  $userparams = array('USERNAME','FULLNAME','EMAIL','ANNOT','ACTIVE','STK_ID','SME_ID');
+  $userparams = array('USERNAME','FULLNAME','EMAIL','ANNOT','ACTIVE');
 
   $u = array();
   $r = array();

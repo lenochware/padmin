@@ -31,12 +31,14 @@ function loginAction()
     $this->redirect('account/signin');
   }
 
+  $this->app->log('auth', 'padmin/login');
   $this->loginNotifications();
   $this->redirect('users');
 }
 
 function logoutAction()
 {
+  $this->app->log('auth', 'padmin/logout');
   $this->auth->logout();
   $this->app->message('Byl jste odhlášen.');
   $this->redirect('account/signin');

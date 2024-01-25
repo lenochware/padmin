@@ -42,8 +42,7 @@ if ($app->config['padmin.logging']) {
 }
 
 if ($_POST) {
-  $a = $app->router->action;  //$app->routestr not work for posts - missing "/method"
-  $app->log('post', 'padmin/' . $a->controller .'/'. $a->method, null,  array_get($_GET, 'id'));
+  $app->log('post', 'padmin/' . $app->router->action->path, null,  isset($_GET['id'])? (int)$_GET['id'] : null);
 }
 
 if ($app->auth->isLogged())

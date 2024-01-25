@@ -136,7 +136,7 @@ class JobsManager extends pclib\system\BaseObject
 		if (!$this->logger) {
 			return;
 		}
-		$this->logger->log('JobsManager', 'job.run', $job['name'] . 
+		$this->logger->log('jobs', 'padmin/job-run', $job['name'] . 
 			' result: ' . $job['last_run_result'] . ' ('. $job['last_run_duration'] .'s)', $job['id']
 		);
 	}

@@ -65,6 +65,15 @@ BODY .fa {
   font-size: 14px;
 }
 
+a {
+  color: #06c;
+}
+
+a:hover {
+  color: black;
+}
+
+
 /* RAMECKY */
 
 .warning, .error {

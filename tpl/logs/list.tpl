@@ -10,7 +10,7 @@ string UA
 string IP
 string size_mb skip
 string ITEM_ID lb "Položka"
-string MESSAGE size "10" tooltip lb "Zpráva" noescape
+string MESSAGE size "10" tooltip lb "Zpráva"
 pager pager pglen "20" nohide
 ?>
 <h2>Záznamy logu</h2>
