@@ -9,6 +9,7 @@ string ANNOT lb "Popis" sort
 string STATUS lb "Status"
 string USER_ID
 button rupdate lb "Uložit"
+button back lb "Zpět" onclick "history.back()"
 pager pager pglen "20"
 ?>
 <h2>Přiřazení oprávnění pro {TITLE}</h2>
@@ -21,7 +22,7 @@ pager pager pglen "20"
   </tr>
   {block items}
   <tr>
-    <td>{ID}{RSET}</td>
+    <td>{if RBOOL}{ID}{RSET}{/if} {if not RBOOL}{RVAL}{/if}</td>
     <td>{SNAME}</td>
     <td>{ANNOT}</td>
     <td>{STATUS}</td>
@@ -30,5 +31,5 @@ pager pager pglen "20"
   <tr><td colspan=8 style="width: auto">Nenalezeny žádné položky.</td></tr>
   {/block}
 </table><br>
-{rupdate}
+{rupdate} {back}
 <div class="pager">{pager} &nbsp; {pager.all}</div>

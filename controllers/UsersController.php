@@ -79,7 +79,6 @@ function addAction() {
 }
 
 function insertAction() {
-  $this->testPerm('padmin/users/insert');
 
   $userform = $this->getform();
   if (!$userform->validate()) $this->invalid($userform);
@@ -94,11 +93,10 @@ function insertAction() {
   }
 
   $this->app->message('Položka byla přidána.');
-  $this->reload();
+  $this->redirect('users/edit/id:'.$id);
 }
 
 function updateAction($id) {
-  $this->testPerm('padmin/users/update');
 
   $userform = $this->getform();
   if (!$userform->validate()) $this->invalid($userform);
@@ -109,7 +107,7 @@ function updateAction($id) {
     $this->app->error(implode('<br>', $this->authMng->errors));
 
   $this->app->message('Položka byla uložena.');
-  $this->reload();
+  $this->redirect('users/edit/id:'.$id);
 }
 
 function deleteAction($id) {

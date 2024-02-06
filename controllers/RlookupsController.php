@@ -199,7 +199,7 @@ function rlistAction($lookup, $id) {
     CASE rval WHEN '0' THEN '2'
      WHEN '1' THEN '1'
      ELSE '3'
-    END as RSET
+    END as RSET, if(R.RTYPE='B', 1, 0) as RBOOL, REG.RVAL
  from AUTH_RIGHTS R
   left join AUTH_REGISTER REG on REG.RIGHT_ID=R.ID
   ~ and REG.ROLE_ID = '{ROLE_ID}'
