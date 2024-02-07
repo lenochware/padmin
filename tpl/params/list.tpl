@@ -17,4 +17,4 @@ pager pager pglen "20"
   <tr><td colspan="10" align="center">Nenalezeny žádné výsledky.</td></tr>
 {/BLOCK}
 </table>
-<ul class="pagination">{pager}</ul>
+<div class="pager">{pager}</div>

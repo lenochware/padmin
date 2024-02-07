@@ -1,8 +1,8 @@
 PATH|ROUTE
 Autentifikace|users
 Autentifikace/Uživatelé|users
-Autentifikace/Role|rlookups/view/lookup:role
-Autentifikace/Oprávnění|rlookups/view/lookup:right
+Autentifikace/Role|roles
+Autentifikace/Oprávnění|rights
 Autentifikace/Konzole|console
 Číselníky|lookups
 Číselníky/Přehled|lookups

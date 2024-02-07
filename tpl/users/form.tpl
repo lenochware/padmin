@@ -15,11 +15,11 @@ text ANNOT lb "Anotace:" maxlength "255" size "60x2"
 check ACTIVE lb "Aktivní" default "1"
 string LAST_LOGIN lb "Posl. přihlášení" sort date "d.m.Y H:i"
 string DT lb "Dat.vytvoření" sort date
-link lnrights lb "Práva a proměnné" route "rlookups/rlist/id:{ID}/lookup:right"
+link lnrights lb "Práva a proměnné" route "rights/user/id:{ID}"
 button insert lb "Přidat" noprint
 button copy lb "Kopírovat" noprint confirm "Kopírovat uživatele?"
 button update lb "Uložit" noprint
-button delete lb "Smazat" noprint confirm "Opravdu smazat?"
+button delete lb "Smazat" noprint confirm "Opravdu smazat?" html_formnovalidate
 button impersonate lb "Přihlásit se" confirm "Přihlásit se jako tento uživatel?" noprint
 button back lb "Zpět" onclick "history.back()"
 ?>

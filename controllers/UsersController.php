@@ -114,7 +114,7 @@ function deleteAction($id) {
   $this->testPerm('padmin/users/delete');
 
   $userform = $this->getform();
-  if (!$userform->validate()) $this->invalid($userform);
+  //if (!$userform->validate()) $this->invalid($userform);
 
   $this->authMng->rmuser('#'.$id);
   $this->app->message('Položka byla smazána.');

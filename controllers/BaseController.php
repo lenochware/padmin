@@ -50,12 +50,12 @@ public function outputJson(array $data, $code = '')
 
 function searchAction() {
   $this->setFilter($_POST['data']);
-  $this->reload();
+  $this->app->router->reload();
 }
 
 function showallAction() {
   $this->setFilter(null);
-  $this->reload();
+  $this->app->router->reload();
 }
 
 function setFilter($filter) {

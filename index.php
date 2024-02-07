@@ -56,7 +56,11 @@ if ($app->auth->isLogged())
   }
 
   $menu = new PCTree();
-  $menu->auth = $app->auth;
+  
+  if (property_exists($menu, 'auth')) {
+    $menu->auth = $app->auth;
+  }
+
   $menu->load(PADMIN_MENU_ID);
 
   $menu->values['CSS_CLASS'] = 'menu';
