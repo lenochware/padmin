@@ -57,7 +57,7 @@ if ($app->auth->isLogged())
 
   $menu = new PCTree();
   
-  if (property_exists($menu, 'auth')) {
+  if (PCLIB_VERSION > '2.9.5') {
     $menu->auth = $app->auth;
   }
 

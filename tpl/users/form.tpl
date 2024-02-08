@@ -15,6 +15,7 @@ text ANNOT lb "Anotace:" maxlength "255" size "60x2"
 check ACTIVE lb "Aktivní" default "1"
 string LAST_LOGIN lb "Posl. přihlášení" sort date "d.m.Y H:i"
 string DT lb "Dat.vytvoření" sort date
+string AUTHOR
 link lnrights lb "Práva a proměnné" route "rights/user/id:{ID}"
 button insert lb "Přidat" noprint
 button copy lb "Kopírovat" noprint confirm "Kopírovat uživatele?"
@@ -61,7 +62,7 @@ Individiální práva:<br>
 </td></tr>
 
 <tr><td colspan="2" style="color:gray">
-  Vytvořeno: {DT}, Poslední přihlášení: {LAST_LOGIN}
+  Vytvořeno: {DT} {AUTHOR}, Poslední přihlášení: {LAST_LOGIN}
 </td></tr>
 </table>
 
