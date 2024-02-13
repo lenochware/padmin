@@ -42,7 +42,7 @@ if ($app->config['padmin.logging']) {
 }
 
 if ($_POST) {
-  $app->log('post', 'padmin/' . $app->router->action->path, null,  isset($_GET['id'])? (int)$_GET['id'] : null);
+  $app->log('action', 'padmin/' . $app->router->action->path, null,  isset($_GET['id'])? (int)$_GET['id'] : null);
 }
 
 if ($app->auth->isLogged())

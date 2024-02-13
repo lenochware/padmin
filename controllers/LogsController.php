@@ -30,9 +30,9 @@ function cleanupAction() {
 
 function deleteAction($period) {
   if (!$period) $this->app->error('Nezadaná perioda.');
-  $start = date("Y-m-d H:i:s", strtotime("now - ".($period+0)." months"));
-  $this->db->delete('LOGGER',"DT<'{0}'", $start);
-  $this->db->delete('LOGGER_MESSAGES',"DT<'{0}'", $start);
+  
+  set_time_limit(0);
+  $this->logger->deleteLog($period, true);
   $this->app->message('Záznamy byly smazány.');
   $this->reload();
 }

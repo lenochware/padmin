@@ -29,6 +29,20 @@ function init_datepicker()
     });
 }
 
+/* jQuery plugin buttonState('loading') deaktivuje button a zobrazi spinner */
+(function($) {
+$.fn.buttonState = function(action)
+{
+  const message = this.data('loading-text') || '<span class="fa fa-circle-o-notch fa-spin" role="status" aria-hidden="true"></span> Zpracovávám...';
+  if (action === 'loading') {
+    this.data('original-text', this.html()).html(message).prop('disabled', true);
+  }
+  if (action === 'reset' && this.data('original-text')) {
+    this.html(this.data('original-text')).prop('disabled', false);
+  }
+};
+}(jQuery));
+
 function filterTable(name)
 {
   let input = document.getElementById("search");
