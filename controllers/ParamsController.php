@@ -10,7 +10,7 @@ function indexAction()
   $grid = new PCGrid('tpl/params/list.tpl', 'params');
   $grid->setQuery(
     "select * from APP_PARAMS where 1=1
-    ~ and PARAM_NAME like '{PARAM_NAME}%'");
+    ~ and PARAM_NAME like '%{PARAM_NAME}%'");
 
   $search = new SearchForm($grid, ['PARAM_NAME']);
 
@@ -34,11 +34,6 @@ function updateAction($id)
   $form->update('APP_PARAMS', pri($id));
   $this->app->message('Položka byla uložena.');
   $this->reload();  
-}
-
-function setFilter($filter) {
-  $this->app->setsession('params.filter', $filter);
-  $this->app->setsession('search-params.values', $filter);
 }
 
 }

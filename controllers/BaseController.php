@@ -48,20 +48,6 @@ public function outputJson(array $data, $code = '')
   die(json_encode($data, JSON_UNESCAPED_UNICODE/*|JSON_PRETTY_PRINT*/));
 }
 
-function searchAction() {
-  $this->setFilter($_POST['data']);
-  $this->app->router->reload();
-}
-
-function showallAction() {
-  $this->setFilter(null);
-  $this->app->router->reload();
-}
-
-function setFilter($filter) {
-  throw new Exception('Vyhledávání není nakonfigurováno.');
-}
-
 }
 
 ?>

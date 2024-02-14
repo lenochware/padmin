@@ -158,7 +158,7 @@ function rightsAction($id) {
   );
 
   $search = new SearchForm($grid, ['SNAME']);
-  $search->addTag('check ALLOWED lb "Povolen"');
+  $search->addTag('check ALLOWED lb "Nastaven"');
 
   return $search->html().$grid;
 }
@@ -180,11 +180,6 @@ function rupdateAction($id) {
 
   $this->app->message('Položky byly uloženy.');
   $this->app->redirect("roles/rights/{GET}");
-}
-
-function setFilter($filter) {
-  $this->app->setsession('rolerights.filter', $filter);
-  $this->app->setsession('search-rolerights.values', $filter);
 }
 
 function getStatus($o, $id, $sub, $value) {

@@ -2,11 +2,15 @@
 
 class SearchForm extends pclib\Form {
 
-	function __construct($pathOrGrid, array $fields)
-	{
-		$grid = is_string($pathOrGrid)? new pclib\Grid($pathOrGrid) : $pathOrGrid;	
-		
+	protected $grid;
+	protected $searchFields;
+
+	function __construct($grid, array $fields)
+	{		
 		parent::__construct('tpl/search.tpl', 'search-'.$grid->name);
+
+		$this->grid = $grid;
+		$this->searchFields = $fields;
 
 		$el = [];
 		foreach ($fields as $name) {
@@ -30,55 +34,67 @@ class SearchForm extends pclib\Form {
 		}
 
 		$this->elements += $el;
+
+		if ($this->submitted) {
+			if ($_POST['search']) $this->enableFilter();
+			if ($_POST['showall']) $this->disableFilter();
+			$this->reload();
+		}
 	}
 
 	function isFiltered($grid)
 	{
-		$filter = $grid->filter;
-		unset($filter['ou']);
-		return (bool)$filter;
+		foreach ($this->searchFields as $name) {
+			if (!empty($grid->filter[$name])) return true;
+		}
+
+		return false;
 	}
 
-	function addTagSearch($category)
-	{
-		$this->addTag("select TAG datasource \"base/getTags/entity:$category\" lb \"Štítek\"");
-	}
-
-
-  static function enableFilter($grid)
+  function enableFilter()
   {
   	global $pclib;
 
-    $name = $grid->name;
+    $name = $this->grid->name;
     $data = self::prepareFilterData($_POST? $_POST['data'] : $_GET);
 
-    $pclib->app->setsession("$name.filter", $data);
-    $pclib->app->setsession("search-$name.values", $data);
+    $pclib->app->setSession("$name.filter", $data);
+    $pclib->app->setSession("search-$name.values", $data);
   }
 
-  static function disableFilter($grid)
+  function disableFilter()
   {
   	global $pclib;
 
-  	$name = $grid->name;
-  	$pclib->app->deletesession("$name.sortarray");
-  	$pclib->app->deletesession("$name.filter");
-    $pclib->app->deletesession("search-$name.values");
+  	$name = $this->grid->name;
+  	$pclib->app->deleteSession("$name.sortarray");
+  	$pclib->app->deleteSession("$name.filter");
+    $pclib->app->deleteSession("search-$name.values");
   	PCGrid::invalidate($name);
   }
 
-  protected static function prepareFilterData($data)
+  protected function prepareFilterData($data)
   {
     if (!$data) return;
+
+    /*
     foreach ($data as $key => $value) {
         if (!$value) continue;
         if (startsWith($key, 'date_')) $data[$key] = Datex::toSqlDate($value);
         if (startsWith($key, 'date_from')) $data[$key] .= ' 00:00:00';
         if (startsWith($key, 'date_to')) $data[$key] .= ' 23:59:59';
     }
+    */
 
     return $data;
-  }   	
+  }
+
+  /**
+	 * Reload stranky.
+	 */
+	function reload() {
+	  $this->app->router->reload();
+	}
 
  }
 

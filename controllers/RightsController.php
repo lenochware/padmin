@@ -75,11 +75,6 @@ function editAction($id) {
   return $form;
 }
 
-function setFilter($filter) {
-  $this->app->setsession('userrights.filter', $filter);
-  $this->app->setsession('search-userrights.values', $filter);
-}
-
 function insertAction() {
   $form = new PCForm('tpl/rights/form.tpl');
   if (!$form->validate()) $this->app->error('Chybně vyplněný formulář.');
@@ -147,7 +142,7 @@ function userAction($id) {
   );
 
   $search = new SearchForm($grid, ['SNAME']);
-  $search->addTag('check ALLOWED lb "Povolen"');
+  $search->addTag('check ALLOWED lb "Nastaven"');
 
   return $search->html().$grid;
 }

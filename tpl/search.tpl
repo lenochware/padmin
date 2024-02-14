@@ -1,8 +1,8 @@
 <?elements
 class form  html_class "padmin" default_print "div"
 string FOUND noescape skip
-button search lb "Hledat"
-button showall lb "Ukaž všechny"
+button search lb "Hledat" default
+button showall lb "Ukaž všechny" default
 ?>
 <div class="form searchform">{form.fields}</div>
 <!-- {FOUND} -->

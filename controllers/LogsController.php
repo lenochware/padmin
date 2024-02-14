@@ -37,6 +37,16 @@ function deleteAction($period) {
   $this->reload();
 }
 
+function searchAction() {
+  $this->setFilter($_POST['data']);
+  $this->app->router->reload();
+}
+
+function showallAction() {
+  $this->setFilter(null);
+  $this->app->router->reload();
+}
+
 function setFilter($filter) {
   $this->app->setsession('logfilter', $filter);
   $this->app->setsession('logsearch.values', $filter);
