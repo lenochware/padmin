@@ -13,6 +13,9 @@ function init() {
 function indexAction() {
   $this->title(1, "Uživatelé");
   $users = new PCGrid('tpl/users/list.tpl', 'users');
+
+  if ($users->filter['new_users']) unset($users->filter['inactive']); //hack
+  
   $users->setquery(
   "SELECT DISTINCT U.* from AUTH_USERS U
    left join AUTH_USER_ROLE UR on U.ID=UR.USER_ID
@@ -21,7 +24,7 @@ function indexAction() {
    ~ AND ACTIVE='{ACTIVE}'
    ~ AND USERNAME like '%{USERNAME}%'
    ~ AND ANNOT like '%{ANNOT}%'
-   ~ AND U.DT>NOW() - INTERVAL 1 month {?new_users}
+   ~ AND U.DT>NOW() - INTERVAL 1 month order by DT desc {?new_users}
    ~ AND (U.LAST_LOGIN<NOW() - INTERVAL 1 year or LAST_LOGIN is null) order by LAST_LOGIN {?inactive}
    "
   );
