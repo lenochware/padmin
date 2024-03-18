@@ -6,15 +6,23 @@ class LookupsController extends BaseController {
 function indexAction() {
   $this->title(1, 'Číselníky');
   $lookups = new PCGrid('tpl/lookups/list.tpl');
-  $lookups->setquery('select distinct CNAME from LOOKUPS');
+  $lookups->setquery("select distinct if (APP is null or APP='', CNAME, concat(APP, '.', CNAME)) CNAME from LOOKUPS order by APP,CNAME");
   return $lookups;
 }
 
 function viewAction($lookup) {
   $this->title(2, 'Číselník '. $lookup);
   $grid = new PCGrid('tpl/lookups/lookup.tpl');
-  $grid->_CNAME = $lookup;
-  $grid->setquery("select * from LOOKUPS where CNAME='{0}'", $lookup);
+  $grid->_CNAME_FULL = $lookup;
+
+  if (strpos($lookup, '.')) {
+    $lookup = explode('.', $lookup);
+    $grid->setquery("select * from LOOKUPS where APP='{0}' and CNAME='{1}'", $lookup);
+  }
+  else {
+    $grid->setquery("select * from LOOKUPS where CNAME='{0}'", $lookup);
+  }
+
   return $grid;
 }
 
@@ -37,7 +45,16 @@ function addAction($lookup) {
 function insertAction($lookup) {
   $form = new PCForm('tpl/lookups/form.tpl');
   if (!$form->validate()) $this->app->error('Chybně vyplněný formulář.');
-  $form->_CNAME = $lookup;
+
+  if (strpos($lookup, '.')) {
+    $la = explode('.', $lookup);
+    $form->_APP = $la[0];
+    $form->_CNAME = $la[1];
+  }
+  else {
+    $form->_CNAME = $lookup;
+  }
+
   $form->insert('LOOKUPS');
   $this->app->message('Položka byla uložena.');
   $this->redirect("lookups/view/lookup:$lookup");
