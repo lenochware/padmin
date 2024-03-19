@@ -118,7 +118,7 @@ class JobsController extends BaseController
 	public function editAction($id)
 	{
 		$form = $this->getForm();
-		$form->values = $this->db->select($this::TABLE, pri($id));
+		$form->values = $this->db->select($this::TABLE, ['id' => $id]);
 		$form->enable('update', 'delete', 'runJob');
 		$this->title(2, $form->values['name']);
 		return $form;
@@ -135,7 +135,7 @@ class JobsController extends BaseController
 			$this->invalid($form);
 		}
 
-		$form->update($this::TABLE, pri($id));
+		$form->update($this::TABLE, ['id' => $id]);
 		$this->app->message('Položka byla uložena.');
 		$this->redirect('jobs/edit/id:'.$id);
 	}
@@ -150,7 +150,7 @@ class JobsController extends BaseController
 		if (!$form->validate()) {
 			$this->invalid($form);
 		}
-		$form->delete($this::TABLE, pri($id));
+		$form->delete($this::TABLE, ['id' => $id]);
 		$this->app->message('Položka byla smazána.');
 		$this->reload();
 	}
@@ -162,7 +162,7 @@ class JobsController extends BaseController
 	 */
 	public function runJobAction($id)
 	{
-		$job = $this->db->select($this::TABLE, pri($id));
+		$job = $this->db->select($this::TABLE, ['id' => $id]);
 		$this->jobs->runJob($job['name']);
 		$this->app->message('Úloha byla spuštěna.');
 		$this->redirect('jobs/edit/id:'.$id);

@@ -147,7 +147,7 @@ class JobsManager extends pclib\system\BaseObject
 		$time = date('Y-m-d H:i:s', $this->currentTime());
 		$job['last_run_at'] = $time;
 
-		$this->db->update('jobs', ['last_run_at' => $time, 'last_run_result' => 'Job started...'], pri($job['id']));
+		$this->db->update('jobs', ['last_run_at' => $time, 'last_run_result' => 'Job started...'], ['id' => $job['id']]);
 
 		return $job;
 	}
@@ -160,7 +160,7 @@ class JobsManager extends pclib\system\BaseObject
 		$job['last_run_duration'] = round(microtime(true) - $job['start'], 2);
 		unset($job['start']);
  
-		$this->db->update('jobs', $job, pri($job['id']));
+		$this->db->update('jobs', $job, ['id' => $job['id']]);
 		$this->jobs[$job['name']] = $job;
 		$this->log($job);
 	}

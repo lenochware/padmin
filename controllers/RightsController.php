@@ -68,7 +68,7 @@ function addAction() {
 
 function editAction($id) {
   $form = new PCForm('tpl/rights/form.tpl');
-  $form->values = $this->db->select('AUTH_RIGHTS', pri($id));
+  $form->values = $this->db->select('AUTH_RIGHTS', ['ID' => $id]);
   $form->_TITLE = 'right';
   $this->title(2, 'Editace oprávnění');
   $form->enable('update', 'delete');
@@ -121,7 +121,7 @@ function userAction($id) {
   $grid = new GridForm('tpl/rights/edit.tpl', 'userrights');
   
   $grid->_USER_ID = $id;
-  $grid->_TITLE = "uživatele ".$this->db->field('AUTH_USERS:USERNAME', pri($id));
+  $grid->_TITLE = "uživatele ".$this->db->field('AUTH_USERS:USERNAME', ['ID' => $id]);
   $grid->_STATUS->onprint = array($this, 'getStatus');
   $grid->filter['USER_ID'] = $id;
   

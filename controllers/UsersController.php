@@ -59,8 +59,8 @@ function exportAction()
 
 function editAction($id) {
   $user = $this->getform();
-  $user->values = $this->db->select('AUTH_USERS', pri($id));
-  $user->values['AUTHOR'] = $this->db->field('AUTH_USERS:USERNAME', pri($user->values['AUTHOR_ID']));
+  $user->values = $this->db->select('AUTH_USERS', ['ID' => $id]);
+  $user->values['AUTHOR'] = $this->db->field('AUTH_USERS:USERNAME', ['ID' => $user->values['AUTHOR_ID']]);
   $user->_RINDIV = implode('<br>', $this->getrights($id));
   $i = 0;
   foreach($this->getroles($id) as $role_id => $tmp) {

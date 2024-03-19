@@ -19,7 +19,7 @@ function indexAction()
 
 function editAction($id)
 {
-  $param = $this->db->select('APP_PARAMS', pri($id));
+  $param = $this->db->select('APP_PARAMS', ['ID' => $id]);
   if (!$param) $this->app->error('Parametr nenalezen.');
 
   $form = new PCForm('tpl/params/form.tpl');
@@ -31,7 +31,7 @@ function editAction($id)
 function updateAction($id)
 {
   $form = new PCForm('tpl/params/form.tpl');
-  $form->update('APP_PARAMS', pri($id));
+  $form->update('APP_PARAMS', ['ID' => $id]);
   $this->app->message('Položka byla uložena.');
   $this->reload();  
 }

@@ -19,7 +19,7 @@ class JobFixDefaultPassword extends Job
  			}
 
  			if ($user['DPASSW']) {
- 				$this->app->db->update('AUTH_USERS', ['DPASSW' => ''], pri($user['ID']));
+ 				$this->app->db->update('AUTH_USERS', ['DPASSW' => ''], ['ID' => $user['ID']]);
  			}
  		}
 

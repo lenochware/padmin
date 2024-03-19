@@ -75,8 +75,8 @@ function deleteAction($tr, $lang) {
 
 protected function getform($tr = null, $lang = null) {
   $form = new PCForm('tpl/locale/form.tpl');
-  $form->_TRANSLATOR = $this->db->field('TRANSLATOR_LABELS:LABEL', pri($tr));
-  $form->_LANG =  $this->db->field('TRANSLATOR_LABELS:LABEL', pri($lang));
+  $form->_TRANSLATOR = $this->db->field('TRANSLATOR_LABELS:LABEL', ['ID' => $tr]);
+  $form->_LANG =  $this->db->field('TRANSLATOR_LABELS:LABEL', ['ID' => $lang]);
   $form->_TEXTS = $this->gettextsxml($tr, $lang);
   return $form;
 }
@@ -130,7 +130,7 @@ protected function importCsv($input)
     }
 
     $transId = $this->db->field('TRANSLATOR:ID', ['TRANSLATOR' => $tr, 'LANG' => $lang, 'TEXT_ID' => $id]);
-    if ($transId) $this->db->delete('TRANSLATOR', pri($transId));
+    if ($transId) $this->db->delete('TRANSLATOR', ['ID' => $transId]);
 
     $data['LANG'] = $lang;
     $data['TSTEXT'] = $sTrans;
@@ -175,7 +175,7 @@ protected function savetexts($tr, $lang, $xml) {
     if (!$text_id and $lang == 0) {
       $data['PAGE'] = $this->getLabelId('default', 3);
       $text_id = $this->db->insert('TRANSLATOR', $data);
-      $this->db->update('TRANSLATOR', "TEXT_ID='$text_id'", pri($text_id));
+      $this->db->update('TRANSLATOR', "TEXT_ID='$text_id'", ['ID' => $text_id]);
       $n++;
       continue;
     }
@@ -198,10 +198,10 @@ protected function savetexts($tr, $lang, $xml) {
         $this->app->message("Text #%d se používá - nelze smazat.", 'warning', $id);
         continue;
       }
-      $this->db->delete('TRANSLATOR', pri($id)); 
+      $this->db->delete('TRANSLATOR', ['ID' => $id]); 
     }
     elseif ($id) {
-      $this->db->update('TRANSLATOR', $data, pri($id)); 
+      $this->db->update('TRANSLATOR', $data, ['ID' => $id]); 
     }
     else {
       $data['PAGE'] = null;

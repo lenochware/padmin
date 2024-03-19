@@ -83,8 +83,8 @@ function addAction() {
 
 function editAction($id) {
   $form = new PCForm('tpl/roles/form.tpl');
-  $form->values = $this->db->select('AUTH_ROLES', pri($id));
-  $form->values['AUTHOR'] = $this->db->field('AUTH_USERS:USERNAME', pri($form->values['AUTHOR_ID']));
+  $form->values = $this->db->select('AUTH_ROLES', ['ID' => $id]);
+  $form->values['AUTHOR'] = $this->db->field('AUTH_USERS:USERNAME', ['ID' => $form->values['AUTHOR_ID']]);
   $form->_TITLE = 'role';
   $this->title(2, 'Editace role');
   $form->enable('update', 'delete');
@@ -137,7 +137,7 @@ function rightsAction($id) {
   $this->title(3, 'Práva');
   $grid = new GridForm('tpl/roles/edit.tpl', 'rolerights');
   
-  $grid->_TITLE = "roli ".$this->db->field('AUTH_ROLES:SNAME', pri($id));
+  $grid->_TITLE = "roli ".$this->db->field('AUTH_ROLES:SNAME', ['ID' => $id]);
   $grid->_STATUS->onprint = array($this, 'getStatus');
   $grid->filter['ROLE_ID'] = $id;
   

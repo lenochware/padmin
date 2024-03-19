@@ -12,7 +12,7 @@ function submitAction() {
   $form = new PCForm('tpl/lookups/menu.tpl');
   $id = (int)$form->values['TREE_ID'];
   if ($id) {
-    $this->db->delete('TREE_LOOKUPS', pri($id));
+    $this->db->delete('TREE_LOOKUPS', ['ID' => $id]);
   } else {
     $id = $this->db->field('TREE_LOOKUPS:max(TREE_ID)') + 1;
     $this->db->insert('LOOKUPS',

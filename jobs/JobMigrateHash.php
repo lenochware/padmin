@@ -22,7 +22,7 @@ class JobMigrateHash extends Job
 				continue;
 			}
 
-			$this->app->db->update('AUTH_USERS', ['PASSW' => $am->passwordHash($user['PASSW'])], pri($user['ID']));
+			$this->app->db->update('AUTH_USERS', ['PASSW' => $am->passwordHash($user['PASSW'])], ['ID' => $user['ID']]);
 			$n++;
 		}
 
