@@ -14,7 +14,7 @@ function indexAction() {
   $this->title(1, "Uživatelé");
   $users = new PCGrid('tpl/users/list.tpl', 'users');
 
-  if ($users->filter['new_users']) unset($users->filter['inactive']); //hack
+  if (isset($users->filter['new_users'])) unset($users->filter['inactive']); //hack
   
   $users->setquery(
   "SELECT DISTINCT U.* from AUTH_USERS U
@@ -60,7 +60,8 @@ function exportAction()
 function editAction($id) {
   $user = $this->getform();
   $user->values = $this->db->select('AUTH_USERS', ['ID' => $id]);
-  $user->values['AUTHOR'] = $this->db->field('AUTH_USERS:USERNAME', ['ID' => $user->values['AUTHOR_ID']]);
+  $author_id = array_get($user->values, 'AUTHOR_ID');
+  $user->values['AUTHOR'] = $this->db->field('AUTH_USERS:USERNAME', ['ID' => $author_id]);
   $user->_RINDIV = implode('<br>', $this->getrights($id));
   $i = 0;
   foreach($this->getroles($id) as $role_id => $tmp) {

@@ -84,7 +84,8 @@ function addAction() {
 function editAction($id) {
   $form = new PCForm('tpl/roles/form.tpl');
   $form->values = $this->db->select('AUTH_ROLES', ['ID' => $id]);
-  $form->values['AUTHOR'] = $this->db->field('AUTH_USERS:USERNAME', ['ID' => $form->values['AUTHOR_ID']]);
+  $author_id = array_get($form->values, 'AUTHOR_ID');
+  $form->values['AUTHOR'] = $this->db->field('AUTH_USERS:USERNAME', ['ID' => $author_id]);
   $form->_TITLE = 'role';
   $this->title(2, 'Editace role');
   $form->enable('update', 'delete');

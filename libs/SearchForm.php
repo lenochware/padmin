@@ -22,11 +22,13 @@ class SearchForm extends pclib\Form {
 			else {
 				$el[$name]['type'] = 'input';
 				$el[$name]['onprint'] = null; //custom field hack
-				if ($el[$name]['date']) {
+				if (!empty($el[$name]['date'])) {
 					$el[$name]['html']['class'] = 'calendar';
 				}
 			}
-			$el[$name]['skip'] = null;
+
+			$el[$name] += pclib\system\ElementsDef::getElement($name, $el[$name]['type']);
+			$el[$name]['skip'] = $el[$name]['block'] = null;
 		}
 
 		if ($this->isFiltered($grid)) {
@@ -36,8 +38,8 @@ class SearchForm extends pclib\Form {
 		$this->elements += $el;
 
 		if ($this->submitted) {
-			if ($_POST['search']) $this->enableFilter();
-			if ($_POST['showall']) $this->disableFilter();
+			if (isset($_POST['search'])) $this->enableFilter();
+			if (isset($_POST['showall'])) $this->disableFilter();
 			$this->reload();
 		}
 	}
@@ -67,8 +69,8 @@ class SearchForm extends pclib\Form {
   	global $pclib;
 
   	$name = $this->grid->name;
-  	$pclib->app->deleteSession("$name.sortarray");
-  	$pclib->app->deleteSession("$name.filter");
+  	$pclib->app->deleteSession($name);
+  	//$pclib->app->deleteSession("$name.filter");
     $pclib->app->deleteSession("search-$name.values");
   	PCGrid::invalidate($name);
   }
