@@ -7,6 +7,7 @@ sort SRSET lb "Konfigurace" sort "RSET"
 string SNAME lb "Název" sort
 string ANNOT lb "Popis" sort
 string STATUS lb "Status"
+string RVAL
 string USER_ID
 button rupdate lb "Uložit"
 button back lb "Zpět" onclick "history.back()"
