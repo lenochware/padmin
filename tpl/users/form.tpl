@@ -62,7 +62,7 @@ Individiální práva:<br>
 </td></tr>
 
 <tr><td colspan="2" style="color:gray">
-  Vytvořeno: {DT} {AUTHOR}, Poslední přihlášení: {LAST_LOGIN}
+  Vytvořeno: {DT} {AUTHOR}, Poslední přihlášení: {LAST_LOGIN} <a href="?r=logs&user={USERNAME.value}">akce</a>
 </td></tr>
 </table>
 

@@ -11,11 +11,19 @@ function init() {
   $this->logger = new PCLogger;
 }
 
-function indexAction() {
+function indexAction()
+{
+  if (isset($_GET['user'])) {
+    $filter = ['USERNAME' => $_GET['user']];
+    if (isset($_GET['action'])) $filter['ACTIONNAME'] = $_GET['action'];
+
+    $this->setFilter($filter);
+  }
+
   $this->title(1, 'Záznamy logu');
   $grid = new PCGrid('tpl/logs/list.tpl');
   $grid->setarray($this->logger->getlog($this->MAXROWS,
-    $this->app->getsession('logfilter'))
+    $this->app->getSession('logfilter'))
   );
 
   $grid->values['size_mb'] = $this->logger->getSize();
