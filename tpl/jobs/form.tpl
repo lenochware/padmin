@@ -1,9 +1,9 @@
 <?elements
 class form route "jobs/{GET}" html_class "padmin" html5
 input name lb "Název" required
-text annotation lb "Popis"
-select job_type lb "Typ úlohy" lookup "job-type" required
-text job_command lb "Příkaz" required
+text annotation lb "Popis" html_class "w-100"
+input job_command lb "Příkaz" required html_class "w-100"
+input job_params lb "Parametry" html_class "w-100"
 input first_run_at lb "První spuštění" html_class "calendar" html_data-format "d. m. Y H:i" date "d.m.Y H:i" required html5 "0"
 select period lb "Perioda spuštění" lookup "job-period" default "86400" noemptylb
 input last_run_at lb "Poslední spuštění" date "d.m.Y H:i" noedit html5 "0"

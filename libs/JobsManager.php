@@ -9,7 +9,6 @@ class JobsManager extends pclib\system\BaseObject
 	public $db;
 	public $logger;
 	protected $jobs;
-	public $runners;
 
 	/**
 	 * JobsManager constructor.
@@ -19,14 +18,6 @@ class JobsManager extends pclib\system\BaseObject
 	{
 		parent::__construct();
 		$this->service('db');
-		$this->runners = [
-			'shell' => [$this, 'runShellJob'],
-			'url' => [$this, 'runUrlJob'],
-			'function' => [$this, 'runFunctionJob'],
-			'class' => [$this, 'runClassJob'],
-			'phpfile' => [$this, 'runPhpFileJob'],
-			'batch' => [$this, 'runBatchJob'],
-		];
 		$this->logger = $this->service('logger');
 	}
 
@@ -37,15 +28,10 @@ class JobsManager extends pclib\system\BaseObject
 	public function runJob($name)
 	{
 		$job = $this->getJob($name);
-		$runner = $this->runners[$job['job_type']];
-		if (!$runner) {
-			throw new Exception('Unsupported job type.');
-		}
-
 		$job = $this->start($job);
 
 		try {
-			$job['last_run_result'] = call_user_func($runner, $job);
+			$job['last_run_result'] = $this->runClassJob($job);
 		}
 		catch(Exception $e) {
 			$job['last_run_result'] = $e->getMessage();
@@ -105,13 +91,9 @@ class JobsManager extends pclib\system\BaseObject
 	{
 		$job = $this->getJob($name);
 
-		if (!$job['active']) {
+		if (!$job['active'] or $job['period'] == 0) {
 			return false;
 		}
-		if ($job['period'] == 0 and $job['last_run_at']) {
-			return false;
-		}
-
 
 		//spoustet v pravidelnych intervalech od firsttime, bez ohledu na iregular lasttime
 		$firstTime = $this->getTime($job['first_run_at']);
@@ -184,46 +166,6 @@ class JobsManager extends pclib\system\BaseObject
 	}
 
 	/**
-	 * Spusti prikaz shellu.
-	 * @param array $job
-	 * @return string
-	 */
-	protected function runShellJob(array $job)
-	{
-		return shell_exec($job['job_command']);
-	}
-
-	/**
-	 * Zavola url.
-	 * @param array $job
-	 * @return bool|mixed|string
-	 */
-	protected function runUrlJob(array $job)
-	{
-		$url = $job['job_command'];
-		if (extension_loaded('curl')) {
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			$response = curl_exec($ch);
-			curl_close($ch);
-		} else {
-			$response = file_get_contents($url);
-		}
-		return $response;
-	}
-
-	/**
-	 * Spusti php funkci.
-	 * @param array $job
-	 * @return mixed
-	 */
-	protected function runFunctionJob(array $job)
-	{
-		return call_user_func($job['job_command'], $job);
-	}
-
-	/**
 	 * Instancuje tridu Job a zavola Job->run().
 	 * @param array $job
 	 * @return mixed
@@ -241,32 +183,6 @@ class JobsManager extends pclib\system\BaseObject
 		return $command->getOutput().$result;
 	}
 
-	/**
-	 * Includuje php skript (path je v job_command) a vrati vysledek.
-	 * @param array $job
-	 * @return string
-	 */
-	protected function runPhpFileJob(array $job)
-	{
-		ob_start();
-		require $job['job_command'];
-		$ret = ob_get_contents();
-		ob_end_clean();
-		return $ret;
-	}
-
-	/**
-	 * Spusti davkove nekolik jobu. Nazvy jobu jsou v job_command oddelene strednikem.
-	 * @param array $job
-	 * @throws Exception
-	 */
-	protected function runBatchJob(array $job)
-	{
-		foreach (explode(';', $job['job_command']) as $jobName) {
-			$this->runJob(trim($jobName));
-		}
-	}
-
 }
 
 /**
@@ -276,14 +192,14 @@ class JobsManager extends pclib\system\BaseObject
 abstract class Job
 {
 	protected $app;
-	protected $params;
+	protected $data;
 	protected $output = [];
 
-	function __construct($params)
+	function __construct($data)
 	{
 		global $pclib;
 		$this->app = $pclib->app;
-		$this->params = $params;
+		$this->data = $data;
 	}
 
 	function write($message)
