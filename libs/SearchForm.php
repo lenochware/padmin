@@ -79,14 +79,17 @@ class SearchForm extends pclib\Form {
   {
     if (!$data) return;
 
-    /*
-    foreach ($data as $key => $value) {
-        if (!$value) continue;
-        if (startsWith($key, 'date_')) $data[$key] = Datex::toSqlDate($value);
-        if (startsWith($key, 'date_from')) $data[$key] .= ' 00:00:00';
-        if (startsWith($key, 'date_to')) $data[$key] .= ' 23:59:59';
-    }
-    */
+    //form->preparedValues()?
+
+    // foreach ($data as $key => $value) {
+    //     if (!$value) continue;
+    //     $elem = $this->grid->elements[$key];
+
+    //     if (isset($elem['date'])) {
+    //     	$date = $this->toSqlDate($value, $elem['date']);
+    //     	$data[$key] = substr($date, 0, 10); //hack
+    //     }
+    // }
 
     return $data;
   }
