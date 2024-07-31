@@ -10,6 +10,7 @@ string last_run_at lb "Poslední spuštění" sort date "d.m.Y H:i"
 string last_run_result lb "Výsledek" format "h" size "50" tooltip
 string created_at lb "Vytvořeno" sort date "d.m.Y H:i" skip
 string active lb "Aktivní" sort skip
+bind inactive list "0,inactive,1," skip field "active"
 link lnedit lb "Editovat" route "jobs/edit/id:{id}" skip
 link lnadd lb "Přidat úlohu" route "jobs/add" skip
 pager pager pglen "20" nohide
@@ -18,7 +19,7 @@ pager pager pglen "20" nohide
 <table class="grid" id="JOBS">
   <tr>{grid.labels}<th>{active.lb}</th></tr>
 {block items}
-  <tr class="link" onclick="{lnedit.js}" title="{lnedit.lb}">{grid.fields}
+  <tr class="link {inactive}" onclick="{lnedit.js}" title="{lnedit.lb}">{grid.fields}
   	<td>{if active}<i class="fa fa-check-square-o"></i>{/if}{if not active}<i class="fa fa-square-o"></i>{/if}</td></tr>
 {block else}
   <tr><td colspan="12" align="center">Nenalezeny žádné položky.</td></tr>

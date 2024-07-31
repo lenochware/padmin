@@ -91,6 +91,9 @@ a:hover {
   cursor: pointer;
 }
 
+.w-100 {
+  width: 100%;
+}
 
 /* PREHLEDY */
 
@@ -134,6 +137,10 @@ TABLE.strips tr:nth-child(even) {
 
 TABLE.grid.strips TR:hover {
   background-color: #fff3f0;
+}
+
+TABLE.grid TR.inactive TD {
+  color: gray;
 }
 
 DIV.pager {
