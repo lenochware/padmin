@@ -5,18 +5,22 @@ class UsersController extends BaseController {
 
 private $authMng;
 
-function init() {
+protected $allowedFields = ['USERNAME','FULLNAME','EMAIL','ANNOT','ACTIVE'];
+
+function init()
+{
   parent::init();
   $this->authMng = new \pclib\extensions\AuthManager;
 }
 
-function indexAction() {
+function indexAction()
+{
   $this->title(1, "Uživatelé");
   $users = new PCGrid('tpl/users/list.tpl', 'users');
 
   if (isset($users->filter['new_users'])) unset($users->filter['inactive']); //hack
   
-  $users->setquery(
+  $users->setQuery(
   "SELECT DISTINCT U.* from AUTH_USERS U
    left join AUTH_USER_ROLE UR on U.ID=UR.USER_ID
    where 1=1
@@ -39,7 +43,7 @@ function exportAction()
 {
   $users = new PCGrid('tpl/users/list.tpl', 'users');
 
-  $users->setquery(
+  $users->setQuery(
   "SELECT DISTINCT U.* from AUTH_USERS U
    left join AUTH_USER_ROLE UR on U.ID=UR.USER_ID
    where 1=1
@@ -57,16 +61,19 @@ function exportAction()
   $users->exportExcel('users.csv');
 }
 
-function editAction($id) {
-  $user = $this->getform();
+function editAction($id)
+{
+  $user = $this->getForm();
   $user->values = $this->db->select('AUTH_USERS', ['ID' => $id]);
   $author_id = array_get($user->values, 'AUTHOR_ID');
   $user->values['AUTHOR'] = $this->db->field('AUTH_USERS:USERNAME', ['ID' => $author_id]);
-  $user->_RINDIV = implode('<br>', $this->getrights($id));
+  $user->_RINDIV = implode('<br>', $this->getRights($id));
+
   $i = 0;
-  foreach($this->getroles($id) as $role_id => $tmp) {
+  foreach($this->getRoles($id) as $role_id => $tmp) {
     $user->values['ROLE'.(++$i)] = $role_id;
   }
+
   if ($user->values['PASSW']) {
     $user->_PASSWORD = '(hidden)';
   }
@@ -76,22 +83,23 @@ function editAction($id) {
   return $user;
 }
 
-function addAction() {
-  $user = $this->getform();
+function addAction()
+{
+  $user = $this->getForm();
   $user->enable('insert');
   $this->title(2, 'Nový uživatel');
   return $user;
 }
 
-function insertAction() {
-
-  $userform = $this->getform();
+function insertAction()
+{
+  $userform = $this->getForm();
   if (!$userform->validate()) $this->invalid($userform);
 
-  $id = $this->authMng->mkuser($userform->_USERNAME);
+  $id = $this->authMng->mkUser($userform->_USERNAME);
   if (!$id) $this->app->error(implode('<br>', $this->authMng->errors));
 
-  $this->setuser($id, $userform->preparedValues());
+  $this->setUser($id, $userform->preparedValues());
 
   if ($this->authMng->errors) {
     $this->app->error(implode('<br>', $this->authMng->errors));
@@ -101,12 +109,12 @@ function insertAction() {
   $this->redirect('users/edit/id:'.$id);
 }
 
-function updateAction($id) {
-
-  $userform = $this->getform();
+function updateAction($id)
+{
+  $userform = $this->getForm();
   if (!$userform->validate()) $this->invalid($userform);
 
-  $this->setuser($id, $userform->preparedValues());
+  $this->setUser($id, $userform->preparedValues());
 
   if ($this->authMng->errors)
     $this->app->error(implode('<br>', $this->authMng->errors));
@@ -115,23 +123,25 @@ function updateAction($id) {
   $this->redirect('users/edit/id:'.$id);
 }
 
-function deleteAction($id) {
+function deleteAction($id)
+{
   $this->testPerm('padmin/users/delete');
 
-  $userform = $this->getform();
+  $userform = $this->getForm();
   //if (!$userform->validate()) $this->invalid($userform);
 
-  $this->authMng->rmuser('#'.$id);
+  $this->authMng->rmUser('#'.$id);
   $this->app->message('Položka byla smazána.');
   $this->reload();
 }
 
-function impersonateAction() {
+function impersonateAction()
+{
   $this->testPerm('padmin/users/impersonate');
 
   $auth = $this->app->auth;
 
-  $userform = $this->getform();
+  $userform = $this->getForm();
   if (!$userform->validate()) $this->invalid($userform);
 
   $user = $auth->getUser($userform->values['USERNAME']);
@@ -142,7 +152,7 @@ function impersonateAction() {
 
 function copyAction()
 {
-  $userform = $this->getform();
+  $userform = $this->getForm();
   if (!$userform->validate()) $this->invalid($userform);
 
   $name = $userform->values['USERNAME'];
@@ -158,13 +168,14 @@ function copyAction()
   $this->app->redirect("users/edit/id:$uid");
 }
 
-function searchAction() {
-  $this->enablefilter();
+function searchAction()
+{
+  $this->enableFilter();
   $this->reload();
 }
 
 function showallAction() {
-  $this->enablefilter(false);
+  $this->enableFilter(false);
   $this->reload();
 }
 
@@ -175,7 +186,8 @@ function genPasswordAction()
   die($password);
 }
 
-protected function getroles($user_id = null) {
+protected function getRoles($user_id = null)
+{
   if ($user_id) {
     return $this->db->selectPair(
     "select R.ID, coalesce(R.ANNOT,R.SNAME) from AUTH_USER_ROLE UR
@@ -191,7 +203,8 @@ protected function getroles($user_id = null) {
   }
 }
 
-protected function getrights($user_id) {
+protected function getRights($user_id)
+{
   $data = $this->db->selectOne(
     "select SNAME from AUTH_RIGHTS R
     left join AUTH_REGISTER REG on R.ID=REG.RIGHT_ID
@@ -200,57 +213,59 @@ protected function getrights($user_id) {
   return $data;
 }
 
-function enablefilter($enable = true) {
+function enableFilter($enable = true)
+{
   $filter = $enable? $_POST['data'] : null;
 
-  $this->app->setsession('users.filter', $filter);
-  $this->app->setsession('usersearch.values', $filter);
-  if (!$filter) $this->app->setsession('users.sortarray', null);
+  $this->app->setSession('users.filter', $filter);
+  $this->app->setSession('usersearch.values', $filter);
+  if (!$filter) $this->app->setSession('users.sortarray', null);
 }
 
-function userroles($o, $id, $sub, $val) {
+function userRoles($o, $id, $sub, $val)
+{
   if ($sub) return true;
 
-  $user_id = (int)$o->getvalue('ID');
+  $user_id = (int)$o->getValue('ID');
   if (!$user_id) return;
   
-  $o->print_String('USERROLES', '', implode(',', array_values($this->getroles($user_id))));
+  $o->print_String('USERROLES', '', implode(',', array_values($this->getRoles($user_id))));
 }
 
-protected function setroles($uid, $roles) {
+protected function setRoles($uid, $roles)
+{
   $this->db->delete('AUTH_USER_ROLE', "USER_ID='{#0}'", $uid);
   foreach($roles as $role) {
     if (!$role) continue;
-    $this->authMng->urole('#'.$uid, '#'.$role);
+    $this->authMng->uRole('#'.$uid, '#'.$role);
   }
 }
 
-function setuser($id, $data) {
-  $userparams = array('USERNAME','FULLNAME','EMAIL','ANNOT','ACTIVE');
-
-  $u = array();
-  $r = array();
+function setUser($id, $data)
+{
+  $u = [];
+  $r = [];
   foreach($data as $k => $v) {
     if (strpos($k, 'ROLE') === 0) $r[] = $v;
-    elseif(in_array($k, $userparams)) $u[$k] = $v;
+    elseif(in_array($k, $this->allowedFields)) $u[$k] = $v;
   }
 
-  $this->authMng->setuser('#'.$id, $u);
-  $this->setroles($id, $r);
+  $this->authMng->setUser('#'.$id, $u);
+  $this->setRoles($id, $r);
 
   $password = $data['PASSWORD'];
   if($password != '(hidden)')  $this->authMng->setPassw('#'.$id, $password);
 }
 
-protected function getform() {
+protected function getForm() {
   $form = new PCForm('tpl/users/form.tpl');
-  $roles = $this->getroles();
+  $roles = $this->getRoles();
   for ($i = 1; $i < 6; $i++)
     $form->elements['ROLE'.$i]['items'] = $roles;
 
   return $form;
 }
 
-} //class
+}
 
 ?>
