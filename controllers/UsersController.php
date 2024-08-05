@@ -16,24 +16,8 @@ function init()
 function indexAction()
 {
   $this->title(1, "Uživatelé");
-  $users = new PCGrid('tpl/users/list.tpl', 'users');
+  $users = $this->getGrid();
 
-  if (isset($users->filter['new_users'])) unset($users->filter['inactive']); //hack
-  
-  $users->setQuery(
-  "SELECT DISTINCT U.* from AUTH_USERS U
-   left join AUTH_USER_ROLE UR on U.ID=UR.USER_ID
-   where 1=1
-   ~ AND UR.ROLE_ID='{ROLE}'
-   ~ AND ACTIVE='{ACTIVE}'
-   ~ AND USERNAME like '%{USERNAME}%'
-   ~ AND ANNOT like '%{ANNOT}%'
-   ~ AND U.DT>NOW() - INTERVAL 1 month order by DT desc {?new_users}
-   ~ AND (U.LAST_LOGIN<NOW() - INTERVAL 1 year or LAST_LOGIN is null) order by LAST_LOGIN {?inactive}
-   "
-  );
-
-  $users->_USERROLES->onprint = [$this, 'userroles'];
   $search = new PCForm('tpl/users/search.tpl', 'usersearch');
   
   return $search.$users;
@@ -41,23 +25,7 @@ function indexAction()
 
 function exportAction()
 {
-  $users = new PCGrid('tpl/users/list.tpl', 'users');
-
-  $users->setQuery(
-  "SELECT DISTINCT U.* from AUTH_USERS U
-   left join AUTH_USER_ROLE UR on U.ID=UR.USER_ID
-   where 1=1
-   ~ AND UR.ROLE_ID='{ROLE}'
-   ~ AND ACTIVE='{INACTIVE}'
-   ~ AND USERNAME like '%{USERNAME}%'
-   ~ AND ANNOT like '%{ANNOT}%'
-   ~ AND U.DT>NOW() - INTERVAL 1 month {?new_users}
-   ~ AND (U.LAST_LOGIN<NOW() - INTERVAL 1 year or LAST_LOGIN is null) order by LAST_LOGIN {?inactive}
-   "
-  );
-
-  $users->_USERROLES->onprint = [$this, 'userroles'];
-    
+  $users = $this->getGrid();  
   $users->exportExcel('users.csv');
 }
 
@@ -93,13 +61,13 @@ function addAction()
 
 function insertAction()
 {
-  $userform = $this->getForm();
-  if (!$userform->validate()) $this->invalid($userform);
+  $form = $this->getForm();
+  if (!$form->validate()) $this->invalid($form);
 
-  $id = $this->authMng->mkUser($userform->_USERNAME);
+  $id = $this->authMng->mkUser($form->_USERNAME);
   if (!$id) $this->app->error(implode('<br>', $this->authMng->errors));
 
-  $this->setUser($id, $userform->preparedValues());
+  $this->setUser($id, $form->preparedValues());
 
   if ($this->authMng->errors) {
     $this->app->error(implode('<br>', $this->authMng->errors));
@@ -111,10 +79,10 @@ function insertAction()
 
 function updateAction($id)
 {
-  $userform = $this->getForm();
-  if (!$userform->validate()) $this->invalid($userform);
+  $form = $this->getForm();
+  if (!$form->validate()) $this->invalid($form);
 
-  $this->setUser($id, $userform->preparedValues());
+  $this->setUser($id, $form->preparedValues());
 
   if ($this->authMng->errors)
     $this->app->error(implode('<br>', $this->authMng->errors));
@@ -127,8 +95,8 @@ function deleteAction($id)
 {
   $this->testPerm('padmin/users/delete');
 
-  $userform = $this->getForm();
-  //if (!$userform->validate()) $this->invalid($userform);
+  $form = $this->getForm();
+  //if (!$form->validate()) $this->invalid($form);
 
   $this->authMng->rmUser('#'.$id);
   $this->app->message('Položka byla smazána.');
@@ -141,10 +109,10 @@ function impersonateAction()
 
   $auth = $this->app->auth;
 
-  $userform = $this->getForm();
-  if (!$userform->validate()) $this->invalid($userform);
+  $form = $this->getForm();
+  if (!$form->validate()) $this->invalid($form);
 
-  $user = $auth->getUser($userform->values['USERNAME']);
+  $user = $auth->getUser($form->values['USERNAME']);
   $auth->setLoggedUser($user);
   $this->app->message('Přihlášení změněno.');
   $this->reload();
@@ -152,10 +120,10 @@ function impersonateAction()
 
 function copyAction()
 {
-  $userform = $this->getForm();
-  if (!$userform->validate()) $this->invalid($userform);
+  $form = $this->getForm();
+  if (!$form->validate()) $this->invalid($form);
 
-  $name = $userform->values['USERNAME'];
+  $name = $form->values['USERNAME'];
   if (!$name) $this->app->error('Uživatel nenalezen.');
 
   $uid = $this->authMng->mkUser($name.'_copy');
@@ -257,13 +225,38 @@ function setUser($id, $data)
   if($password != '(hidden)')  $this->authMng->setPassw('#'.$id, $password);
 }
 
-protected function getForm() {
+protected function getForm()
+{
   $form = new PCForm('tpl/users/form.tpl');
   $roles = $this->getRoles();
   for ($i = 1; $i < 6; $i++)
     $form->elements['ROLE'.$i]['items'] = $roles;
 
   return $form;
+}
+
+protected function getGrid()
+{
+  $grid = new PCGrid('tpl/users/list.tpl', 'users');
+
+  if (isset($grid->filter['new_users'])) unset($grid->filter['inactive']); //hack
+  
+  $grid->setQuery(
+    "SELECT DISTINCT U.* from AUTH_USERS U
+     left join AUTH_USER_ROLE UR on U.ID=UR.USER_ID
+     where 1=1
+     ~ AND UR.ROLE_ID='{ROLE}'
+     ~ AND ACTIVE='{ACTIVE}'
+     ~ AND USERNAME like '%{USERNAME}%'
+     ~ AND ANNOT like '%{ANNOT}%'
+     ~ AND U.DT>NOW() - INTERVAL 1 month order by DT desc {?new_users}
+     ~ AND (U.LAST_LOGIN<NOW() - INTERVAL 1 year or LAST_LOGIN is null) order by LAST_LOGIN {?inactive}
+     "
+  );
+
+  $grid->_USERROLES->onprint = [$this, 'userRoles'];
+  
+  return $grid;
 }
 
 }
