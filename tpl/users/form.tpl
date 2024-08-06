@@ -56,7 +56,7 @@ button back lb "Zpět" onclick "history.back()"
 <tr><td>{ACTIVE.lb}</td><td>{ACTIVE}</td></tr>
 <tr><td colspan="2">
 Individiální práva:<br>
-<div style="font-weight:bold; color:red">{RINDIV}</div><br>
+<div style="font-weight:bold">{RINDIV}</div><br>
 &nbsp;{lnrights}<br><br>
 &nbsp;{insert}{update} {copy} {delete} {impersonate} {back}<br><br>
 </td></tr>

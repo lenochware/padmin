@@ -31,32 +31,32 @@ function exportAction()
 
 function editAction($id)
 {
-  $user = $this->getForm();
-  $user->values = $this->db->select('AUTH_USERS', ['ID' => $id]);
-  $author_id = array_get($user->values, 'AUTHOR_ID');
-  $user->values['AUTHOR'] = $this->db->field('AUTH_USERS:USERNAME', ['ID' => $author_id]);
-  $user->_RINDIV = implode('<br>', $this->getRights($id));
+  $form = $this->getForm();
+  $form->values = $this->db->select('AUTH_USERS', ['ID' => $id]);
+  $author_id = array_get($form->values, 'AUTHOR_ID');
+  $form->values['AUTHOR'] = $this->db->field('AUTH_USERS:USERNAME', ['ID' => $author_id]);
+  $form->_RINDIV = implode('<br>', $this->getRights($id));
 
   $i = 0;
   foreach($this->getRoles($id) as $role_id => $tmp) {
-    $user->values['ROLE'.(++$i)] = $role_id;
+    $form->values['ROLE'.(++$i)] = $role_id;
   }
 
-  if ($user->values['PASSW']) {
-    $user->_PASSWORD = '(hidden)';
+  if ($form->values['PASSW']) {
+    $form->_PASSWORD = '(hidden)';
   }
 
-  $user->enable('copy', 'update', 'delete', 'impersonate');
-  $this->title(2, $user->values['FULLNAME']);
-  return $user;
+  $form->enable('copy', 'update', 'delete', 'impersonate');
+  $this->title(2, $form->values['FULLNAME']);
+  return $form;
 }
 
 function addAction()
 {
-  $user = $this->getForm();
-  $user->enable('insert');
+  $form = $this->getForm();
+  $form->enable('insert');
   $this->title(2, 'Nový uživatel');
-  return $user;
+  return $form;
 }
 
 function insertAction()
