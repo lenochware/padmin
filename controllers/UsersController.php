@@ -17,9 +17,9 @@ function indexAction()
 {
   $this->title(1, "Uživatelé");
   $users = $this->getGrid();
-
-  $search = new PCForm('tpl/users/search.tpl', 'usersearch');
-  
+  $search = new SearchForm($users, ['USERNAME', 'ANNOT', 'ROLE', 'ACTIVE']);
+  $search->addTag('check new_users lb "Noví" html_title "za poslední měsíc"');
+  $search->addTag('check inactive lb "Nepřihlášení 1y"');
   return $search.$users;
 }
 
@@ -136,17 +136,6 @@ function copyAction()
   $this->app->redirect("users/edit/id:$uid");
 }
 
-function searchAction()
-{
-  $this->enableFilter();
-  $this->reload();
-}
-
-function showallAction() {
-  $this->enableFilter(false);
-  $this->reload();
-}
-
 /* @ajax */
 function genPasswordAction()
 {
@@ -179,15 +168,6 @@ protected function getRights($user_id)
     where REG.USER_ID={#0}", $user_id
   );
   return $data;
-}
-
-function enableFilter($enable = true)
-{
-  $filter = $enable? $_POST['data'] : null;
-
-  $this->app->setSession('users.filter', $filter);
-  $this->app->setSession('usersearch.values', $filter);
-  if (!$filter) $this->app->setSession('users.sortarray', null);
 }
 
 function userRoles($o, $id, $sub, $val)

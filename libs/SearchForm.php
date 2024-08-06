@@ -72,7 +72,6 @@ class SearchForm extends pclib\Form {
   	$pclib->app->deleteSession($name);
   	//$pclib->app->deleteSession("$name.filter");
     $pclib->app->deleteSession("search-$name.values");
-  	PCGrid::invalidate($name);
   }
 
   protected function prepareFilterData($data)
@@ -97,8 +96,11 @@ class SearchForm extends pclib\Form {
   /**
 	 * Reload stranky.
 	 */
-	function reload() {
-	  $this->app->router->reload();
+	function reload()
+	{
+		$_GET['sort'] = null;
+		$url = $this->app->router->createUrl(new pclib\Action($_GET));
+	  $this->app->redirect(['url' => $url]);
 	}
 
  }

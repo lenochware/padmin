@@ -8,7 +8,8 @@ string EMAIL lb "Email" size "20" tooltip
 string ANNOT lb "Poznámka" size "20" tooltip
 string LAST_LOGIN lb "Posl. přihlášení" sort date "d.m.Y H:i"
 string DT lb "Dat.vytvoření" sort date
-string ACTIVE lb "Aktivní" sort skip
+bind ACTIVE lb "Aktivní" list "1,Ano,0,Ne" sort skip
+bind ROLE lb "Role" query "select ID,coalesce(nullif(ANNOT,''),SNAME) from AUTH_ROLES" skip
 bind inactive list "0,inactive,1," skip field "ACTIVE"
 link lnedit lb "Editovat" route "users/edit/id:{ID}" skip
 link lnadd lb "Přidat uživatele" route "users/add" skip
