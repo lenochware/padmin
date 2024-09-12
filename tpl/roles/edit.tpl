@@ -7,7 +7,7 @@ sort SRSET lb "Konfigurace" sort "RSET"
 string SNAME lb "Název" sort
 string ANNOT lb "Popis" sort
 string STATUS lb "Status"
-string RVAL
+input RVAL
 string USER_ID
 button rupdate lb "Uložit"
 button back lb "Zpět" onclick "history.back()"
@@ -23,7 +23,7 @@ pager pager pglen "20"
   </tr>
   {block items}
   <tr>
-    <td>{if RBOOL}{ID}{RSET}{/if} {if not RBOOL}{RVAL}{/if}</td>
+    <td>{ID}{if RBOOL}{RSET}{/if} {if not RBOOL}{RVAL}{/if}</td>
     <td>{SNAME}</td>
     <td>{ANNOT}</td>
     <td>{STATUS}</td>

@@ -79,7 +79,8 @@ function insertAction() {
   $form = new PCForm('tpl/rights/form.tpl');
   if (!$form->validate()) $this->app->error('Chybně vyplněný formulář.');
   
-  $this->authMng->mkright($form->values['SNAME'], $form->values['ANNOT']);
+  $id = $this->authMng->mkright($form->values['SNAME'], $form->values['ANNOT']);
+  $this->authMng->setright(['ID' => $id, 'RTYPE' => $form->values['RTYPE']]);
 
   if ($this->authMng->errors)
     $this->app->error(implode('<br>', $this->authMng->errors));
@@ -151,11 +152,16 @@ function rupdateAction($id) {
   $grid = new GridForm('tpl/rights/edit.tpl');
 
   foreach($_POST['rowdata'] as $ra) {
-    switch ($ra['RSET']) {
-      case '1': $rval = '1';  break;
-      case '2': $rval = '0';  break;
-      case '3': $rval = null; break;
-      default: continue 2;
+    if (isset($ra['RVAL'])) {
+      $rval = $ra['RVAL'] ?: null;
+    }
+    else {
+      switch ($ra['RSET']) {
+        case '1': $rval = '1';  break;
+        case '2': $rval = '0';  break;
+        case '3': $rval = null; break;
+        default: continue 2;
+      }      
     }
 
     $right_id = (int)$ra['ID'];

@@ -168,11 +168,17 @@ function rupdateAction($id) {
   $grid = new GridForm('tpl/roles/edit.tpl');
 
   foreach($_POST['rowdata'] as $ra) {
-    switch ($ra['RSET']) {
-      case '1': $rval = '1';  break;
-      case '2': $rval = '0';  break;
-      case '3': $rval = null; break;
-      default: continue 2;
+
+    if (isset($ra['RVAL'])) {
+      $rval = $ra['RVAL'] ?: null;
+    }
+    else {    
+      switch ($ra['RSET']) {
+        case '1': $rval = '1';  break;
+        case '2': $rval = '0';  break;
+        case '3': $rval = null; break;
+        default: continue 2;
+      }
     }
 
     $right_id = (int)$ra['ID'];
