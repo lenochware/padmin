@@ -95,6 +95,10 @@ a:hover {
   width: 100%;
 }
 
+.text-muted {
+  color: gray;
+}
+
 /* PREHLEDY */
 
 TABLE.grid {

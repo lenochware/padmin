@@ -13,7 +13,7 @@
 +right padmin/sysinfo
 +right padmin/jobs
 
-+role admin
++role admin "Admin"
 role admin +right *
 
 +user admin +role admin +dpassw pclibadmin

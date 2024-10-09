@@ -1,11 +1,4 @@
 <?php
-
-//vyresit page (do searchformu), pridavani, mazani jazyku a translatoru
-//zobrazit neprelozene texty v jazyce x (existuji v source a ne v x)
-//vyber translatoru vubec nezobrazovat, pridavat translator 1 v pclib.sql
-//export - by mel exportovat vzdycky pouze jeden jazyk - nedovolit nevybrany jazyk?
-//aktualizovat grid po ulozeni translate formu
-
 include_once 'BaseController.php';
 
 class LocaleController extends BaseController {
@@ -101,8 +94,6 @@ function editAction($textId)
 
 function updateAction($textId)
 {
-  $this->db->delete('TRANSLATOR', "TEXT_ID='{0}'", $textId);
-
   $post = $_POST['data'];
   foreach ($this->getLanguages() as $langId => $lang)
   {
@@ -112,13 +103,12 @@ function updateAction($textId)
     $data = [
       'TRANSLATOR' => $this->transId,
       'LANG' => $langId,
-      'PAGE' => 0,
       'TEXT_ID' => $textId,
       'TSTEXT' => $text,
       'DT' => now(),
     ];
 
-    $this->db->insert('TRANSLATOR', $data);
+    $this->db->insertUpdate('TRANSLATOR', $data, ['TRANSLATOR', 'LANG', 'TEXT_ID']);
   }
 
   if (!$textId) {
@@ -138,8 +128,11 @@ function deleteAction($textId)
 
 function importAction()
 {
+  $search = $this->getSearch();
+
   $form = new PCForm('tpl/locale/import.tpl');
   $form->elements['LANG']['items'] = $this->getLanguages();
+  $form->elements['LANG']['default'] = $search->values['LANG'];
 
   if ($form->submitted) {
     $csv = new CsvFile();
@@ -150,9 +143,9 @@ function importAction()
       $this->app->error('Chybí povinné sloupce!');
     }
 
-    $this->importTexts($form->values['LANG'], $csv->toArray());
+    $count = $this->importTexts($form->values['LANG'], $csv->toArray());
 
-    $this->app->message("Import dokončen.");
+    $this->app->message("Import dokončen. $count textů importováno.");
   }
 
   return $form;
@@ -173,7 +166,7 @@ function languagesAction()
 function languageDeleteAction($id)
 {
   $this->db->delete('TRANSLATOR_LABELS', ['ID' => $id]);
-  $this->db->delete('TRANSLATOR', ['LANG' => $id]);
+  $this->db->delete('TRANSLATOR', ['TRANSLATOR' => $this->transId, 'LANG' => $id]);
   $this->app->message('Položka byla smazána.');
   $this->redirect('locale/languages');
 }
@@ -181,11 +174,14 @@ function languageDeleteAction($id)
 
 protected function getLanguages()
 {
-  return $this->db->selectPair('TRANSLATOR_LABELS:ID,LABEL', 'CATEGORY=2 order by ID');
+  $items = $this->db->selectPair('TRANSLATOR_LABELS:ID,LABEL', 'CATEGORY=2 order by ID');
+  return [0 => 'source'] + $items;
 }
 
 protected function importTexts($langId, $texts)
 {
+  $source = ($langId > 0) ? $this->db->selectOne('TRANSLATOR:TEXT_ID', ['TRANSLATOR' => $this->transId,  'LANG' => 0]) : [];
+
   foreach ($texts as $i => $text) {
     $data = [
       'TRANSLATOR' => $this->transId,
@@ -197,7 +193,15 @@ protected function importTexts($langId, $texts)
     ];
 
     $this->db->insertUpdate('TRANSLATOR', $data, ['TRANSLATOR', 'LANG', 'TEXT_ID']);
+
+    if ($source and !in_array($text['Id'], $source)) {
+      $data['LANG'] = 0;
+      $data['TSTEXT'] = 'SOURCE: ' . $data['TSTEXT'];
+      $this->db->insert('TRANSLATOR', $data);
+    }
   }
+
+  return count($texts);
 }
 
 function countAction($id)
