@@ -1,19 +1,63 @@
 <?elements
 class grid
-bind TRANSLATOR lb "Překladač" query "select ID,LABEL from TRANSLATOR_LABELS where CATEGORY=1" sort
-bind LANG lb "Jazyk" query "select ID,LABEL from TRANSLATOR_LABELS where CATEGORY=2" emptylb "source" sort
-link lnedit route "locale/edit/tr:{TRANSLATOR}/lang:{LANG}" skip
-link lnadd route "locale/add" lb "Přidat nový jazyk" skip
+string TEXT_ID lb "Id" sort
+string TSTEXT2 lb "Text" sort
+bind LANG query "select id,label from TRANSLATOR_LABELS where CATEGORY=2" skip
+link lnexport route "locale/export:1" lb "Export" skip
 pager pager pglen "20" nohide
 ?>
+<style> 
+.locale-input {
+  width: 100%;
+}
+</style>
 <h2>Texty</h2>
 <table class="grid">
-  <tr>{grid.labels}</tr>
+  <tr>
+  	<th>{TEXT_ID.lb}</th>
+  	<th>{TSTEXT2.lb}</th>
+  	<th></th>
+  </tr>
 {block items}
-  <tr class="link" onclick="{lnedit.js}">{grid.fields}</tr>
+  <tr class="link" onclick="editText({TEXT_ID})">
+  	<td width="50">{TEXT_ID}</td>
+  	<td><div class="text-long">{TSTEXT2}</div></td>
+  	<td align="right" style="color:#999">{LANG}</td>
+  </tr>
 {block else}
   <tr><td colspan=9>Nenalezeny žádné položky.</td></tr>
 {/block}
-<tr><td colspan=9>{lnadd}</td></tr>
+
+<tr><td colspan=9>
+  <a href="javascript:void(0)" onclick="editText(0)">Přidat</a>
+</td></tr>
 </table>
-<div class="pager">{pager}</div>
+
+<div id="form"></div>
+
+<div class="pager">{pager} | {pager.total} záznamů | {lnexport}</div>
+
+<script>
+	function editText(id)
+	{
+		$('#form').load('?r=locale/edit&textId=' + id);
+	}
+
+  function updateText(id)
+  {   
+    $.post('?r=locale/update&textId='+id,  $('.locale-form').serialize(), function(data) {
+      $(".result").html(data.message);
+    });
+  }
+
+  function dblclick(input)
+  {
+    let textbox = $(document.createElement('textarea'))
+      .attr('id', input.id)
+      .attr('name', input.name)
+      .attr('cols', 60)
+      .val(input.value);
+
+    $(input).replaceWith(textbox);
+  }
+</script>

@@ -1,238 +1,204 @@
 <?php
+
+//vyresit page (do searchformu), pridavani, mazani jazyku a translatoru
+//zobrazit neprelozene texty v jazyce x (existuji v source a ne v x)
+//vyber translatoru vubec nezobrazovat, pridavat translator 1 v pclib.sql
+//export - by mel exportovat vzdycky pouze jeden jazyk - nedovolit nevybrany jazyk?
+//aktualizovat grid po ulozeni translate formu
+
 include_once 'BaseController.php';
 
 class LocaleController extends BaseController {
 
-function indexAction() {
-  return $this->textsAction();
+protected $transId;
+
+function init()
+{
+  parent::init();
+  $search = $this->getSearch();
+  $this->transId = (int)$search->values['TRANSLATOR'];
 }
 
-function textsAction() {
+function indexAction()
+{
   $this->title(1, "Texty");
-  $grid = new PCGrid('tpl/locale/texts.tpl');  
+
+  $grid = new PCGrid('tpl/locale/texts.tpl', 'locale-grid');
+  $search = $this->getSearch();
 
   $grid->setquery(
-    "select A.ID TRANSLATOR,B.ID LANG FROM 
-    (SELECT ID FROM TRANSLATOR_LABELS WHERE CATEGORY=1) A,
-    (SELECT 0 ID UNION SELECT ID FROM TRANSLATOR_LABELS WHERE CATEGORY=2) B
-     ORDER BY A.ID,B.ID"
+    "select T.ID,T.TEXT_ID,T2.LANG,IFNULL(T2.TSTEXT,CONCAT('TRANSLATE: ',T.TSTEXT)) AS TSTEXT2 FROM TRANSLATOR T
+    LEFT JOIN TRANSLATOR T2 ON T2.TEXT_ID=T.TEXT_ID AND T2.LANG='{LANG}'
+    WHERE 1=1
+    AND T.TRANSLATOR='$this->transId'
+    AND T.LANG=0
+    ~ and T2.TSTEXT like '%{TSTEXT}%'
+    ORDER BY T.TRANSLATOR,IFNULL(T2.TSTEXT,T.TSTEXT)"
   );
-  return $grid;
+
+  if ($_GET['export']) {
+    $grid->exportExcel('texty.csv');
+  }
+
+  return $search.$grid;
 }
 
-function addAction() {
-  $this->title(2, 'Formulář jazyka');
-  $form = new PCForm('tpl/locale/form.tpl');
-  $form->_TRANSLATOR->noedit = 0;
-  $form->_LANG->noedit = 0;
-  $form->enable('insert');
-
-  return $form;  
-}
-
-function insertAction() {
-  $form = new PCForm('tpl/locale/form.tpl');
-  $translator = new PCTranslator($form->values['TRANSLATOR']);
-  $lang = $translator->createLanguage($form->values['LANG']);
-  $tr = $this->getLabelId($form->values['TRANSLATOR'], 1);
-  $n = $this->savetexts($tr, $lang, $form->values['TEXTS']);
-  $this->app->message("Položka byla přidána.");
+function searchAction() {
+  $this->setFilter($_POST['data']);
   $this->reload();
 }
 
-function editAction($tr, $lang) {
-  $this->title(2, 'Formulář jazyka');
-  $form = $this->getform($tr, $lang);
-  $form->enable('update', 'delete');
-  return $form;  
+function showallAction() {
+  $this->setFilter(null);
+  $this->reload();
+}
+
+function setFilter($filter)
+{
+  $this->app->setsession('locale-grid.filter', $filter);
+  $this->app->setsession('locale-search.values', $filter);
+}
+
+function getSearch()
+{
+  $search = new PCForm('tpl/locale/search.tpl', 'locale-search');
+
+  if (!$search->values['TRANSLATOR']) $search->values['TRANSLATOR'] = 1;
+  if (!$search->values['LANG']) $search->values['LANG'] = 0;
+
+  return $search;
+}
+
+/** ajax call */
+function editAction($textId)
+{  
+  $form = new PCForm('tpl/locale/form.tpl');
+  $data = [];
+
+  if ($textId) {
+    $data = $this->db->selectAll('TRANSLATOR', "TEXT_ID='{0}'", $textId);
+    $data = array_assoc($data, 'LANG');    
+  }
+
+  foreach ($this->getLanguages() as $langId => $lang)
+  {
+    $s = $data? $data[$langId]['TSTEXT'] : '';
+    if (strpos($s, "\n")) {
+      $form->addTag("text text_$langId lb \"Text $lang\" html_class=\"locale-input\"");
+    }
+    else {
+      $form->addTag("input text_$langId lb \"Text $lang\" html_class=\"locale-input\" html_ondblclick=\"dblclick(this)\"");
+    }
+
+    $form->values["text_$langId"] = $s;
+  }
+
+  $form->values["textId"] = $textId;
+  $form->enable($data? ['update', 'delete']:'insert');
+
+  die($form);
+}
+
+function updateAction($textId)
+{
+  $this->db->delete('TRANSLATOR', "TEXT_ID='{0}'", $textId);
+
+  $post = $_POST['data'];
+  foreach ($this->getLanguages() as $langId => $lang)
+  {
+    $text = $post['text_'.$langId];
+    if (!$text) continue;
+
+    $data = [
+      'TRANSLATOR' => $this->transId,
+      'LANG' => $langId,
+      'PAGE' => 0,
+      'TEXT_ID' => $textId,
+      'TSTEXT' => $text,
+      'DT' => now(),
+    ];
+
+    $this->db->insert('TRANSLATOR', $data);
+  }
+
+  if (!$textId) {
+    $textId = $this->db->field('TRANSLATOR:ID', "TEXT_ID=0 and LANG=0");
+    $this->db->update('TRANSLATOR', ['TEXT_ID' => $textId], "TEXT_ID=0");
+  }
+
+  $this->outputJson(['message' => 'Položka byla aktualizována.']);
+}
+
+function deleteAction($textId)
+{
+  $this->db->delete('TRANSLATOR', "TEXT_ID='{#0}'", $textId);
+  $this->app->message('Položka byla smazána.');
+  $this->reload();
 }
 
 function importAction()
 {
-  $form = new PCForm('tpl/locale/csvform.tpl');
+  $form = new PCForm('tpl/locale/import.tpl');
+  $form->elements['LANG']['items'] = $this->getLanguages();
+
   if ($form->submitted) {
-    $this->importCsv($form->values);
+    $csv = new CsvFile();
+    $csv->fromString($form->getFile('FILE'));
+    $cols = $csv->getColumns();
+
+    if (!in_array('Text', $cols) or !in_array('Id', $cols)) {
+      $this->app->error('Chybí povinné sloupce!');
+    }
+
+    $this->importTexts($form->values['LANG'], $csv->toArray());
+
     $this->app->message("Import dokončen.");
   }
 
   return $form;
 }
 
-function updateAction($tr, $lang) {
-  $form = new PCForm('tpl/locale/form.tpl');
-  $n = $this->savetexts($tr, $lang, $form->values['TEXTS']);
-  $this->app->message("Uloženo $n záznamů.");
-  $this->redirect("locale/edit/tr:$tr/lang:$lang");
+function languagesAction()
+{
+  if ($_GET['add']) {
+    $this->db->insert('TRANSLATOR_LABELS', ['CATEGORY' => 2, 'LABEL' => $_GET['add'], 'DT' => now()]);
+  }
+
+  $grid = new PCGrid('tpl/locale/languages.tpl');
+  $grid->setQuery("select ID,LABEL from TRANSLATOR_LABELS where CATEGORY=2 order by ID");
+  return $grid;
 }
 
-function deleteAction($tr, $lang) {
-  $form = new PCForm('tpl/locale/form.tpl');
-  $translator = new PCTranslator($form->values['TRANSLATOR']);
-  $translator->deleteLanguage($form->values['LANG']);
+function languageDelete($id)
+{
+  $this->db->delete('TRANSLATOR_LABELS', ['ID' => $id]);
+  $this->db->delete('TRANSLATOR', ['LANG' => $id]);
   $this->app->message('Položka byla smazána.');
   $this->reload();
 }
 
-protected function getform($tr = null, $lang = null) {
-  $form = new PCForm('tpl/locale/form.tpl');
-  $form->_TRANSLATOR = $this->db->field('TRANSLATOR_LABELS:LABEL', ['ID' => $tr]);
-  $form->_LANG =  $this->db->field('TRANSLATOR_LABELS:LABEL', ['ID' => $lang]);
-  $form->_TEXTS = $this->gettextsxml($tr, $lang);
-  return $form;
-}
 
-protected function gettextsxml($tr, $lang, $all = true) {
-
-  $texts = $this->gettexts($tr, $lang);
-  
-  $s = '';
-  foreach ($texts as $id => $text) {
-    if (!$text[1]) {
-      if (!$all) continue; else $text[1] = $text[0];
-    }
-    $s .= "<text id=\"$id\">".$text[1]."</text>\n";
-  }
-  return "<texts>\n".$s.'</texts>';
-}
-
-protected function importCsv($input)
+protected function getLanguages()
 {
-  $tr = $input['TRANSLATOR'];
-  $lang = $input['LANG'];
-  $column = $input['COLUMN'];
+  return $this->db->selectPair('TRANSLATOR_LABELS:ID,LABEL', 'CATEGORY=2 order by ID');
+}
 
-  $data = [
-    'TRANSLATOR' => $tr,
-    'LANG' => 0,
-    'PAGE' => 0,
-    'TEXT_ID' => 0,
-    'TSTEXT' => '',
-    'DT' => now(),
-  ];
+protected function importTexts($langId, $texts)
+{
+  foreach ($texts as $i => $text) {
+    $data = [
+      'TRANSLATOR' => $this->transId,
+      'LANG' => $langId,
+      'TEXT_ID' => $text['Id'],
+      'TSTEXT' => $text['Text'],
+      /*'PAGE' => $text['Page'],*/
+      'DT' => now(),
+    ];
 
-  $lines = explode("\n", $input['CSV']);
-
-  foreach ($lines as $line)
-  {
-    $fields = explode(';', trim($line));
-    $sSource = $fields[0];
-    $sTrans = $fields[$column];
-
-    if (!$sSource) continue;
-
-    $id = $this->db->field('TRANSLATOR:ID', ['TRANSLATOR' => $tr, 'LANG' => 0, 'TSTEXT' => $sSource]);
-
-    if (!$id) {
-      $data['LANG'] = 0;
-      $data['TSTEXT'] = $sSource;
-      $data['TEXT_ID'] = 0;
-      $id = $this->db->insert('TRANSLATOR', $data);
-    }
-
-    $transId = $this->db->field('TRANSLATOR:ID', ['TRANSLATOR' => $tr, 'LANG' => $lang, 'TEXT_ID' => $id]);
-    if ($transId) $this->db->delete('TRANSLATOR', ['ID' => $transId]);
-
-    $data['LANG'] = $lang;
-    $data['TSTEXT'] = $sTrans;
-    $data['TEXT_ID'] = $id;
-    $id = $this->db->insert('TRANSLATOR', $data);
+    $this->db->insertUpdate('TRANSLATOR', $data, ['TRANSLATOR', 'LANG', 'TEXT_ID']);
   }
 }
 
-protected function gettexts($tr, $lang) {
-  $texts = $this->db->selectPair(
-    "select T0.ID,T0.TSTEXT,T.TSTEXT,T.ID FROM TRANSLATOR T0
-    LEFT JOIN TRANSLATOR T ON T.TEXT_ID=T0.ID AND T.LANG='{1}'
-    WHERE T0.TRANSLATOR='{0}' AND T0.LANG=0 order by T.ID,T0.ID",
-    $tr, $lang
-  );
-  return $texts;
-}
-
-/**
- * Update table TRANSLATOR with texts stored in XML.
- * - You can add new source text with syntax <text>New source text</text> (without id)
- * - You can delete text as follows: <text id="11"></text> (empty tag will delete text #11)
- * - TODO: pages?
- */
-protected function savetexts($tr, $lang, $xml) {
-  $stored = $this->gettexts($tr, $lang);
-
-  $data = array(
-    'TRANSLATOR' => $tr,
-    'LANG' => $lang,
-    'DT' => now(),
-  );
-
-  $n = 0;
-  foreach ($this->xml2array($xml) as $text) {
-    $text_id = (int)$text[1];
-
-    $data['TEXT_ID'] = $text_id;
-    $data['TSTEXT'] = $text[2];
-
-    //adding source text
-    if (!$text_id and $lang == 0) {
-      $data['PAGE'] = $this->getLabelId('default', 3);
-      $text_id = $this->db->insert('TRANSLATOR', $data);
-      $this->db->update('TRANSLATOR', "TEXT_ID='$text_id'", ['ID' => $text_id]);
-      $n++;
-      continue;
-    }
-
-    $stored_text = $stored[$text_id];
-    if (!$stored_text) {
-      $this->app->message("Text #%d nenalezen.", 'warning', $text_id);
-      continue;
-    }    
-
-    //do not rewrite the same
-    if ($stored_text[1] == $text[2] or (!$stored_text[1] and $stored_text[0] == $text[2])) {
-      continue;
-    }
-
-    $id = $stored_text[2];
-    if ($data['TSTEXT'] === '' and $id) {
-      //check the dependencies
-      if ($lang == 0 and $this->db->exists('TRANSLATOR', "TEXT_ID='{0}' AND LANG<>0", $id)) {
-        $this->app->message("Text #%d se používá - nelze smazat.", 'warning', $id);
-        continue;
-      }
-      $this->db->delete('TRANSLATOR', ['ID' => $id]); 
-    }
-    elseif ($id) {
-      $this->db->update('TRANSLATOR', $data, ['ID' => $id]); 
-    }
-    else {
-      $data['PAGE'] = null;
-      $this->db->insert('TRANSLATOR', $data);      
-    }
-
-    $n++;
-  }
-  return $n;
-}
-
-protected function xml2array($s) {
-  $TEXTTAG_PATTERN = "/<text\s+id\s*=\s*\"(\d+)\"\s*>(.*?)<\/text>/si";
-  $TEXTTAG_PATTERN_ADD = "/<text>()(.+?)<\/text>/si"; 
-  preg_match_all($TEXTTAG_PATTERN, $s, $texts, PREG_SET_ORDER);
-  preg_match_all($TEXTTAG_PATTERN_ADD, $s, $texts2, PREG_SET_ORDER);
-  return array_merge($texts, $texts2);
-}
-
-protected function getLabelId($label, $category) {
-  if (!$label) return -1;
-  if ($label == 'source' and $category == 2) return 0;
-  $id = $this->db->field('TRANSLATOR_LABELS:ID',
-    "LABEL='{0}' AND CATEGORY='{1}'", $label, $category
-  );
-  if (!$id) {
-    $label = array('LABEL'=>$label,'CATEGORY'=>$category,'DT'=>date('Y-m-d H:i:s'));
-    $id = $this->db->insert($this->LABELS_TAB, $label);
-  }
-  return $id;
-}
 
 }
 
