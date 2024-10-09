@@ -161,7 +161,8 @@ function importAction()
 function languagesAction()
 {
   if ($_GET['add']) {
-    $this->db->insert('TRANSLATOR_LABELS', ['CATEGORY' => 2, 'LABEL' => $_GET['add'], 'DT' => now()]);
+    $this->db->insertUpdate('TRANSLATOR_LABELS', ['CATEGORY' => 2, 'LABEL' => $_GET['add'], 'DT' => now()], ['LABEL', 'CATEGORY']);
+    $this->redirect('locale/languages');
   }
 
   $grid = new PCGrid('tpl/locale/languages.tpl');
@@ -169,12 +170,12 @@ function languagesAction()
   return $grid;
 }
 
-function languageDelete($id)
+function languageDeleteAction($id)
 {
   $this->db->delete('TRANSLATOR_LABELS', ['ID' => $id]);
   $this->db->delete('TRANSLATOR', ['LANG' => $id]);
   $this->app->message('Položka byla smazána.');
-  $this->reload();
+  $this->redirect('locale/languages');
 }
 
 
@@ -197,6 +198,11 @@ protected function importTexts($langId, $texts)
 
     $this->db->insertUpdate('TRANSLATOR', $data, ['TRANSLATOR', 'LANG', 'TEXT_ID']);
   }
+}
+
+function countAction($id)
+{
+  print $this->db->field("TRANSLATOR:count(*)", ['LANG' => $id]);
 }
 
 

@@ -2,8 +2,9 @@
 class grid
 string ID lb "Id" sort
 string LABEL lb "Jazyk" sort
-link lnedelete route "locale/languageDelete" lb "Smazat" confirm "Opravdu smazat?"
-pager pager pglen "20" nohide
+action count route "locale/count/id:{ID}" lb "Počet textů"
+link lnedelete route "locale/languageDelete/id:{ID}" lb "Smazat" confirm "Opravdu smazat?"
+pager pager pglen "200" nohide
 ?>
 <h2>Jazyky</h2>
 <table class="grid">
@@ -16,12 +17,9 @@ pager pager pglen "20" nohide
   <tr><td colspan=9>Nenalezeny žádné položky.</td></tr>
 {/block}
 
-<tr><td colspan=9>
-  <a href="javascript:void(0)" onclick="editText(0)">Přidat</a>
-</td></tr>
 </table>
-
-<div class="pager">{pager}</div>
-
-<script>
-</script>
+<br>
+<form method="GET">
+	<input type="hidden" name="r" value="locale/languages">
+	Nový jazyk: <input type="text" name="add" maxlength="2"> <button type="submit">Přidat</button>
+</form>

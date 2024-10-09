@@ -10,7 +10,8 @@ Autentifikace/Konzole|console
 Číselníky/Menu|menu
 Číselníky/App. parametry|params
 Lokalizace|locale
-Lokalizace/Texty|locale/texts
+Lokalizace/Texty|locale
+Lokalizace/Jazyky|locale/languages
 Lokalizace/Import|locale/import
 Logger|logs
 Logger/Záznamy logu|logs

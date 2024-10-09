@@ -215,5 +215,7 @@ INSERT INTO LOOKUPS (APP, ID, CNAME, LABEL, POSITION) VALUES ('padmin', 604800, 
 INSERT INTO LOOKUPS (APP, ID, CNAME, LABEL, POSITION) VALUES ('padmin', 2592000, 'job-period', 'Jednou za měsíc', 8);
 INSERT INTO LOOKUPS (APP, ID, CNAME, LABEL, POSITION) VALUES ('padmin', 60, 'job-period', 'Jednou za minutu', 2);
 
+insert into TRANSLATOR_LABELS (ID, LABEL, CATEGORY) values(1,'App',1);
+
 -- Version of PCLIB database structures.
 INSERT INTO APP_PARAMS (PARAM_NAME, PARAM_VALUE, TITLE, CREATED_AT) VALUES ('PCLIB_VERSION', '3.1.0', 'Version of PCLIB database structures', datetime('now'));
