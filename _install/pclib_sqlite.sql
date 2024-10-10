@@ -205,7 +205,7 @@ CREATE TABLE jobs (
   author_id integer
 );
 
--- Fill lookups for padmin/jobs.
+-- Fill lookups.
 INSERT INTO LOOKUPS (APP, ID, CNAME, LABEL, POSITION) VALUES ('padmin', 0, 'job-period', 'Ruční spuštění', 1);
 INSERT INTO LOOKUPS (APP, ID, CNAME, LABEL, POSITION) VALUES ('padmin', 600, 'job-period', 'Jednou za 10 minut', 3);
 INSERT INTO LOOKUPS (APP, ID, CNAME, LABEL, POSITION) VALUES ('padmin', 3600, 'job-period', 'Jednou za hodinu', 4);

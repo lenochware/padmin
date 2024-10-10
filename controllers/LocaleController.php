@@ -29,7 +29,7 @@ function indexAction()
     ORDER BY T.TRANSLATOR,IFNULL(T2.TSTEXT,T.TSTEXT)"
   );
 
-  if ($_GET['export']) {
+  if (isset($_GET['export'])) {
     $grid->exportExcel('texty.csv');
   }
 
@@ -56,8 +56,8 @@ function getSearch()
 {
   $search = new PCForm('tpl/locale/search.tpl', 'locale-search');
 
-  if (!$search->values['TRANSLATOR']) $search->values['TRANSLATOR'] = 1;
-  if (!$search->values['LANG']) $search->values['LANG'] = 0;
+  if (empty($search->values['TRANSLATOR'])) $search->values['TRANSLATOR'] = 1;
+  if (empty($search->values['LANG'])) $search->values['LANG'] = 0;
 
   return $search;
 }
@@ -75,7 +75,7 @@ function editAction($textId)
 
   foreach ($this->getLanguages() as $langId => $lang)
   {
-    $s = $data? $data[$langId]['TSTEXT'] : '';
+    $s = array_get($data, [$langId, 'TSTEXT'], '');
     if (strpos($s, "\n")) {
       $form->addTag("text text_$langId lb \"Text $lang\" html_class=\"locale-input\"");
     }
@@ -153,7 +153,7 @@ function importAction()
 
 function languagesAction()
 {
-  if ($_GET['add']) {
+  if (isset($_GET['add'])) {
     $this->db->insertUpdate('TRANSLATOR_LABELS', ['CATEGORY' => 2, 'LABEL' => $_GET['add'], 'DT' => now()], ['LABEL', 'CATEGORY']);
     $this->redirect('locale/languages');
   }
@@ -180,7 +180,7 @@ protected function getLanguages()
 
 protected function importTexts($langId, $texts)
 {
-  $source = ($langId > 0) ? $this->db->selectOne('TRANSLATOR:TEXT_ID', ['TRANSLATOR' => $this->transId,  'LANG' => 0]) : [];
+  $source = $this->db->selectOne('TRANSLATOR:TEXT_ID', ['TRANSLATOR' => $this->transId,  'LANG' => 0]);
 
   foreach ($texts as $i => $text) {
     $data = [
@@ -194,7 +194,7 @@ protected function importTexts($langId, $texts)
 
     $this->db->insertUpdate('TRANSLATOR', $data, ['TRANSLATOR', 'LANG', 'TEXT_ID']);
 
-    if ($source and !in_array($text['Id'], $source)) {
+    if ($langId > 0 and !in_array($text['Id'], $source)) {
       $data['LANG'] = 0;
       $data['TSTEXT'] = 'SOURCE: ' . $data['TSTEXT'];
       $this->db->insert('TRANSLATOR', $data);

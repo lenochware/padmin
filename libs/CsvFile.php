@@ -153,7 +153,7 @@ class CsvFile
 		$rename = $this->options['columnsRename'];
 
 		foreach ( $this->columns as $i => $col) {
-			if ($rename[$col]) $col = $rename[$col];
+			if (isset($rename[$col])) $col = $rename[$col];
 			if (!$col) continue; //hack
 			$data[$col] = $row[$i];
 		}
@@ -242,6 +242,7 @@ class CsvFile
 	        $escesc = false;
 	      }
 
+	      if (!isset($o[$num])) $o[$num] = '';
 	      $o[$num] .= $s;
 	    }
 
