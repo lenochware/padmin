@@ -11,11 +11,30 @@ class DbController extends BaseController
 function init()
 {
   parent::init();
-  $this->clipboard = $this->app->getSession('db-clipboard');
+  $this->clipboard = $this->app->getSession('db.clipboard');
+  $this->table = $this->app->getSession('db.table');
 }
 
 function indexAction()
 {
+  $this->title(1, 'Tabulky');
+
+  $tables = $this->getTables();
+  $grid = new PCGrid('tpl/db/tables.tpl');
+  $grid->setArray(array_record($tables, 'table'));
+
+  return $grid;
+}
+
+function tableAction()
+{
+  if ($_GET['table']) $this->setTable($_GET['table']);
+
+  if (!$this->table) $this->app->error("Vyberte tabulku.");
+
+  $this->title(2, $this->table);
+
+
   $pk = $this->getPrimary($this->table);
   $columns = $this->db->columns($this->table);
   $grid = TemplateFactory::create('tpl/db/grid.tpl', $columns);
@@ -47,7 +66,7 @@ function pasteCsvAction()
 {
   $csv = new CsvFile;
   $csv->fromString($_POST['data']['csv-data']);
-  $this->app->setSession('db-clipboard', $csv->toArray());
+  $this->app->setSession('db.clipboard', $csv->toArray());
   $this->redirect('db/preview');
 }
 
@@ -65,6 +84,11 @@ function previewAction()
 
 function updateAction()
 {
+  $tables = $this->getTables();
+  if (!in_array($table, $tables)) {
+    $this->app->error("Tabulka nenalezena.");
+  }
+
   $rows = $this->getInsertDeleteRows();
   $pk = $this->getPrimary($this->table);
 
@@ -76,9 +100,9 @@ function updateAction()
     if ($status == 'ins') $this->db->insert($this->table, $row);
   }
 
-  $this->app->setSession('db-clipboard', []);
+  $this->app->setSession('db.clipboard', []);
   $this->app->message('Tabulka byla aktualizována.');
-  $this->redirect('db');
+  $this->redirect('db/table');
 
 }
 
@@ -99,6 +123,8 @@ protected function getPrimary($table)
 
 protected function getInsertDeleteRows()
 {
+  if (!$this->clipboard) $this->app->error("Nejsou vybrané žádné řádky.");
+
   $rows = [];
   $pk = $this->getPrimary($this->table);
 
@@ -118,16 +144,20 @@ protected function getInsertDeleteRows()
   return $rows;
 }
 
-
-protected function getConf($table)
+protected function setTable($table)
 {
-  $c = $this->app->config['dbsync'];
-
-  if (!isset($c[$table])) {
-    throw new Exception("Konfigurace pro '$table' nenalezena.");
+  $tables = $this->getTables();
+  if (!in_array($table, $tables)) {
+    $this->app->error("Tabulka nenalezena.");
   }
 
-  return (object)$c[$table];
+  $this->table = $table;
+  $this->app->setSession('db.table', $table);
+}
+
+protected function getTables()
+{
+  return $this->app->config['dbsync'] ?? [];
 }
 
 

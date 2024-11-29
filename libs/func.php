@@ -40,4 +40,14 @@ function array_assoc(array $a, $key)
   return $b;
 }
 
+function array_record(array $a, $key)
+{
+  $b = [];
+  foreach ($a as $row) {
+    $b[] = [$key => $row];
+  }
+  return $b;
+}
+
+
 ?>

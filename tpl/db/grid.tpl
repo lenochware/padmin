@@ -6,7 +6,7 @@ string elements noescape
 class grid
 block b_update noprint
 {elements}
-pager pager pglen "1000"
+pager pager pglen "20"
 ?:>
 <style>
 	form.padmin table.grid {
