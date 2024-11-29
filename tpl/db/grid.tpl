@@ -32,9 +32,11 @@ pager pager pglen "1000"
 		background-color: #fcc;
 	}
 
-	.upd {
+	.sel {
 		background-color: #ffc;
 	}
+
+
 
 </style>
 <h3>{:htitle:}</h3>
@@ -43,12 +45,10 @@ pager pager pglen "1000"
 
 <table class="grid">
   <tr>
-  	<th width="30"><input type="checkbox" id="check-all" checked="checked" value="1"></th>
   {block head}<th>{:{name}.lb:}</th>{/block}
   </tr>
 {:block items:}
-  <tr class="{:__status:}">
-  	<td><input type="checkbox" class="csel" name="data[__primary][]" value="{:__primary:}" checked></td>
+  <tr class="{:__status:}" id="{:__primary:}">
   {block columns}<td class="value {:__{name}_status:}" title="{:{name}:}" data-old="{:__{name}_old:}">{:{name}:}</td>{/block}
   </tr>
 {:block else:}
@@ -63,12 +63,37 @@ pager pager pglen "1000"
 {:/block:}
 
 <script>
-	function init()
-	{
-		$("#check-all").change(function() {
-	    $(".csel").prop('checked', $(this).prop('checked'));
-		});
-	}
 
-	$(document).ready(init);
+$(document).ready(function () {
+  let isMouseDown = false; // Sleduje stav tlačítka myši
+  let isSelecting = false; // Sleduje, zda vybíráme nebo odznačujeme
+  let lastSelectedRow = null; // Poslední vybraný řádek pro případ "shiftového" výběru
+
+  // Spuštění výběru
+  $("tr").on("mousedown", function (e) {
+    isMouseDown = true;
+
+    // Zkontroluj aktuální stav řádku (vybraný/nevybraný)
+    isSelecting = !$(this).hasClass("sel");
+    $(this).toggleClass("sel", isSelecting);
+
+    // Ulož poslední vybraný řádek
+    lastSelectedRow = $(this);
+
+    e.preventDefault(); // Zabraňuje standardnímu chování (např. výběru textu)
+  });
+
+  // Výběr při pohybu myši
+  $("tr").on("mouseover", function () {
+    if (isMouseDown) {
+      $(this).toggleClass("sel", isSelecting);
+    }
+  });
+
+  // Ukončení výběru
+  $(document).on("mouseup", function () {
+    isMouseDown = false;
+  });
+});
+
 </script>

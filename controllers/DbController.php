@@ -16,11 +16,15 @@ function init()
 
 function indexAction()
 {
+  $pk = $this->getPrimary($this->table);
   $columns = $this->db->columns($this->table);
   $grid = TemplateFactory::create('tpl/db/grid.tpl', $columns);
-  $grid->setQuery("select *, id as __primary from $this->table");
+  $grid->setQuery("select *, $pk as __primary from $this->table");
   $grid->_htitle = 'TABLE ' . $this->table;
-  $grid->_copy_form = new PCForm('tpl/db/form.tpl');
+
+  $form =  new PCForm('tpl/db/form.tpl');
+  $form->values['pk'] = $pk;
+  $grid->_copy_form = $form;
   return $grid;
 }
 
