@@ -37,6 +37,9 @@ pager pager pglen "1000"
 
 </style>
 <h3>{:htitle:}</h3>
+
+{:copy_form:}
+
 <table class="grid">
   <tr>
   	<th width="30"><input type="checkbox" id="check-all" checked="checked" value="1"></th>
@@ -55,17 +58,8 @@ pager pager pglen "1000"
 <div class="pager">{:pager:}</div>
 
 <script>
-	function showDiff()
-	{
-		let old = $(this).data('old');
-		if (!old) return;
-		alert(old);
-	}
-
 	function init()
 	{
-		$(".value").click(showDiff);
-
 		$("#check-all").change(function() {
 	    $(".csel").prop('checked', $(this).prop('checked'));
 		});

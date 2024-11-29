@@ -3,30 +3,39 @@ include 'BaseController.php';
 
 use pclib\extensions\TemplateFactory;
 
-class DbController extends BaseController {
+class DbController extends BaseController
+{
+  protected $table = 'addresses';
 
 function indexAction()
 {
-   $form = $this->getForm();
-   return $form;
+  $columns = $this->db->columns($this->table);
+  $grid = TemplateFactory::create('tpl/db/grid.tpl', $columns);
+  $grid->setQuery("select *, id as __primary from $this->table");
+  $grid->_htitle = 'TABLE ' . $this->table;
+  $grid->_copy_form = new PCForm('tpl/db/form.tpl');
+  return $grid;
 }
 
-function showAction()
+function csvAction()
 {
-   $form = $this->getForm();
-   $table = $form->values['table'];
-   $conf = $this->getConf($table);
+  $selected = explode(',', $_GET['selected']);
+  if (!$selected) die('Nenalezeno.');
+  
+  $rows = $this->db->selectAll("select * from {table} where id in ({#selected})", [
+    'selected' => $selected, 'table' => $this->table
+  ]);
 
-   $changes = $this->compareTablesHtml($conf->src, $conf->dest);
+  $csv = new CsvFile;
+  $csv->fromArray($rows);
+  die($csv->toString());
+}
 
-   $columns = $this->db->columns($table);
-
-   $grid = TemplateFactory::create('tpl/system/dbgrid.tpl', $columns);
-   $grid->setArray($changes);
-   $grid->_htitle = 'Rozdíl';
-   $form->values['grid'] = $grid->html();
-
-   return $form;
+function importCsvAction()
+{
+  $csv = new CsvFile;
+  $csv->fromString($_POST['data']['csv-data']);
+  dump($csv->toArray());
 }
 
 function syncAction()
@@ -58,52 +67,6 @@ protected function getPrimary($table)
   }
 
   return $col[0];
-}
-
-protected function getForm()
-{
-  $form = new PCForm('tpl/system/dbform.tpl', 'admin-dbform');
-  $keys = array_keys($this->app->config['dbsync']);
-
-  $items = [];
-  foreach ($keys as $key) {
-    $items[$key] = $key;
-  }
-
-  $form->_table->items = $items;
-  return $form;
-
-}
-
-function syncTable($table, $changes, $selected)
-{ 
-  $pk = $this->getPrimary($table);
-
-  $ins = $upd = $del = 0;
-
-  foreach ($changes['insert'] as $data)
-  {
-    if (!in_array($data[$pk], $selected)) continue;
-    $this->db->insert($table, $data);
-    $ins++;
-  }
-
-  foreach ($changes['update'] as $data)
-  {
-    if (!in_array($data[$pk], $selected)) continue;
-    $this->db->delete($table, [$pk => $data[$pk]]);
-    $this->db->insert($table, $data);
-    $upd++;
-  }
-
-  foreach ($changes['delete'] as $data)
-  {
-    if (!in_array($data[$pk], $selected)) continue;
-    $this->db->delete($table, [$pk => $data[$pk]]);
-    $del++;
-  }
-
-  return ['ins' => $ins, 'upd' => $upd, 'del' => $del];
 }
 
 // from $s1 -> to $s2 (_sync/new -> prod/old)
