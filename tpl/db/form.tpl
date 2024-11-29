@@ -1,5 +1,5 @@
 <?elements
-class form name "copy-form" route "db/importCsv" html5
+class form name "copy-form" route "db/pasteCsv" html5
 text csv-data
 button copy lb "Copy" onclick "copySelected()"
 button paste lb "Paste" onclick "pasteSelected()"

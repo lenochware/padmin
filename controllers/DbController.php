@@ -6,6 +6,13 @@ use pclib\extensions\TemplateFactory;
 class DbController extends BaseController
 {
   protected $table = 'addresses';
+  protected $clipboard = [];
+
+function init()
+{
+  parent::init();
+  $this->clipboard = $this->app->getSession('db-clipboard');
+}
 
 function indexAction()
 {
@@ -17,6 +24,7 @@ function indexAction()
   return $grid;
 }
 
+/* @ajax */
 function csvAction()
 {
   $selected = explode(',', $_GET['selected']);
@@ -31,27 +39,43 @@ function csvAction()
   die($csv->toString());
 }
 
-function importCsvAction()
+function pasteCsvAction()
 {
   $csv = new CsvFile;
   $csv->fromString($_POST['data']['csv-data']);
-  dump($csv->toArray());
+  $this->app->setSession('db-clipboard', $csv->toArray());
+  $this->redirect('db/preview');
 }
 
-function syncAction()
+function previewAction()
 {
-  $form = $this->getForm();
-  $table = $form->values['table'];
-  $conf = $this->getConf($table);
+  $columns = $this->db->columns($this->table);
+  $rows = $this->getInsertDeleteRows();
 
-  $sel = $form->values['__primary'];
+  $grid = TemplateFactory::create('tpl/db/grid.tpl', $columns);
+  $grid->setArray($rows);
+  $grid->_htitle = 'Preview';
+  $grid->enable('b_update');
+  return $grid;
+}
 
-  $changes = $this->compareTables($conf->src, $conf->dest);
+function updateAction()
+{
+  $rows = $this->getInsertDeleteRows();
+  $pk = $this->getPrimary($this->table);
 
-  $ret = $this->syncTable($table, $changes, $sel);
+  foreach ($rows as $row) {
+    $status = $row['__status'];
+    unset($row['__status']);
 
-  $this->app->message(paramStr('Ok. {ins} vloženo, {upd} aktualizováno, {del} smazáno.', $ret));
+    if ($status == 'del') $this->db->delete($this->table, [$pk => $row[$pk]]);
+    if ($status == 'ins') $this->db->insert($this->table, $row);
+  }
+
+  $this->app->setSession('db-clipboard', []);
+  $this->app->message('Tabulka byla aktualizována.');
   $this->redirect('db');
+
 }
 
 protected function getPrimary($table)
@@ -69,110 +93,27 @@ protected function getPrimary($table)
   return $col[0];
 }
 
-// from $s1 -> to $s2 (_sync/new -> prod/old)
-function compareTablesHtml($from, $to, $showSame = false)
+protected function getInsertDeleteRows()
 {
-  $c1 = $this->db->columns($from);
-  $c2 = $this->db->columns($to);
+  $rows = [];
+  $pk = $this->getPrimary($this->table);
 
-  if (!$c1 or !$c2 or $c1 != $c2) {
-    $this->app->error('Tabulky nenalezeny, nebo mají odlišnou strukturu.');
-  }
-
-  $pk = $this->getPrimary($to);
-
-  $s2 = [];
-  foreach ($this->db->selectAll($to) as $row) {
-    $s2[$row[$pk]] = $row;
-  }
-
-  $s1 = $this->db->selectAll($from);
-
-  $ret = [];
-
-  foreach ($s1 as $row)
-  {
-    $id = $row[$pk];
-
-    if (!$s2[$id]) {
-      $ret[] = $row + ['__status' => 'ins', '__primary' => $id];
-      continue;
+  foreach ($this->clipboard as $row) {
+    $previous = $this->db->select($this->table, [$pk => $row[$pk] ?? '']);
+    if ($previous and $previous != $row) {
+      $previous['__status'] = 'del';
+      $rows[] = $previous;      
     }
 
-    if ($s2[$id] != $row) 
-    {
-      //$row['__status']  = 'upd';
+    if ($previous and $previous == $row) continue;
 
-      foreach (array_diff($s2[$id], $row) as $key => $value) {
-        $row['__'.$key.'_status'] = 'upd';
-        $row['__'.$key.'_old'] = $s2[$id][$key];
-        $row['__primary'] = $id;
-      }
-
-      $ret[] = $row;
-    }
-    elseif($showSame) {
-       $row['__status']  = 'same';
-       $row['__primary'] = $id;
-       $ret[] = $row;
-    } 
-
-    unset($s2[$id]);
+    $row['__status'] = 'ins';
+    $rows[] = $row;
   }
 
-  foreach ($s2 as $key => $value) {
-    $ret[] = $value + ['__status' => 'del', '__primary' => $value[$pk]];
-  }
-
-  return $ret;
+  return $rows;
 }
 
-
-function compareTables($from, $to)
-{
-  $c1 = $this->db->columns($from);
-  $c2 = $this->db->columns($to);
-
-  if (!$c1 or !$c2 or $c1 != $c2) {
-    $this->app->error('Tabulky nenalezeny, nebo mají odlišnou strukturu.');
-  }
-
-  $ret = [
-    'insert' => [],
-    'update' => [],
-    'delete' => [],
-  ];
-
-  $pk = $this->getPrimary($to);
-
-  $s2 = [];
-  foreach ($this->db->selectAll($to) as $row) {
-    $s2[$row[$pk]] = $row;
-  }
-
-  $s1 = $this->db->selectAll($from);
-
-  foreach ($s1 as $row)
-  {
-    $id = $row[$pk];
-
-    if (!$s2[$id]) {
-      $ret['insert'][] = $row;
-      continue;
-    }
-
-    if ($s2[$id] != $row) 
-    {
-      $ret['update'][] = $row;
-    } 
-
-    unset($s2[$id]);
-  }
-
-  $ret['delete'] = $s2;
-
-  return $ret;
-}
 
 protected function getConf($table)
 {

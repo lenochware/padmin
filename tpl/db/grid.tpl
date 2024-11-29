@@ -4,6 +4,7 @@ string elements noescape
 ?>
 <:?elements
 class grid
+block b_update noprint
 {elements}
 pager pager pglen "1000"
 ?:>
@@ -56,6 +57,10 @@ pager pager pglen "1000"
 {:/block:}
 </table>
 <div class="pager">{:pager:}</div>
+
+{:block b_update:}
+<button onclick="document.location='?r=db/update'">Update</button>
+{:/block:}
 
 <script>
 	function init()
