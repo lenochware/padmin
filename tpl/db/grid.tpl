@@ -1,5 +1,5 @@
 <?elements
-class templatefactory create "grid"
+class templatefactory create "grid" sort
 string elements noescape
 ?>
 <:?elements
@@ -33,7 +33,7 @@ pager pager pglen "20"
 	}
 
 	.sel {
-		background-color: #ffc;
+		background-color: #9cf !important;
 	}
 
 
@@ -43,7 +43,7 @@ pager pager pglen "20"
 
 {:copy_form:}
 
-<table class="grid">
+<table class="grid" id="db-grid">
   <tr>
   {block head}<th>{:{name}.lb:}</th>{/block}
   </tr>

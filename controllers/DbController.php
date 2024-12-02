@@ -40,6 +40,7 @@ function tableAction()
   $grid = TemplateFactory::create('tpl/db/grid.tpl', $columns);
   $grid->setQuery("select *, $pk as __primary from $this->table");
   $grid->_htitle = 'TABLE ' . $this->table;
+  $this->setPager($grid);
 
   $form =  new PCForm('tpl/db/form.tpl');
   $form->values['pk'] = $pk;
@@ -158,6 +159,24 @@ protected function setTable($table)
 protected function getTables()
 {
   return $this->app->config['dbsync'] ?? [];
+}
+
+protected function setPager($grid)
+{
+  $pagerForm = new PCForm("tpl/db/pagerform.tpl", "db-pager");
+
+  $grid->pager->setPageLen(array_get($pagerForm->values, 'pglen'));
+  $page = array_get($pagerForm->values, 'page');
+  $grid->pager->setPage(array_get($_GET, 'page', $page));
+
+  $pagerForm->_page = $grid->pager->getValue('page');
+  $pagerForm->_total = $grid->pager->getValue('total');
+  $pagerForm->_first = $grid->pager->getHtml('first');
+  $pagerForm->_last = $grid->pager->getHtml('last');
+  $pagerForm->_pglen = $grid->pager->getValue('pglen');
+  $pagerForm->_pages = $grid->pager->getHtml('pages');
+
+  $grid->values['pager'] = $pagerForm;
 }
 
 

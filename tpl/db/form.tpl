@@ -5,7 +5,11 @@ button copy lb "Copy" onclick "copySelected()"
 button paste lb "Paste" onclick "pasteSelected()"
 ?>
 
-<div>{form.fields} <span id="info-box"></span></div>
+
+<div>
+	<input type="text" id="search" onkeyup="filterTable('db-grid')" placeholder="Hledat..">
+	{form.fields} <span id="info-box"></span>
+</div>
 <br><br>
 
 <script>
