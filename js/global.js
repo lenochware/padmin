@@ -50,7 +50,9 @@ function filterTable(name)
   let table = document.getElementById(name);
   let tr = table.getElementsByTagName("tr");
 
-  $('#'+name).toggleClass('strips', filter.length == 0);
+  if (!$('#'+name).hasClass('no-strips')) {
+    $('#'+name).toggleClass('strips', filter.length == 0);
+  }
 
   for (let i = 1; i < tr.length; i++) {
   let txtValue = tr[i].textContent;

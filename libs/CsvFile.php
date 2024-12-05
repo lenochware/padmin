@@ -155,7 +155,7 @@ class CsvFile
 		foreach ( $this->columns as $i => $col) {
 			if (isset($rename[$col])) $col = $rename[$col];
 			if (!$col) continue; //hack
-			$data[$col] = $row[$i];
+			$data[$col] = $row[$i] ?? null;
 		}
 
 		return $data;

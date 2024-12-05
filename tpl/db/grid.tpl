@@ -33,7 +33,12 @@ pager pager pglen "20"
 	}
 
 	.sel {
-		background-color: #9cf !important;
+		background-color: #99ccff66;
+		border: 1px solid #ccc;
+	}
+
+	TABLE.grid TR.sel:hover {
+		background-color: #99ccff99;
 	}
 
 
@@ -43,14 +48,14 @@ pager pager pglen "20"
 
 {:copy_form:}
 
-<table class="grid" id="db-grid">
-  <tr>
-  {block head}<th>{:{name}.lb:}</th>{/block}
-  </tr>
+<table class="grid no-strips" id="db-grid">
+	<tr>
+	{block head}<th>{:{name}.lb:}</th>{/block}
+	</tr>
 {:block items:}
-  <tr class="{:__status:}" id="{:__primary:}">
-  {block columns}<td class="value {:__{name}_status:}" title="{:{name}:}" data-old="{:__{name}_old:}">{:{name}:}</td>{/block}
-  </tr>
+	<tr class="{:__status:}" id="{:__primary:}">
+	{block columns}<td class="value {:__{name}_status:}" title="{:{name}:}" data-old="{:__{name}_old:}">{:{name}:}</td>{/block}
+	</tr>
 {:block else:}
 <tr><td colspan="20" align="center">Žádné změny.</td></tr>
 
@@ -65,35 +70,52 @@ pager pager pglen "20"
 <script>
 
 $(document).ready(function () {
-  let isMouseDown = false; // Sleduje stav tlačítka myši
-  let isSelecting = false; // Sleduje, zda vybíráme nebo odznačujeme
-  let lastSelectedRow = null; // Poslední vybraný řádek pro případ "shiftového" výběru
+	let isMouseDown = false; // Sleduje stav tlačítka myši
+	let isSelecting = false; // Sleduje, zda vybíráme nebo odznačujeme
+	let firstSelectedRow = null;
 
-  // Spuštění výběru
-  $("tr").on("mousedown", function (e) {
-    isMouseDown = true;
+	const rows = $('tr');
 
-    // Zkontroluj aktuální stav řádku (vybraný/nevybraný)
-    isSelecting = !$(this).hasClass("sel");
-    $(this).toggleClass("sel", isSelecting);
+	// Spuštění výběru
+	$("tr").on("mousedown", function (e) {
+		if (e.button != 0) return;
+		isMouseDown = true;
 
-    // Ulož poslední vybraný řádek
-    lastSelectedRow = $(this);
+		// Zkontroluj aktuální stav řádku (vybraný/nevybraný)
+		isSelecting = !$(this).hasClass("sel");
+		$(this).toggleClass("sel", isSelecting);
 
-    e.preventDefault(); // Zabraňuje standardnímu chování (např. výběru textu)
-  });
+		// Ulož poslední vybraný řádek
+		firstSelectedRow = this;
 
-  // Výběr při pohybu myši
-  $("tr").on("mouseover", function () {
-    if (isMouseDown) {
-      $(this).toggleClass("sel", isSelecting);
-    }
-  });
+		e.preventDefault(); // Zabraňuje standardnímu chování (např. výběru textu)
+	});
 
-  // Ukončení výběru
-  $(document).on("mouseup", function () {
-    isMouseDown = false;
-  });
+	// Výběr při pohybu myši
+	$("tr").on("mouseover", function () {
+		if (isMouseDown) {
+			//$(this).toggleClass("sel", isSelecting);
+
+			let selection = false;
+			for(let i = 0; i < rows.length; i++) {
+				if (!selection && (rows[i] == this || rows[i] == firstSelectedRow)) {
+					selection = true;
+					$(rows[i]).toggleClass("sel", isSelecting);
+					continue;
+				}
+
+				if (selection) $(rows[i]).toggleClass("sel", isSelecting);
+				if (rows[i] == this || rows[i] == firstSelectedRow) return;
+			}
+		}
+
+	});
+
+	// Ukončení výběru
+	$(document).on("mouseup", function () {
+		isMouseDown = false;
+	});
+
 });
 
 </script>
