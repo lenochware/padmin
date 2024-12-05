@@ -16,7 +16,7 @@ button paste lb "Paste" onclick "pasteSelected()"
 function copySelected()
 {
 	let a = [];
-	$(".sel").each(function() {
+	$("tr.sel").each(function() {
 		a.push($(this).attr('{pk}'));
 	})
 

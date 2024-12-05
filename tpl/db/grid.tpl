@@ -34,7 +34,8 @@ pager pager pglen "20"
 
 	.sel {
 		background-color: #99ccff66;
-		border: 1px solid #ccc;
+		border-top: 1px solid #ccc;
+		border-bottom: 1px solid #ccc;
 	}
 
 	TABLE.grid TR.sel:hover {
@@ -68,54 +69,7 @@ pager pager pglen "20"
 {:/block:}
 
 <script>
-
 $(document).ready(function () {
-	let isMouseDown = false; // Sleduje stav tlačítka myši
-	let isSelecting = false; // Sleduje, zda vybíráme nebo odznačujeme
-	let firstSelectedRow = null;
-
-	const rows = $('tr');
-
-	// Spuštění výběru
-	$("tr").on("mousedown", function (e) {
-		if (e.button != 0) return;
-		isMouseDown = true;
-
-		// Zkontroluj aktuální stav řádku (vybraný/nevybraný)
-		isSelecting = !$(this).hasClass("sel");
-		$(this).toggleClass("sel", isSelecting);
-
-		// Ulož poslední vybraný řádek
-		firstSelectedRow = this;
-
-		e.preventDefault(); // Zabraňuje standardnímu chování (např. výběru textu)
-	});
-
-	// Výběr při pohybu myši
-	$("tr").on("mouseover", function () {
-		if (isMouseDown) {
-			//$(this).toggleClass("sel", isSelecting);
-
-			let selection = false;
-			for(let i = 0; i < rows.length; i++) {
-				if (!selection && (rows[i] == this || rows[i] == firstSelectedRow)) {
-					selection = true;
-					$(rows[i]).toggleClass("sel", isSelecting);
-					continue;
-				}
-
-				if (selection) $(rows[i]).toggleClass("sel", isSelecting);
-				if (rows[i] == this || rows[i] == firstSelectedRow) return;
-			}
-		}
-
-	});
-
-	// Ukončení výběru
-	$(document).on("mouseup", function () {
-		isMouseDown = false;
-	});
-
+  dataGrid("#db-grid");
 });
-
 </script>

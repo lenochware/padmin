@@ -28,6 +28,8 @@ function indexAction()
 
 function tableAction()
 {
+  $this->app->layout->addScripts("js/datagrid.js");
+
   if ($_GET['table']) $this->setTable($_GET['table']);
 
   if (!$this->table) $this->app->error("Vyberte tabulku.");
