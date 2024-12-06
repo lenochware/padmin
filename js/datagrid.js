@@ -1,6 +1,8 @@
 
 function dataGrid(id) {
   let isSelecting = false;
+  let firstSel = null;
+  
   let startX, startY;
   let mouseButton;
 
@@ -14,6 +16,10 @@ function dataGrid(id) {
     };
   }
 
+  $("tr").on("click", function (e) {
+    $(this).toggleClass("sel", !$(this).hasClass("sel"));
+  });  
+
   // Zahájení výběru
   $(id).on("mousedown", function (e) {
 
@@ -23,9 +29,6 @@ function dataGrid(id) {
     isSelecting = true;
     startX = e.pageX;
     startY = e.pageY;
-
-    // Zrušení aktuálního výběru buněk
-    $("td,tr").removeClass("sel");
 
     e.preventDefault(); // Zabrání výběru textu
   });
@@ -54,8 +57,10 @@ function dataGrid(id) {
         rect.top < cellRect.bottom &&
         rect.bottom > cellRect.top;
 
-      $(this).toggleClass("sel", isOverlapping);
-      //if (isOverlapping) $(this).addClass("sel"); //ctrl - add sel?
+      if (isOverlapping && !firstSel)  firstSel = $(this).hasClass("sel")? "sel" : "unsel";
+
+      //$(this).toggleClass("sel", isOverlapping);
+      if (isOverlapping) $(this).toggleClass("sel", firstSel == "unsel");
     });
   });
 
@@ -63,6 +68,7 @@ function dataGrid(id) {
   $(document).on("mouseup", function () {
     if (isSelecting) {
       isSelecting = false;
+      firstSel = null;
     }
   });
 };

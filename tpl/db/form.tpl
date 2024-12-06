@@ -3,6 +3,7 @@ class form name "copy-form" route "db/pasteCsv" html5
 text csv-data html_class "hidden" lb " "
 button copy lb "Copy" onclick "copySelected()"
 button paste lb "Paste" onclick "pasteSelected()"
+button unselect lb "Unselect" onclick "clearSelection()"
 ?>
 
 
@@ -31,5 +32,10 @@ function pasteSelected()
 	navigator.clipboard
   .readText()
   .then((clipText) => { $("#csv-data").val(clipText); $("#copy-form").submit()});
+}
+
+function clearSelection()
+{
+	$("td,tr").removeClass("sel");
 }
 </script>
