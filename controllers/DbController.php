@@ -28,7 +28,7 @@ function indexAction()
 
 function tableAction()
 {
-  $this->app->layout->addScripts("js/datagrid.js");
+  $this->app->layout->addScripts("js/datagrid.js", "js/contextual.js", "css/contextual.css");
 
   if ($_GET['table']) $this->setTable($_GET['table']);
 
