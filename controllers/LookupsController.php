@@ -6,7 +6,12 @@ class LookupsController extends BaseController {
 function indexAction() {
   $this->title(1, 'Číselníky');
   $lookups = new PCGrid('tpl/lookups/list.tpl');
-  $lookups->setquery("select distinct if (APP is null or APP='', CNAME, concat(APP, '.', CNAME)) CNAME from LOOKUPS order by APP,CNAME");
+  $lookups->setquery(
+    "select DISTINCT IF (L.APP IS NULL OR L.APP='', L.CNAME, CONCAT(L.APP, '.', L.CNAME)) CNAME, LA.LABEL AS ANNOT FROM LOOKUPS L
+    LEFT JOIN LOOKUPS AS LA ON LA.ID=L.CNAME and LA.CNAME='lookups'
+    ORDER BY L.APP,L.CNAME"
+  );
+
   return $lookups;
 }
 
