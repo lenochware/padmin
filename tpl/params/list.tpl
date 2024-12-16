@@ -9,8 +9,12 @@ link lnedit route "params/edit/id:{ID}" skip
 pager pager pglen "20"
 ?>
 <h2>Parametry aplikace</h2>
-<table class="grid">
-  <tr>{grid.labels}</tr>
+
+<input type="text" id="search" onkeyup="filterTable('mainList')" placeholder="Hledat..">
+<br><br>
+
+<table id="mainList" class="grid strips">
+	<tr>{grid.labels}</tr>
 {BLOCK items}
   <tr class="link" onclick="{lnedit.js}">{grid.fields}</tr>
 {BLOCK else}  
