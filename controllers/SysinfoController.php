@@ -3,6 +3,12 @@ include 'BaseController.php';
 
 class SysinfoController extends BaseController {
 
+function init()
+{
+  parent::init();
+  $this->title(1, "Informace");
+}
+
 function phpAction()
 {
   $pi = $this->getPhpInfo();

@@ -69,7 +69,7 @@ function deleteAction($id) {
   $form = new PCForm('tpl/lookups/form.tpl');
   $form->delete('LOOKUPS', "GUID='{#0}'", $id);
   $this->app->message('Položka byla smazána.');
-  $this->redirect("lookups/view/lookup:{GET.lookup}");
+  $this->redirect("lookups/view/lookup:" . $_GET['lookup']);
 }
 
 function updateAction($id) {
@@ -77,7 +77,7 @@ function updateAction($id) {
   if (!$form->validate()) $this->app->error('Chybně vyplněný formulář.');
   $form->update('LOOKUPS', "GUID='{#0}'", $id);
   $this->app->message('Položka byla uložena.');
-  $this->redirect("lookups/view/lookup:{GET.lookup}");
+  $this->redirect("lookups/view/lookup:" . $_GET['lookup']);
 }
 
 function addlookupAction() {

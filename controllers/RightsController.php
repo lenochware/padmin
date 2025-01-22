@@ -169,7 +169,7 @@ function rupdateAction($id) {
   };
 
   $this->app->message('Položky byly uloženy.');
-  $this->app->redirect("rights/user/{GET}");
+  $this->app->redirect("rights/user/id:" . $id);
 
 }
 

@@ -186,7 +186,7 @@ function rupdateAction($id) {
   };
 
   $this->app->message('Položky byly uloženy.');
-  $this->app->redirect("roles/rights/{GET}");
+  $this->app->redirect("roles/rights/id:" . $id);
 }
 
 function getStatus($o, $id, $sub, $value) {
