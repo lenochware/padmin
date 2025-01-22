@@ -1,7 +1,7 @@
 <?php
 
 $config = [
-	'padmin.version' => '2.4.0',
+	'padmin.version' => '2.5.0',
 	'padmin.logging' => true,
 
 	'pclib.security' => [

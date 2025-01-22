@@ -4,7 +4,7 @@
 	"type": "project",
 	"keywords": ["pclib", "administration", "tool"],
 	"homepage": "http://pclib.brambor.net",
-	"license": "MIT",
+	"license": ["MIT"],
 	"authors": [
 		{
 			"name": "lenochware",
