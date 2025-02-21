@@ -3,11 +3,10 @@
 ### Features
 
 * Management of user accounts
-* Roles, user permissions etc.
-* Management of lookups, application menu
-* Localization texts
-* Logger - searching, deleting
-* System informations
+* Setting roles and user permissions
+* Management of lookup tables
+* Management of texts for localization
+* Logger, system informations and more
 
 ### Installation
 
@@ -18,7 +17,7 @@ Install it using composer:
 in directory of your project.
 
 Before first run, set database connection or other parameters in padmin/config.php.
-If pclib tables does not exists in database, padmin create datastructures after first run.
+If pclib tables does not exists in database, padmin creates datastructures at first run.
 
 ### Links
 * [PClib homepage](http://pclib.brambor.net/)

@@ -162,12 +162,18 @@ protected function getRoles($user_id = null)
 
 protected function getRights($user_id)
 {
-  $data = $this->db->selectOne(
-    "select SNAME from AUTH_RIGHTS R
+  $rows = $this->db->selectAll(
+    "select SNAME,REG.RVAL as RVAL from AUTH_RIGHTS R
     left join AUTH_REGISTER REG on R.ID=REG.RIGHT_ID
     where REG.USER_ID={#0}", $user_id
   );
-  return $data;
+
+  $rights = [];
+  foreach ($rows as $row) {
+    $rights[] = $row['RVAL'] == '1' ? $row['SNAME'] : $row['SNAME'] . ": ".$row['RVAL'];
+  }
+
+  return $rights;
 }
 
 function userRoles($o, $id, $sub, $val)

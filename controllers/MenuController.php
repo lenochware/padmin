@@ -41,7 +41,7 @@ function deleteAction() {
 function ajax_loadAction($id) {
   $menu = new PCTree;
   $menu->load($id);
-  die($menu->exportText());
+  die($menu->exportText("PATH|ROUTE|RKEY"));
 }
 
 }

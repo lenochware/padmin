@@ -6,9 +6,16 @@ function now() {
 }
 
 //test zda db obsahuje pclib tabulky
-function is_installed($db) {
-  $table = (get_class($db->drv) == 'pgsql')? 'auth_users':'AUTH_USERS';
-  return $db->columns($table)? true:false;
+function is_installed($db)
+{
+  global $app;
+  
+  try {
+    $table = (get_class($db->drv) == 'pgsql')? 'auth_users':'AUTH_USERS';
+    return $db->columns($table)? true:false;
+  } catch(Exception $e) {
+    $app->error('Nepodařilo se připojit k databázi. Chyba: %s',null, $e->getMessage());
+  }
 }
 
 function make_install($app)  

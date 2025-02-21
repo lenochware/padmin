@@ -4,8 +4,6 @@
  * Aplikace padmin.
  * \author -dk- <lenochware@gmail.com>
  */
-define('PADMIN_MENU_ID', 1);
-
 include 'vendor/autoload.php';
 include 'libs/func.php';
 
@@ -15,31 +13,14 @@ $app = new PCApp('padmin');
 $app->addConfig('./config.php');
 $pclib->autoloader->addDirectory('libs');
 
-$app->setLayout('tpl/website.tpl');
-$app->layout->_VERSION = $app->config['padmin.version'];
+$app->layout->_VERSION = '2.5.1';
 
-try {
-  $app->db = new PCDb($app->config['padmin.db']);
-} catch (Exception $e) {
-  $app->error('Nepodařilo se připojit k databázi. Chyba: %s',null, $e->getMessage());
-}
-
-if ($app->db->info['driver'] == 'pgsql') {
+if (($app->db->info['driver'] ?? '') == 'pgsql') {
   $app->db->drv->ucase = 1;
   $app->db->drv->noquote = 1;
 }
 
 if (!is_installed($app->db)) make_install($app);
-
-$app->auth = new PCAuth();
-
-if (!$app->controller) {
-  $app->controller = 'users';
-}
-
-if ($app->config['padmin.logging']) {
-  $app->logger = new PCLogger();
-}
 
 if ($_POST) {
   $app->log('action', 'padmin/' . $app->router->action->path, null,  isset($_GET['id'])? (int)$_GET['id'] : null);
@@ -61,7 +42,7 @@ if ($app->auth->isLogged())
     $menu->auth = $app->auth;
   }
 
-  $menu->load(PADMIN_MENU_ID);
+  $menu->load(/*PADMIN_MENU_ID*/ 1);
 
   $menu->values['CSS_CLASS'] = 'menu';
   $app->layout->_MENU = $menu;

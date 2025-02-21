@@ -88,7 +88,7 @@ function previewAction()
 function updateAction()
 {
   $tables = $this->getTables();
-  if (!in_array($table, $tables)) {
+  if (!in_array($this->table, $tables)) {
     $this->app->error("Tabulka nenalezena.");
   }
 
