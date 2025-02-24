@@ -33,7 +33,7 @@ function loginAction()
 
   $this->app->log('auth', 'padmin/login');
   $this->loginNotifications();
-  $this->redirect('users');
+  $this->redirectBack('users');
 }
 
 function logoutAction()
@@ -46,7 +46,7 @@ function logoutAction()
 
 function loginNotifications()
 {
-  $cfg = $this->app->config['pclib.auth'];
+  $cfg = $this->app->config['service.auth'] ?? $this->app->config['pclib.auth'];
   
   if ($cfg['algo'] == 'md5' and (!$cfg['secret'] or $cfg['secret'] == 'write any random string!')) {
     $this->app->message(

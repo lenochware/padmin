@@ -39,7 +39,7 @@ $config = [
 	'superuser' => ['admin'],
 
 	'protected' => [
-		'jobs', 'console', 'sysinfo', 'db' ,'menu'
+		'jobs', 'console', 'sysinfo', 'db' ,'menu', 'logs/cleanup'
 	],
 
 	'hidden' => [],

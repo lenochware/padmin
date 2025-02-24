@@ -32,12 +32,6 @@ function make_install($app)
   }
 }
 
-//akce pristupne bez prihlaseni
-function is_public($route)
-{
-	return in_array($route, ['jobs/run', 'account/login', 'account']);
-}
-
 function array_assoc(array $a, $key)
 {
   $b = [];

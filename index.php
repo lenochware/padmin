@@ -26,18 +26,14 @@ if ($_POST) {
   $app->log('action', 'padmin/' . $app->router->action->path, null,  isset($_GET['id'])? (int)$_GET['id'] : null);
 }
 
-if ($app->auth->isLogged())
+if ($app->auth->hasright('padmin/enter'))
 {
   $app->layout->enable('user');
   $user = $app->auth->getUser()->getValues();
   $user['superuser'] = in_array($user['USERNAME'], $app->config['superuser']);
   $app->layout->_UNAME = $user['FULLNAME'];
 
-  if ($app->controller != 'account' and !$app->auth->hasright('padmin/enter')) {
-    $app->error('Nemáte oprávnění ke vstupu.');
-  }
-
-  if (in_array($app->controller, $app->config['protected']) and !$user['superuser']) {
+  if (in_array($app->routestr, $app->config['protected']) and !$user['superuser']) {
     $app->error('Nemáte oprávnění ke vstupu.');
   }
 
@@ -64,15 +60,9 @@ if ($app->auth->isLogged())
 
   $menu->values['CSS_CLASS'] = 'menu';
   $app->layout->_MENU = $menu;
-  $app->run();
-}
-elseif(is_public($app->routestr)) {
-  $app->run();
-}
-else {
-  $app->run('account/signin');
 }
 
+$app->run();
 $app->out();
 
 ?>

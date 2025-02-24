@@ -6,11 +6,12 @@ protected $db;
 
 function __construct($app) {
   parent::__construct($app);
+  $this->authorizeRedirect = 'account/signin';
   $this->db = $this->app->db;
 }
 
 function init() {
-  $this->testPerm('padmin/'.$this->app->controller);
+  $this->authorize('padmin/'.$this->app->controller);
 }
 
 function allowed($perm) {
@@ -34,6 +35,21 @@ function title($level, $title) {
 
 function reload() {
   $this->app->redirect($this->app->controller);
+}
+
+/**
+ * Redirect na predchozi url (backurl) nebo fallback url, kdyz neexistuje
+ */
+function redirectBack($fallback)
+{
+  $backUrl = $this->app->getSession('backurl');
+  if ($backUrl) {
+    $this->app->deleteSession('backurl');
+    $this->app->redirect(['url' => $backUrl]);
+  }
+  else {
+    $this->app->redirect($fallback);
+  }
 }
 
 function invalid($form) {

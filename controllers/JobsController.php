@@ -14,7 +14,13 @@ class JobsController extends BaseController
 	{
 		global $pclib;
 
-		parent::init();
+		if ($this->action == 'run') {
+			if (!isset($_GET['key']) or $_GET['key'] != $this->getApiKey()) {
+				throw new Exception('Neplatný aplikační klíč. Přístup zamítnut.');
+			}
+		} else {
+			$this->authorize('padmin/jobs');
+		}
 
 		$this->app->layout->addScripts(
 			'css/zebra_datepicker/bootstrap/zebra_datepicker.css',
@@ -28,19 +34,6 @@ class JobsController extends BaseController
 			$pclib->autoloader->addDirectory($this->app->config['jobs-dir']);
 		}
 	}
-
-	// @override
-	function testPerm($perm)
-	{
-		if ($this->action == 'run') {
-			if ($_GET['key'] != $this->getApiKey()) {
-				throw new Exception('Neplatný aplikační klíč. Přístup zamítnut.');
-			}
-		} else {
-			parent::testPerm($perm);
-		}
-	}
-
 
 	protected function getApiKey()
 	{
@@ -99,7 +92,6 @@ class JobsController extends BaseController
 	{
 		global $user;
 
-		$this->testPerm('padmin/jobs/edit');
 		$form = $this->getForm();
 		if (!$form->validate()) {
 			$this->invalid($form);
@@ -129,7 +121,6 @@ class JobsController extends BaseController
 	 */
 	public function updateAction($id)
 	{
-		$this->testPerm('padmin/jobs/edit');
 		$form = $this->getForm();
 		if (!$form->validate()) {
 			$this->invalid($form);
@@ -145,7 +136,6 @@ class JobsController extends BaseController
 	 */
 	public function deleteAction($id)
 	{
-		$this->testPerm('padmin/jobs/edit');
 		$form = $this->getForm();
 		if (!$form->validate()) {
 			$this->invalid($form);
