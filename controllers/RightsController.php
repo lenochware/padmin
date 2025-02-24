@@ -9,10 +9,10 @@ private $authMng;
 
 function init() {
   if (in_array($this->action, ['user', 'rupdate', 'search', 'showall'])) {
-    $this->testPerm('padmin/users');
+    $this->authorize('padmin/users');
   }
   else {
-    $this->testPerm('padmin/'.$this->app->controller);
+    $this->authorize('padmin/rights');
   }
 
   $this->authMng = new pclib\extensions\AuthManager;

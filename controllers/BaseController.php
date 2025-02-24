@@ -19,15 +19,6 @@ function allowed($perm) {
   return $this->app->auth->hasright($perm);
 }
 
-function testPerm($perm) {
-  if (!$this->allowed($perm)) {
-    $this->app->error(
-      "Nemáte oprávnění '%s'. Přístup zamítnut.", 
-      null, $perm
-    );  
-  }
-}
-
 function title($level, $title) {
   $this->app->layout->bookmark($level, $title);
   $this->app->layout->_TITLE = $title;

@@ -93,7 +93,7 @@ function updateAction($id)
 
 function deleteAction($id)
 {
-  $this->testPerm('padmin/users/delete');
+  $this->authorize('padmin/users/delete');
 
   $form = $this->getForm();
   //if (!$form->validate()) $this->invalid($form);
@@ -105,7 +105,7 @@ function deleteAction($id)
 
 function impersonateAction()
 {
-  $this->testPerm('padmin/users/impersonate');
+  $this->authorize('padmin/users/impersonate');
 
   $auth = $this->app->auth;
 
