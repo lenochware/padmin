@@ -1,24 +1,30 @@
-PATH|ROUTE
+PATH|ROUTE|RKEY
 Autentifikace|users
-Autentifikace/Uživatelé|users
+Autentifikace/Uživatelé|users|padmin/users
 Autentifikace/Role|roles
 Autentifikace/Oprávnění|rights
-Autentifikace/Konzole|console
-Číselníky|lookups
+Číselníky|lookups|padmin/lookups
 Číselníky/Přehled|lookups
 Číselníky/Přidat nový|lookups/addlookup
-Číselníky/Menu|menu
-Číselníky/App. parametry|params
+Web|content
+Web/Stránky a šablony|content
+Web/Nahrané soubory|files
+Web/Konfigurace|params
 Lokalizace|locale
 Lokalizace/Texty|locale
 Lokalizace/Jazyky|locale/languages
 Lokalizace/Import|locale/import
-Logger|logs
-Logger/Záznamy logu|logs
-Logger/Vymazat|logs/cleanup
+Logování|logs
+Logování/Záznamy logu|logs
+Logování/Odeslané maily|mails
+Logování/Vyčistit|logs/cleanup
 Jobs|jobs
-Informace|sysinfo/php
+Informace|sysinfo
 Informace/PHP|sysinfo/php
 Informace/Database|sysinfo/db
 Informace/PClib|sysinfo/pclib
 Informace/WebServer|sysinfo/webserver
+Nástroje|menu
+Nástroje/Menu|menu/index
+Nástroje/AuthKonzole|console
+Nástroje/DB|db

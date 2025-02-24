@@ -30,9 +30,14 @@ if ($app->auth->isLogged())
 {
   $app->layout->enable('user');
   $user = $app->auth->getUser()->getValues();
+  $user['superuser'] = in_array($user['USERNAME'], $app->config['superuser']);
   $app->layout->_UNAME = $user['FULLNAME'];
 
   if ($app->controller != 'account' and !$app->auth->hasright('padmin/enter')) {
+    $app->error('Nemáte oprávnění ke vstupu.');
+  }
+
+  if (in_array($app->controller, $app->config['protected']) and !$user['superuser']) {
     $app->error('Nemáte oprávnění ke vstupu.');
   }
 
@@ -43,6 +48,19 @@ if ($app->auth->isLogged())
   }
 
   $menu->load(/*PADMIN_MENU_ID*/ 1);
+
+  $menu->map(function($node) use ($app, $user) {
+    if (in_array($node['ROUTE'], $app->config['hidden'])) {
+      $node['ACTIVE'] = 0;
+    }
+
+    if (!$user['superuser'] and in_array($node['ROUTE'], $app->config['protected'])) {
+      $node['ACTIVE'] = 0;
+    }
+
+    return $node;
+
+  });
 
   $menu->values['CSS_CLASS'] = 'menu';
   $app->layout->_MENU = $menu;

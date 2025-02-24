@@ -9,6 +9,11 @@ function init()
   $this->title(1, "Informace");
 }
 
+function indexAction()
+{
+  return $this->action('sysinfo/php');
+}
+
 function phpAction()
 {
   $pi = $this->getPhpInfo();
@@ -23,11 +28,7 @@ function phpAction()
     }
   }
 
-  //dump($pi);
-
   return $this->getTable('PHP '. phpversion(), $output);
-
-
 }
 
 function phpExportAction()
