@@ -11,6 +11,7 @@ string IP
 string size_mb skip
 string ITEM_ID lb "Položka"
 string MESSAGE size "10" tooltip lb "Zpráva"
+link lnclean route "logs/cleanup" lb "Vyčistit" skip
 pager pager pglen "20" nohide
 ?>
 <h2>Záznamy logu</h2>
@@ -22,4 +23,4 @@ pager pager pglen "20" nohide
   <tr><td colspan="20" align="center">Nenalezeny žádné položky.</td></tr>
 {/block}
 </table>
-<div class="pager">{pager} | Prvních {pager.total} záznamů. Velikost logu: {size_mb} MB</div>
+<div class="pager">{pager} | Prvních {pager.total} záznamů. Velikost logu: {size_mb} MB  &nbsp; {lnclean}</div>

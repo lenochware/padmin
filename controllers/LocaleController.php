@@ -10,11 +10,12 @@ function init()
   parent::init();
   $search = $this->getSearch();
   $this->transId = (int)$search->values['TRANSLATOR'];
+  $this->title(1, "Lokalizace");
 }
 
 function indexAction()
 {
-  $this->title(1, "Texty");
+  $this->title(2, "Texty");
 
   $grid = new PCGrid('tpl/locale/texts.tpl', 'locale-grid');
   $search = $this->getSearch();
@@ -128,6 +129,8 @@ function deleteAction($textId)
 
 function importAction()
 {
+  $this->title(2, "Import textů");
+
   $search = $this->getSearch();
 
   $form = new PCForm('tpl/locale/import.tpl');
@@ -153,6 +156,8 @@ function importAction()
 
 function languagesAction()
 {
+  $this->title(2, "Jazyky");
+
   if (isset($_GET['add'])) {
     $this->db->insertUpdate('TRANSLATOR_LABELS', ['CATEGORY' => 2, 'LABEL' => $_GET['add'], 'DT' => now()], ['LABEL', 'CATEGORY']);
     $this->redirect('locale/languages');

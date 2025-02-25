@@ -6,6 +6,7 @@ Autentifikace/Oprávnění|rights
 Číselníky|lookups|padmin/lookups
 Číselníky/Přehled|lookups
 Číselníky/Přidat nový|lookups/addlookup
+Číselníky/Export a import|lookups/export
 Web|content
 Web/Stránky a šablony|content
 Web/Nahrané soubory|files
@@ -13,18 +14,17 @@ Web/Konfigurace|params
 Lokalizace|locale
 Lokalizace/Texty|locale
 Lokalizace/Jazyky|locale/languages
-Lokalizace/Import|locale/import
+Lokalizace/Importovat...|locale/import
 Logování|logs
 Logování/Záznamy logu|logs
 Logování/Odeslané maily|mails
-Logování/Vyčistit|logs/cleanup
 Jobs|jobs
+Nástroje|menu
+Nástroje/Menu|menu/index
+Nástroje/Auth Konzole|console
+Nástroje/DB|db
 Informace|sysinfo
 Informace/PHP|sysinfo/php
 Informace/Database|sysinfo/db
 Informace/PClib|sysinfo/pclib
 Informace/WebServer|sysinfo/webserver
-Nástroje|menu
-Nástroje/Menu|menu/index
-Nástroje/Auth Konzole|console
-Nástroje/DB|db

@@ -33,6 +33,7 @@ function indexAction()
 }
 
 function cleanupAction() {
+  $this->title(2, 'Vyčistit');
   return new PCForm ('tpl/logs/form.tpl');
 }
 
