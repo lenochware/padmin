@@ -8,7 +8,7 @@ class InstallController extends BaseController {
 
 function createdbAction()
 {
-  if (is_installed($this->db)) {
+  if ($this->app->isPclibDbInstalled()) {
     $this->app->error('Instalace už byla dokončena!');
   }
 
@@ -46,9 +46,9 @@ protected function addMenu()
   $text = file_get_contents('_install/menu.txt');
   $menu->importText($text);
 
-  $menu->save(PADMIN_MENU_ID);
+  $menu->save(/*PADMIN_MENU_ID*/ 1);
 
-  $li = ['ID' => PADMIN_MENU_ID, 'APP' => 'padmin', 'CNAME' => 'tree', 'LABEL' => 'pAdmin menu'];
+  $li = ['ID' => 1, 'APP' => 'padmin', 'CNAME' => 'tree', 'LABEL' => 'pAdmin menu'];
   $this->db->insert('LOOKUPS', $li);
 
   $this->app->message("Menu aplikace vytvořeno.");

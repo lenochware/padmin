@@ -14,7 +14,7 @@ pager pager pglen "200" nohide
 {block items}
   <tr class="link">{grid.fields}</tr>
 {block else}
-  <tr><td colspan=9>Nenalezeny žádné položky.</td></tr>
+  <tr><td colspan="10" align="center">Nenalezeny žádné položky.</td></tr>
 {/block}
 
 </table>

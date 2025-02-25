@@ -14,35 +14,45 @@ $config = [
 		'autostart' => ['db', 'auth', 'logger'],
 	],
 
-	/* Set connection to database */
+	/* Nastavte databázové připojení */
 	'service.db' => [
 		//'dsn' => 'pdo_mysql://user:password@localhost/my_database' 
 	],
 
 
-	/* secret: Set auth secret string (at least 20 random characters) */
+	/* secret: Nastavte náhodný řetězec (nejméně 20 znaků) pro posílení zabezpečení */
 	'service.auth' => [
 		'algo' => 'md5', 
 		'secret' => 'write any random string!',
 		'realm' => ''
 	],
 
+	/* Cesta k adresáři s nahranými soubory */
+	'service.fileStorage' => [
+		'rootDir' => '../uploaded',
+	],
+
 	/* 
-	 - upload-dir:  path to directory with uploaded files 
-	 - api-key: Set api-key for external applications access to padmin api (now used for jobs/run)
+	 - api-key: Aplikační klíč pro přístup externích apikací k padmin-api (nyní pouze akce jobs/run)
 	 */
 	'dbsync' => [],
 	'jobs-dir' => 'jobs',
-	'upload-dir' => '../uploaded',
 	'api-key' => '',
 
 	'superuser' => ['admin'],
 
-	'protected' => [
-		'jobs', 'console', 'sysinfo', 'db' ,'menu', 'logs/cleanup'
+	/* 
+	 - protected: Položky, ke kterým má přístup pouze superuser (implicitně uživatel admin)
+	 - hidden: Položky menu, které jsou skryté
+	 */
+	'menu' => [
+			'protected' => [
+				'jobs', 'console', 'sysinfo', 'db' ,'menu', 'logs/cleanup'
+			],
+
+			'hidden' => ['db'],
 	],
 
-	'hidden' => [],
 ];
 
 $production = [

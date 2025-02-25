@@ -26,5 +26,5 @@ Informace/PClib|sysinfo/pclib
 Informace/WebServer|sysinfo/webserver
 Nástroje|menu
 Nástroje/Menu|menu/index
-Nástroje/AuthKonzole|console
+Nástroje/Auth Konzole|console
 Nástroje/DB|db

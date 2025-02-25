@@ -1,7 +1,7 @@
 +right * "Všechna práva"
 +right padmin/users "Správa uživatelských účtů"
 +right padmin/users/delete "Mazání uživatelů"
-+right padmin/users/impersonate
++right padmin/users/impersonate "Přihlášení jako jiný uživatel"
 +right padmin/roles "Nastavení rolí"
 +right padmin/rights "Nastavení oprávnění"
 +right padmin/console "Autentizační konzole"
@@ -10,17 +10,17 @@
 +right padmin/mails "Odeslané a plánované emaily"
 +right padmin/params "Editace aplikačních parametrů"
 +right padmin/content "Stránky a šablony (CMS)"
-+right padmin/db "Modul databáze (experimantální)"
++right padmin/db "Modul databáze (experimentální)"
 +right padmin/menu "Editace menu"
 +right padmin/locale "Editace textů k překladu"
 +right padmin/logs "Aplikační log"
 +right padmin/sysinfo "Systémové informace"
-+right padmin/jobs "Editace dávkových úloh"
++right padmin/jobs "Editace a spouštění dávkových úloh"
 
 +role admin "Admin"
 role admin +right *
 
 +role cms_admin "CMS Admin"
-role cms_admin +right padmin/users +right padmin/lookups +right padmin/files +right padmin/mails +right padmin/params +right padmin/content +right padmin/logs
+role cms_admin +right padmin/users +right padmin/lookups +right padmin/files +right padmin/mails +right padmin/params +right padmin/content +right padmin/logs +right padmin/locale
 
 +user admin +role admin +dpassw pclibadmin

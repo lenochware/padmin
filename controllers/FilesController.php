@@ -12,7 +12,7 @@ class FilesController extends BaseController
 	function init()
 	{
 		parent::init();
-		$this->uploadDir = array_get($this->app->config, 'upload-dir', '../uploaded');
+		//$this->uploadDir = array_get($this->app->config, 'upload-dir', '../uploaded');
 	}
 
 	/**
@@ -43,7 +43,7 @@ class FilesController extends BaseController
 	public function showAction($id)
 	{
 		try {
-			$fs = new pclib\FileStorage($this->uploadDir);
+			$fs = new pclib\FileStorage();
 			$fs->output($id);			
 		}
 		catch(Exception $e) {

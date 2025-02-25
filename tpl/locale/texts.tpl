@@ -25,7 +25,7 @@ pager pager pglen "20" nohide
   	<td align="right" style="color:#999">{LANG}</td>
   </tr>
 {block else}
-  <tr><td colspan=9>Nenalezeny žádné položky.</td></tr>
+  <tr><td colspan="10" align="center">Nenalezeny žádné položky.</td></tr>
 {/block}
 
 <tr><td colspan=9>
