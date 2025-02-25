@@ -1,4 +1,5 @@
 +right * "Všechna práva"
++right padmin/enter "Vstup do aplikace padmin"
 +right padmin/users "Správa uživatelských účtů"
 +right padmin/users/delete "Mazání uživatelů"
 +right padmin/users/impersonate "Přihlášení jako jiný uživatel"
@@ -21,6 +22,6 @@
 role admin +right *
 
 +role cms_admin "CMS Admin"
-role cms_admin +right padmin/users +right padmin/lookups +right padmin/files +right padmin/mails +right padmin/params +right padmin/content +right padmin/logs +right padmin/locale
+role cms_admin +right padmin/enter +right padmin/users +right padmin/lookups +right padmin/files +right padmin/mails +right padmin/params +right padmin/content +right padmin/logs +right padmin/locale
 
 +user admin +role admin +dpassw pclibadmin

@@ -19,7 +19,7 @@ class App extends pclib\App {
 	      'Tabulky PCLIB v databázi neexistují!<br>'
 	      .'<a href="?r=install/createdb">Nainstalovat PClib</a>'
     	);
-		};		
+		};
 	}
 
 	function createMenu($user)

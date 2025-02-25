@@ -6,6 +6,12 @@ use pclib\extensions\AuthConsole;
 
 class InstallController extends BaseController {
 
+function init() {
+  if ($this->action != 'createdb') {
+    $this->authorize('padmin/install');
+  }
+}
+
 function createdbAction()
 {
   if ($this->app->isPclibDbInstalled()) {

@@ -23,7 +23,11 @@ if ($_POST) {
 
 if ($app->auth->loggedUser)
 {
-  //$app->auth->hasright('padmin/enter')
+  if (!$app->auth->hasright('padmin/enter')) {
+    $app->message("Nemáte oprávnění ke vstupu.", 'warning');
+    $app->auth->logout();
+    $app->redirect("/");
+  }
 
   $app->layout->enable('user');
   $user = $app->auth->getUser()->getValues();

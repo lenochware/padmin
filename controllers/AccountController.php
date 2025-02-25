@@ -56,8 +56,9 @@ function loginNotifications()
   }
 
   $user = $this->auth->loggedUser;
-  if ($user->hasDefaultPassword()) {
-    $this->app->message("Uživatel má implicitní heslo!", 'warning');
+
+  if (($user->USERNAME == 'admin' and $user->passwordVerify('pclibadmin')) or $user->passwordVerify($user->USERNAME)) {
+    $this->app->message("Používáte implicitní heslo!", 'warning');
   }
 }
 
