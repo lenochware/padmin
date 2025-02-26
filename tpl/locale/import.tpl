@@ -9,3 +9,4 @@ button back lb "Zpět" onclick "history.back()"
 <tr><td><h1>Import textů</h1></td></tr>
 {form.fields}
 </TABLE>
+<p class="text-muted">Exportovat texty lze odkazem <u>Exportovat</u> v přehledu textů.</p>

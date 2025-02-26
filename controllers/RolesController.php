@@ -18,7 +18,6 @@ function indexAction() {
   $grid->_TITLE = 'Seznam rolí';
   $this->title(1, 'Seznam rolí');
 
-  $grid->addtag('link lnset lb "Nastavení" route "roles/rights/id:{ID}"');
   $grid->setquery('select * from AUTH_ROLES');
 
   return $grid;

@@ -25,7 +25,7 @@ function editAction($id)
 
   $form = new PCForm('tpl/mails/form.tpl');
   $form->values = $mail;
-  $form->enable('update');
+  //$form->enable('update');
   return $form;
 }
 
