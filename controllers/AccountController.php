@@ -40,6 +40,7 @@ function logoutAction()
 {
   $this->app->log('auth', 'padmin/logout');
   $this->auth->logout();
+  $this->app->deleteSession();
   $this->app->message('Byl jste odhlášen.');
   $this->redirect('account/signin');
 }
