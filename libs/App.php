@@ -4,6 +4,10 @@ class App extends pclib\App {
 
 	function initDatabase()
 	{
+		if (!$this->db->info) {
+			$this->error('Není nastavené připojení k databázi.');
+		}
+
 		if (($this->db->info['driver'] ?? '') == 'pgsql') {
 		  $this->db->drv->ucase = 1;
 		  $this->db->drv->noquote = 1;
@@ -20,6 +24,18 @@ class App extends pclib\App {
 	      .'<a href="?r=install/createdb">Nainstalovat PClib</a>'
     	);
 		};
+	}
+
+	function addConfig($path)
+	{
+		try {
+			parent::addConfig($path);
+			
+		} catch (Exception $e) {
+			$this->error("Nepodařilo se inicializovat aplikaci. Chyba: " . $e->getMessage());
+			
+		}
+
 	}
 
 	function createMenu($user)
@@ -57,10 +73,12 @@ class App extends pclib\App {
 	{
 	  try {
 	    $table = (get_class($this->db->drv) == 'pgsql')? 'auth_users':'AUTH_USERS';
-	    return $this->db->columns($table)? true:false;
+	    $this->db->select($table);
 	  } catch(Exception $e) {
-	    $this->error('Nepodařilo se připojit k databázi. Chyba: %s',null, $e->getMessage());
+	    return false;
 	  }
+
+	  return true;
 	}
 
 }
