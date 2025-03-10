@@ -13,6 +13,9 @@ function init() {
 
 function indexAction()
 {
+  $this->title(1, 'Záznamy logu');
+  $grid = new PCGrid('tpl/logs/list.tpl');
+
   if (isset($_GET['user'])) {
     $filter = ['USERNAME' => $_GET['user']];
     if (isset($_GET['action'])) $filter['ACTIONNAME'] = $_GET['action'];
@@ -20,11 +23,16 @@ function indexAction()
     $this->setFilter($filter);
   }
 
-  $this->title(1, 'Záznamy logu');
-  $grid = new PCGrid('tpl/logs/list.tpl');
-  $grid->setarray($this->logger->getlog($this->MAXROWS,
-    $this->app->getSession('logfilter'))
-  );
+  if (isset($_GET['id'])) {
+    $id = (int)$_GET['id'];
+    $this->setFilter(['MIN_ID' => $id - 20, 'MAX_ID' => $id + 20]);
+    $grid->values['SEL_ID'] = $id;
+  }
+
+  $filter = $this->app->getSession('logfilter');
+  if (!$filter) $grid->setAttr('ID', 'type', 'string');
+
+  $grid->setarray($this->logger->getlog($this->MAXROWS, $filter));
 
   $grid->values['size_mb'] = $this->logger->getSize();
 
