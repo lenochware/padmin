@@ -43,7 +43,7 @@ class FilesController extends BaseController
 	public function showAction($id)
 	{
 		try {
-			$fs = new pclib\FileStorage();
+			$fs = new pclib\FileStorage('');
 			$fs->output($id);			
 		}
 		catch(Exception $e) {

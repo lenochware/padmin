@@ -6,6 +6,7 @@ input FULLNAME  size "50" lb "Celé jméno:"
 input EMAIL size "40" lb "Email:" email
 string ID
 string RINDIV noescape
+string PARAMS noescape
 select ROLE1 required lb "Role:"
 select ROLE2
 select ROLE3
@@ -16,7 +17,8 @@ check ACTIVE lb "Aktivní" default "1"
 string LAST_LOGIN lb "Posl. přihlášení" sort date "d.m.Y H:i"
 string DT lb "Dat.vytvoření" sort date
 string AUTHOR
-link lnrights lb "Práva a proměnné" route "rights/user/id:{ID}"
+link lnrights lb "Nastavit" route "rights/user/id:{ID}"
+link lnparams lb "Nastavit" route "userparams/edit/id:{ID}"
 button insert lb "Přidat" noprint
 button copy lb "Kopírovat" noprint confirm "Kopírovat uživatele?"
 button update lb "Uložit" noprint
@@ -45,7 +47,7 @@ button back lb "Zpět" onclick "history.back()"
 <tr><td>{ROLE1.lb}</td>
 <td>
 &nbsp;{ROLE1} <a  href="#" onclick="$('#roleplus').toggle()">další...</a>
-  <div id="roleplus" style="display:none">
+  <div id="roleplus" class="hidden">
   <table style="border-width:0px;">
   <tr><td>{ROLE2} {ROLE3}</td></tr>
   <tr><td>{ROLE4} {ROLE5}</td></tr>
@@ -54,11 +56,16 @@ button back lb "Zpět" onclick "history.back()"
 </td></tr>
 <tr><td>{ANNOT.lb}</td><td>{ANNOT}</td></tr>
 <tr><td>{ACTIVE.lb}</td><td>{ACTIVE}</td></tr>
-<tr><td colspan="2">
-Individiální práva:<br>
-<div style="font-weight:bold">{RINDIV}</div><br>
-&nbsp;{lnrights}<br><br>
-&nbsp;{insert}{update} {copy} {delete} {impersonate} {back}<br><br>
+<tr><td colspan="2" style="padding-top: 1em">
+  <b>Individiální práva</b> {lnrights}
+  <div style="max-height: 10em; overflow-y: scroll">{RINDIV}</div>
+</td></tr>
+<tr><td colspan="2" style="padding-top: 1em">
+  <b>Konfigurace</b> {lnparams}<br>
+  <div style="max-height: 10em; overflow-y: scroll">{PARAMS}</div>
+</td></tr>
+<tr><td colspan="2" style="padding-top: 1em">
+  {insert}{update} {copy} {delete} {impersonate} {back}
 </td></tr>
 
 <tr><td colspan="2" style="color:gray">
@@ -68,7 +75,7 @@ Individiální práva:<br>
 
 <br>Pole označená (*) jsou povinná.
 
-<script language="JavaScript">
+<script>
 
 function passwordGenerate()
 {

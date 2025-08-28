@@ -57,11 +57,10 @@ function dataGrid(id) {
             {label: 'Hide columns', onClick: hideColumns },
             {label: 'Show all columns', onClick: showAllColumns },
             {type: 'seperator'},
-            {label: 'Item 3', onClick: () => {}, shortcut: 'Ctrl+A'},
-            {type: 'hovermenu', label: 'Hover menu', items: [
-                {label: 'Subitem 1', onClick: () => {}},
-                {label: 'Subitem 2', onClick: () => {}},
-                {label: 'Subitem 3', onClick: () => {}},
+            {label: 'Editovat...', onClick: () => {}, shortcut: 'Ctrl+E'},
+            {type: 'hovermenu', label: 'Search', items: [
+                {label: 'In column', onClick: () => {}},
+                {label: 'All columns', onClick: () => {}},
             ]},
         ]
     });    

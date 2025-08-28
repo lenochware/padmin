@@ -46,6 +46,16 @@ function editAction($id)
     $form->_PASSWORD = '(hidden)';
   }
 
+  if ($form->values['JSON_PARAMS']) {
+    $html = '';
+    $params = json_decode($form->values['JSON_PARAMS'], true);
+    foreach ($params as $key => $value) {
+      $html .= "$key: $value<br>";
+    }
+
+    $form->values['PARAMS'] = $html;
+  }
+
   $form->enable('copy', 'update', 'delete', 'impersonate');
   $this->title(2, $form->values['FULLNAME']);
   return $form;
