@@ -33,4 +33,8 @@ pager pager pglen "40" nohide
 
 <script>
 	if('{SEL_ID}') $('#id-{SEL_ID}').css("background-color", "#9f9");
+
+  $('td').each(function() {
+    if (this.innerText.toLowerCase().includes('error')) this.style="color:red";
+  })
 </script>
