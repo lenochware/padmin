@@ -31,8 +31,11 @@ function exportAction()
 
 function editAction($id)
 {
+  $data = $this->db->select('AUTH_USERS', ['ID' => $id]);  
+  if (!$data) $this->app->error("Uživatel nenalezen.");
+
   $form = $this->getForm();
-  $form->values = $this->db->select('AUTH_USERS', ['ID' => $id]);
+  $form->values = $data;
   $author_id = array_get($form->values, 'AUTHOR_ID');
   $form->values['AUTHOR'] = $this->db->field('AUTH_USERS:USERNAME', ['ID' => $author_id]);
   $form->_RINDIV = implode('<br>', $this->getRights($id));
