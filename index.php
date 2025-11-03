@@ -13,7 +13,7 @@ $pclib->autoloader->addDirectory('libs');
 $app = new App('padmin');
 $app->addConfig('./config.php');
 
-$app->layout->_VERSION = '2.6.0';
+$app->layout->_VERSION = '2.6.1';
 
 $app->initDatabase();
 
