@@ -20,6 +20,8 @@ function phpAction()
 
   unset($pi['PHP Variables']);
 
+  $output = [];
+
   foreach ($pi as $secName => $secData) {
     $output["<b>$secName</b>"] = "";
 
@@ -29,6 +31,24 @@ function phpAction()
   }
 
   return $this->getTable('PHP '. phpversion(), $output);
+}
+
+function phpTextAction()
+{
+  $pi = $this->getPhpInfo();
+  unset($pi['PHP Variables']);
+
+  $output = [];
+
+  foreach ($pi as $secName => $secData) {
+    $output[] = "\n*$secName*";
+
+    foreach ($secData as $key => $value) {
+      $output[] = "$key: $value";
+    }
+  }
+
+  return '<pre>'.implode("\r\n", $output).'</pre>';
 }
 
 function phpExportAction()
@@ -131,8 +151,12 @@ function getPhpInfo()
         }
         elseif(preg_match("~<tr><td[^>]+>([^<]*)</td><td[^>]+>([^<]*)</td><td[^>]+>([^<]*)</td></tr>~", $line, $val))
         {
-            //$info_arr[$cat][trim($val[1])] = array("local" => $val[2], "master" => $val[3]);
+          if ($val[2] != $val[3]) {
+            $info_arr[$cat][trim($val[1])] = $val[3] . "🔹local value: " . $val[2] ;
+          }
+          else {
             $info_arr[$cat][trim($val[1])] = $val[3];
+          }
         }
     }
     return $info_arr;
