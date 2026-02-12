@@ -29,7 +29,7 @@ pager pager pglen "40" nohide
   <tr><td colspan="20" align="center">Nenalezeny žádné položky.</td></tr>
 {/block}
 </table>
-<div class="pager">{pager} | Prvních {pager.total} záznamů. Velikost logu: {size_mb} MB  &nbsp; {lnclean}</div>
+<div class="pager">{pager} | Prvních {pager.total} záznamů. {pager.all} Velikost logu: {size_mb} MB  &nbsp; {lnclean}</div>
 
 <script>
 	if('{SEL_ID}') $('#id-{SEL_ID}').css("background-color", "#9f9");
@@ -37,4 +37,6 @@ pager pager pglen "40" nohide
   $('td').each(function() {
     if (this.innerText.toLowerCase().includes('error')) this.style="color:red";
   })
+
+  $('td.MESSAGE>span').on('click', (e) => $(e.target).text($(e.target).attr('title')).parent().css('max-width', '20vw'));
 </script>
