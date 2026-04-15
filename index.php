@@ -13,7 +13,7 @@ $pclib->autoloader->addDirectory('libs');
 $app = new App('padmin');
 $app->addConfig('./config.php');
 
-$app->layout->_VERSION = '2.6.1';
+$app->layout->_VERSION = '2.6.3';
 
 $app->initDatabase();
 
@@ -37,7 +37,6 @@ if ($app->auth->loggedUser)
   $app->createMenu($user);
 }
 
-$app->run();
-$app->out();
+$app->execute();
 
 ?>

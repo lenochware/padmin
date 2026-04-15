@@ -15,8 +15,8 @@ class App extends pclib\App {
 
 		if (!$this->isPclibDbInstalled()) {
 			if ($this->routestr == 'install/createdb') {
-			  $this->run('install/createdb');
-    		$this->redirect('users');
+				$this->run('install/createdb');
+				$this->redirect('users');
 			}
 
 			$this->error(

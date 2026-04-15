@@ -30,9 +30,7 @@ class JobsController extends BaseController
 
 		$this->jobs = $this->getJobsManager();
 
-		if ($this->app->config['jobs-dir']) {
-			$pclib->autoloader->addDirectory($this->app->config['jobs-dir']);
-		}
+		$pclib->autoloader->addDirectory('jobs');
 	}
 
 	protected function getApiKey()

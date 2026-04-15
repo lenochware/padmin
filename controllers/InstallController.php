@@ -37,10 +37,10 @@ function serviceJobsAction()
 
 protected function createTables()
 {
-  $dname = str_replace('pdo_', '', $this->db->drv->extension);
-  $dumpfile = '_install/pclib_'.$dname.'.sql';
+  $path = 'vendor/lenochware/pclib/install/';
+  $sqlFile = 'pclib_'.str_replace('pdo_', '', $this->db->drv->extension).'.sql';
 
-  $n = $this->db->runDump($dumpfile);
+  $n = $this->db->runDump($path . $sqlFile);
 
   $this->app->message("Ok, vykonáno $n dotazů.");
 }

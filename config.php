@@ -36,7 +36,6 @@ $config = [
 	 - api-key: Aplikační klíč pro přístup externích apikací k padmin-api (nyní pouze akce jobs/run)
 	 */
 	'dbsync' => [],
-	'jobs-dir' => 'jobs',
 	'api-key' => '',
 
 	'superuser' => ['admin'],
