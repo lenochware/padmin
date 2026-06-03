@@ -151,7 +151,8 @@ class JobsController extends BaseController
 	public function runJobAction($id)
 	{
 		$job = $this->db->select($this::TABLE, ['id' => $id]);
-		$this->jobs->runJob($job['name']);
+		$params = $_POST['data']['job_params'] ?? $job['job_params'];
+		$this->jobs->runJob($job['name'], $params);
 		$this->app->message('Úloha byla spuštěna.');
 		$this->redirect('jobs/edit/id:'.$id);
 	}

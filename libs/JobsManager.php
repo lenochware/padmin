@@ -25,10 +25,11 @@ class JobsManager extends pclib\system\BaseObject
 	 * @param string $name
 	 * @throws Exception
 	 */
-	public function runJob($name)
+	public function runJob($name, $params = '')
 	{
 		$job = $this->getJob($name);
 		$job = $this->start($job);
+		if ($params) $job['job_params'] = $params;
 
 		try {
 			$job['last_run_result'] = $this->runClassJob($job);
@@ -36,7 +37,7 @@ class JobsManager extends pclib\system\BaseObject
 		catch(Exception $e) {
 			$job['last_run_result'] = $e->getMessage();
 		}
-		
+
 		$this->finish($job);
 	}
 
@@ -140,7 +141,7 @@ class JobsManager extends pclib\system\BaseObject
 	protected function finish(array $job)
 	{
 		$job['last_run_duration'] = round(microtime(true) - $job['start'], 2);
-		unset($job['start']);
+		unset($job['start'], $job['job_params']);
  
 		$this->db->update('jobs', $job, ['id' => $job['id']]);
 		$this->jobs[$job['name']] = $job;
@@ -211,6 +212,11 @@ abstract class Job
 	{
 		if (!$this->output) return '';
 		return implode("\n", $this->output);
+	}
+
+	function getParams()
+	{
+		return $this->data['job_params'] ?? '';
 	}
 
 	abstract function run();
