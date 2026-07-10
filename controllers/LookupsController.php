@@ -3,12 +3,14 @@ include 'BaseController.php';
 
 class LookupsController extends BaseController {
 
+protected $TABLE = 'LOOKUPS';
+
 function indexAction() {
   $this->title(1, 'Číselníky');
   $lookups = new PCGrid('tpl/lookups/list.tpl');
   $lookups->setquery(
-    "select DISTINCT IF (L.APP IS NULL OR L.APP='', L.CNAME, CONCAT(L.APP, '.', L.CNAME)) CNAME, LA.LABEL AS ANNOT FROM LOOKUPS L
-    LEFT JOIN LOOKUPS AS LA ON LA.ID=L.CNAME and LA.CNAME='lookups'
+    "select DISTINCT IF (L.APP IS NULL OR L.APP='', L.CNAME, CONCAT(L.APP, '.', L.CNAME)) CNAME, LA.LABEL AS ANNOT FROM {$this->TABLE} L
+    LEFT JOIN {$this->TABLE} AS LA ON LA.ID=L.CNAME and LA.CNAME='lookups'
     ORDER BY L.APP,L.CNAME"
   );
 
@@ -22,10 +24,10 @@ function viewAction($lookup) {
 
   if (strpos($lookup, '.')) {
     $lookup = explode('.', $lookup);
-    $grid->setquery("select * from LOOKUPS where APP='{0}' and CNAME='{1}'", $lookup);
+    $grid->setquery("select * from {$this->TABLE} where APP='{0}' and CNAME='{1}'", $lookup);
   }
   else {
-    $grid->setquery("select * from LOOKUPS where CNAME='{0}'", $lookup);
+    $grid->setquery("select * from {$this->TABLE} where CNAME='{0}'", $lookup);
   }
 
   return $grid;
@@ -34,7 +36,7 @@ function viewAction($lookup) {
 function editAction($id) {
   $this->title(3, 'Editace');
   $form = new PCForm('tpl/lookups/form.tpl');
-  $form->values = $this->db->select('LOOKUPS',"GUID='{#0}'", $id);
+  $form->values = $this->db->select($this->TABLE,"GUID='{#0}'", $id);
   $form->enable('update', 'delete');
   return $form;
 }
@@ -60,14 +62,14 @@ function insertAction($lookup) {
     $form->_CNAME = $lookup;
   }
 
-  $form->insert('LOOKUPS');
+  $form->insert($this->TABLE);
   $this->app->message('Položka byla uložena.');
   $this->redirect("lookups/view/lookup:$lookup");
 }
 
 function deleteAction($id) {
   $form = new PCForm('tpl/lookups/form.tpl');
-  $form->delete('LOOKUPS', "GUID='{#0}'", $id);
+  $form->delete($this->TABLE, "GUID='{#0}'", $id);
   $this->app->message('Položka byla smazána.');
   $this->redirect("lookups/view/lookup:" . $_GET['lookup']);
 }
@@ -75,7 +77,7 @@ function deleteAction($id) {
 function updateAction($id) {
   $form = new PCForm('tpl/lookups/form.tpl');
   if (!$form->validate()) $this->app->error('Chybně vyplněný formulář.');
-  $form->update('LOOKUPS', "GUID='{#0}'", $id);
+  $form->update($this->TABLE, "GUID='{#0}'", $id);
   $this->app->message('Položka byla uložena.');
   $this->redirect("lookups/view/lookup:" . $_GET['lookup']);
 }
@@ -105,7 +107,7 @@ function importAction()
 protected function getLookupsExport()
 {
   $s = '';
-  $list = $this->db->selectAll("select * from LOOKUPS order by CNAME,GUID");
+  $list = $this->db->selectAll("select * from {$this->TABLE} order by CNAME,GUID");
 
   foreach ($list as $row) {
     $s .= paramStr("{APP};{CNAME};{ID};{LABEL};{POSITION}\n", $row);
@@ -125,20 +127,20 @@ protected function importLookups($s)
     if (!isset($in[1])) continue;
 
     $data = ['APP' => $in[0], 'CNAME' => $in[1], 'ID' => $in[2]];
-    $guid = $this->db->field('LOOKUPS:GUID', $data);
+    $guid = $this->db->field("{$this->TABLE}:GUID", $data);
 
     if ($guid) {
       if ($in[4] == 'x')
-         $this->db->delete('LOOKUPS', "GUID='$guid'");
-      else 
-        $this->db->update('LOOKUPS', ['LABEL' => $in[3], 'POSITION' => $in[4]], "GUID='$guid'");
+         $this->db->delete($this->TABLE, "GUID='$guid'");
+      else
+        $this->db->update($this->TABLE, ['LABEL' => $in[3], 'POSITION' => $in[4]], "GUID='$guid'");
       
       $i++;
     }
     else {
       $data['LABEL'] = $in[3];
       $data['POSITION'] = $in[4];
-      $this->db->insert('LOOKUPS', $data);
+      $this->db->insert($this->TABLE, $data);
       $j++;
     }
   }

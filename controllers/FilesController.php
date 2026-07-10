@@ -9,6 +9,8 @@ class FilesController extends BaseController
 {
 	protected $uploadDir;
 
+	protected $TABLE = 'FILESTORAGE';
+
 	function init()
 	{
 		parent::init();
@@ -23,7 +25,7 @@ class FilesController extends BaseController
 		$this->title(1, 'Nahrané soubory');
 		$grid = new pclib\Grid('tpl/files/list.tpl', 'files');
 		$grid->setQuery(
-			"select * from FILESTORAGE 
+			"select * from {$this->TABLE}
 			where 1=1
 			~ and ORIGNAME like '%{ORIGNAME}%'
 			~ and ENTITY_TYPE like '%{ENTITY_TYPE}%'
@@ -67,7 +69,7 @@ class FilesController extends BaseController
 	protected function totalSize()
 	{
 		if ($this->app->getSession('files-size')) return $this->app->getSession('files-size');
-		$size = $this->formatSize($this->db->field("select sum(SIZE) from FILESTORAGE"));
+		$size = $this->formatSize($this->db->field("select sum(SIZE) from {$this->TABLE}"));
 		$this->app->setSession('files-size', $size);
 		return $size;
 	}
