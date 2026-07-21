@@ -6,9 +6,8 @@
   --link-color: #0d6efd;
   --link-hover: #0a58ca;
   --border-color: #dee2e6;
-  --header-bg: #f8f9fa;
-  --row-hover: rgba(0, 0, 0, 0.04);
-  --row-stripe: rgba(0, 0, 0, 0.03);
+  --row-hover: rgba(13, 110, 253, 0.08);
+  --row-stripe: rgba(0, 0, 0, 0.04);
 }
 
 BODY {
@@ -126,12 +125,8 @@ empty-cells: show;
 width: 100%;
 }
 
-TABLE.grid TR:first-child {
-  border: 1px solid var(--border-color);
-}
-
 TABLE.grid TH {
-  background-color: var(--header-bg);
+  background-color: #fff;
   border-bottom: 2px solid var(--border-color);
   text-align: left;
   padding: 0.25rem 0.5rem;
