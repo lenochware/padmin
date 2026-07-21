@@ -7,7 +7,7 @@ BODY {
   background-color: white;
 }
 
-DIV#site-top {
+#site-top {
   width:100%;
   height:100px;
   border-bottom: 3px solid orange;
@@ -17,7 +17,7 @@ DIV#site-top {
   background: linear-gradient(to left, #5f2c82 , #49a09d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
-DIV#menu {
+#menu {
  height:28px;
  padding: 0px;
  padding-left: 5px;
@@ -26,7 +26,7 @@ DIV#menu {
  line-height: 25px;
 }
 
-DIV#sidebar {
+#sidebar {
   position:absolute;
   top:133px;
   left:0;
@@ -37,12 +37,12 @@ DIV#sidebar {
   overflow-y:auto;
 }
 
-DIV#site-content {
+#site-content {
   min-height: 600px;
   padding: 10px 20px;
 }
 
-DIV#site-top A {
+#site-top A {
   color: #fa0;
 }
 
@@ -51,9 +51,9 @@ DIV.void {}
 .hidden { display:none; }
 
 @media print {
-  DIV#site-top  { display: none; }
-  DIV#menu  { display: none; }
-  DIV#sidebar { display: none; }
+  #site-top  { display: none; }
+  #menu  { display: none; }
+  #sidebar { display: none; }
 }
 
 img { border-width: 0px }
