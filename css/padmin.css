@@ -1,10 +1,30 @@
 /* SITE GLOBAL */
 
+:root {
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  --body-color: #212529;
+  --link-color: #0d6efd;
+  --link-hover: #0a58ca;
+  --border-color: #dee2e6;
+  --header-bg: #f8f9fa;
+  --row-hover: rgba(0, 0, 0, 0.04);
+  --row-stripe: rgba(0, 0, 0, 0.03);
+}
+
 BODY {
   margin: 0;
   padding: 0;
-  font-family:  Verdana, Arial; font-size: 12px;
-  background-color: white;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--body-color);
+  background-color: #fff;
+}
+
+input, button, select, textarea, optgroup {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 #site-top {
@@ -39,7 +59,7 @@ BODY {
 
 #site-content {
   min-height: 600px;
-  padding: 10px 20px;
+  padding: 1rem 1.5rem;
 }
 
 #site-top A {
@@ -65,11 +85,11 @@ BODY .fa {
 }
 
 a {
-  color: #06c;
+  color: var(--link-color);
 }
 
 a:hover {
-  color: black;
+  color: var(--link-hover);
 }
 
 
@@ -107,23 +127,20 @@ width: 100%;
 }
 
 TABLE.grid TR:first-child {
-  border: 1px solid rgb(180,180,150);
+  border: 1px solid var(--border-color);
 }
 
 TABLE.grid TH {
-  background-color: rgb(247,243,221);
-  background: -moz-linear-gradient(top, rgb(255,250,229), rgb(234,232,209));
-  background: -webkit-linear-gradient(top, rgb(255,250,229), rgb(234,232,209));
-  background: linear-gradient(top, rgb(255,250,229), rgb(234,232,209));
+  background-color: var(--header-bg);
+  border-bottom: 2px solid var(--border-color);
   text-align: left;
-  padding: 4px 2px;
-  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.7);
+  padding: 0.25rem 0.5rem;
+  font-weight: 600;
 }
 
 TABLE.grid TD {
-  border-bottom: 1px dotted #ccd;
-  height: 20px;
-  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.7);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.25rem 0.5rem;
 }
 
 TABLE.grid TR.link {
@@ -131,15 +148,15 @@ TABLE.grid TR.link {
 }
 
 TABLE.grid TR:hover {
-  background-color: #fff3f0;
+  background-color: var(--row-hover);
 }
 
 TABLE.strips tr:nth-child(even) {
-  background-color: #f0f0ff;
+  background-color: var(--row-stripe);
 }
 
 TABLE.grid.strips TR:hover {
-  background-color: #fff3f0;
+  background-color: var(--row-hover);
 }
 
 TABLE.grid TR.inactive TD {
@@ -147,20 +164,25 @@ TABLE.grid TR.inactive TD {
 }
 
 DIV.pager {
-  padding: 4px 2px;
-  margin-top: 8px;
+  padding: 0.25rem;
+  margin-top: 0.5rem;
 }
 
 /* FORM */
 
 form.padmin table, form.padmin > div.form {
   border: 1px solid gray;
-  border-radius: 2px;
+  border-radius: 0.25rem;
   box-shadow:1px 1px 1px 0px #eee;
   background-color: rgb(234,232,209);
-  padding: 5px;
-  margin: 5px 0px;
-  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.7);
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+form.padmin input:not([type=checkbox]):not([type=radio]),
+form.padmin select,
+form.padmin textarea {
+  padding: 0.25rem 0.5rem;
 }
 
 form.padmin h1 {
@@ -188,13 +210,13 @@ label.required:before {
 } 
 
 .page-item a {
-  padding: 4px;
+  padding: 0.25rem;
   text-decoration: none;
-  color: #06c;
+  color: var(--link-color);
 }
 
 .page-item a:hover {
-  color: black;
+  color: var(--link-hover);
 }
 
 .page-item.active {
