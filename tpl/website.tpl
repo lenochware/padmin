@@ -22,24 +22,29 @@ block user noprint
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-  <header id="site-top">
-    <i class="fa fa-cogs" style="font-size:50px; text-shadow: 2px 2px 4px #333; padding: 10px" aria-hidden="true"></i>
-    {block user}
-    <div style="position: absolute; top: 80px; right: 10px;">
-      <i class="fa fa-user" style="color:orange" aria-hidden="true"></i>
-      Uživatel: {UNAME} | <a href="#" onclick="if (confirm('Odhlásit se?')) pclib.redirect('account/logout')">odhlásit</a>
-    </div>
-    {/block}
-    <div style="position: absolute; top: 80px; left: 10px;">» {NAVIG}</div>
-    <div style="position: absolute; top: 108px; right: 10px;">
-      padmin {if VERSION}v{VERSION}{/if}
-    </div>
-  </header>
+  <div id="site-header">
+    <header id="site-top">
+      <div class="brand">
+        <i class="fa fa-cogs" aria-hidden="true"></i>
+        <span class="app-name">pclib admin</span>
+      </div>
+      {block user}
+      <div class="user-info">
+        <i class="fa fa-user" aria-hidden="true"></i>
+        Uživatel: {UNAME} | <a href="#" onclick="if (confirm('Odhlásit se?')) pclib.redirect('account/logout')">odhlásit</a>
+      </div>
+      {/block}
+    </header>
 
-  <nav id="menu">{MENU}</nav>
+    <nav id="menu">
+      {MENU}
+      <div class="menu-version">{if VERSION}padmin v{VERSION}{/if}</div>
+    </nav>
+  </div>
 
   <div id="site-body">
     <main id="site-content">
+      <div class="breadcrumb">» {NAVIG}</div>
       {PRECONTENT}{CONTENT}
     </main>
   </div>
