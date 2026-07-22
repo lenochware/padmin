@@ -6,7 +6,7 @@ input TSTEXT
 button search lb "Hledat"
 button showall lb "Zrušit"
 ?>
-<TABLE width="100%">
+<TABLE width="100%" class="searchform">
 <TR>
 <TD colspan="2">Překladač: {TRANSLATOR} Jazyk: {LANG} Text: {TSTEXT}</TD>
 <TD align="right"> {search} {showall}</TD>
