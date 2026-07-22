@@ -288,6 +288,23 @@ DIV.pager {
   margin-top: 0.5rem;
 }
 
+/* incremental (quick) search box above grids */
+input[onkeyup^="filterTable"] {
+  margin-bottom: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  min-width: 240px;
+  color: var(--body-color);
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 999px;
+}
+
+input[onkeyup^="filterTable"]:focus {
+  outline: 0;
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 0.2rem var(--focus-ring);
+}
+
 /* FORM */
 
 form.padmin > table, form.padmin > div.form {
@@ -342,9 +359,9 @@ form.padmin table:not(.searchform) textarea {
 }
 
 /* buttons (bootstrap outline-secondary) */
-form.padmin button,
-form.padmin input[type=submit],
-form.padmin input.button {
+#site-content form button,
+#site-content form input[type=submit],
+#site-content form input.button {
   padding: 0.25rem 0.75rem;
   font-weight: 500;
   color: var(--body-color);
@@ -354,25 +371,25 @@ form.padmin input.button {
   cursor: pointer;
 }
 
-form.padmin button:hover,
-form.padmin input[type=submit]:hover,
-form.padmin input.button:hover {
+#site-content form button:hover,
+#site-content form input[type=submit]:hover,
+#site-content form input.button:hover {
   color: #fff;
   background-color: var(--btn-hover-bg);
   border-color: var(--btn-hover-bg);
 }
 
-form.padmin button:active,
-form.padmin input[type=submit]:active,
-form.padmin input.button:active {
+#site-content form button:active,
+#site-content form input[type=submit]:active,
+#site-content form input.button:active {
   color: #fff;
   background-color: var(--btn-active-bg);
   border-color: var(--btn-active-bg);
 }
 
-form.padmin button:focus-visible,
-form.padmin input[type=submit]:focus-visible,
-form.padmin input.button:focus-visible {
+#site-content form button:focus-visible,
+#site-content form input[type=submit]:focus-visible,
+#site-content form input.button:focus-visible {
   outline: 0;
   box-shadow: 0 0 0 0.2rem var(--focus-ring);
 }

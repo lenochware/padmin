@@ -6,33 +6,50 @@ input CMDLINE html_autocomplete "off" size "50/200"
 button submit lb "Ok"
 ?>
 <style type="text/css">
-div.console td {
-  font: 12px courier;
+div.console {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border-color);
+  border-radius: 0.25rem;
+  background-color: #1e1e1e;
+  color: #e6e6e6;
+  padding: 0.5rem 0.75rem;
+  font: 13px/1.5 ui-monospace, "Cascadia Code", Consolas, "Liberation Mono", monospace;
 }
 
-div.console input {
-  font: 12px courier;
-  width:100%;
-  border: 0px;
-  background-color: #ccc;
+div.console pre {
+  margin: 0;
 }
 
-DIV.term {
-  font: 12px courier;
-  width: 600px;
-  height:300px;
+div.term {
+  width: 100%;
+  height: 320px;
   overflow: auto;
 }
 
-.console-value {color:green}
-.console-cmd   {color:blue}
-.console-error {color:#c00}
-
-DIV.console {
-  border: 1px solid gray;
-  background-color: #ccc;
-  width: 600px;
+div.console table.console {
+  margin-top: 0.5rem;
+  border-top: 1px solid #3a3f44;
 }
+
+div.console td {
+  font: inherit;
+  padding-top: 0.35rem;
+}
+
+div.console input {
+  font: inherit;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  color: #e6e6e6;
+  outline: none;
+}
+
+.console-value { color: #4ec9b0; }
+.console-cmd   { color: #569cd6; }
+.console-error { color: #f14c4c; }
 </style>
 <h2>Autentizační konzole</h2>
 <div class="console" onclick="confoc()">
