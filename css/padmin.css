@@ -8,6 +8,7 @@
   --border-color: #dee2e6;
   --row-hover: rgba(13, 110, 253, 0.08);
   --row-stripe: rgba(0, 0, 0, 0.04);
+  --menu-hover: rgba(0, 0, 0, 0.04);
 
   /* surfaces & text */
   --bg: #fff;
@@ -36,6 +37,37 @@
   --alert-success-bg: #d1e7dd;
   --alert-success-border: #badbcc;
   --alert-success-text: #0f5132;
+}
+
+:root[data-theme="dark"] {
+  --body-color: #e3e3e3;
+  --link-color: #6ea8fe;
+  --link-hover: #8bb9fe;
+  --border-color: #3a3f44;
+  --row-hover: rgba(110, 168, 254, 0.14);
+  --row-stripe: rgba(255, 255, 255, 0.05);
+  --menu-hover: rgba(255, 255, 255, 0.08);
+
+  --bg: #1b1e21;
+  --surface: #2b3035;
+  --surface-muted: #23272b;
+  --text-muted: #9aa0a6;
+
+  --input-bg: #2b3035;
+  --input-border: #495057;
+
+  --alert-info-bg: #032830;
+  --alert-info-border: #055160;
+  --alert-info-text: #6edff6;
+  --alert-warning-bg: #332701;
+  --alert-warning-border: #664d03;
+  --alert-warning-text: #ffda6a;
+  --alert-danger-bg: #2c0b0e;
+  --alert-danger-border: #842029;
+  --alert-danger-text: #ea868f;
+  --alert-success-bg: #0a3622;
+  --alert-success-border: #0f5132;
+  --alert-success-text: #75b798;
 }
 
 BODY {
@@ -85,6 +117,26 @@ input, button, select, textarea, optgroup {
 
 #site-top .user-info {
   font-size: 0.875rem;
+}
+
+#site-top .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#site-top .theme-toggle {
+  color: #fff;
+  opacity: 0.85;
+}
+
+#site-top .theme-toggle:hover {
+  color: #fff;
+  opacity: 1;
+}
+
+#site-top .theme-toggle .fa {
+  font-size: 1.05rem;
 }
 
 #menu {
@@ -360,5 +412,5 @@ label.required:before {
 }
 
 .page-item.active a {
-  color: black;
+  color: var(--body-color);
 }

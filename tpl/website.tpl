@@ -16,6 +16,15 @@ block user noprint
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#5f2c82">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('padmin-theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
   <title>padmin{if TITLE} | {TITLE}{/if}</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%235f2c82'/><circle cx='8' cy='8' r='3' fill='none' stroke='%23ffaa00' stroke-width='1.6'/></svg>">
   {HEAD}
@@ -28,12 +37,15 @@ block user noprint
         <i class="fa fa-cogs" aria-hidden="true"></i>
         <span class="app-name">pclib admin</span>
       </div>
-      {block user}
-      <div class="user-info">
-        <i class="fa fa-user" aria-hidden="true"></i>
-        Uživatel: {UNAME} | <a href="#" onclick="if (confirm('Odhlásit se?')) pclib.redirect('account/logout')">odhlásit</a>
+      <div class="header-actions">
+        {block user}
+        <div class="user-info">
+          <i class="fa fa-user" aria-hidden="true"></i>
+          Uživatel: {UNAME} | <a href="#" onclick="if (confirm('Odhlásit se?')) pclib.redirect('account/logout')">odhlásit</a>
+        </div>
+        {/block}
+        <a href="#" class="theme-toggle" role="button" title="Přepnout motiv" aria-label="Přepnout světlý/tmavý motiv" onclick="padminToggleTheme(); return false;"><i class="fa fa-moon-o" aria-hidden="true"></i></a>
       </div>
-      {/block}
     </header>
 
     <nav id="menu">
@@ -53,6 +65,20 @@ block user noprint
 
   <script>
     $(document).ready(init_global);
+
+    function padminToggleTheme() {
+      var next = (document.documentElement.getAttribute('data-theme') === 'dark') ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('padmin-theme', next); } catch (e) {}
+      padminSyncThemeIcon();
+    }
+    function padminSyncThemeIcon() {
+      var i = document.querySelector('#site-top .theme-toggle i');
+      if (!i) return;
+      var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      i.className = 'fa ' + (dark ? 'fa-sun-o' : 'fa-moon-o');
+    }
+    padminSyncThemeIcon();
   </script>
 </body>
 </html>
