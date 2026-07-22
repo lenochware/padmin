@@ -26,11 +26,14 @@
   --alert-info-border: #b6effb;
   --alert-info-text: #055160;
   --alert-warning-bg: #fff3cd;
-  --alert-warning-border: #ffecb5;
+  --alert-warning-border: #fddd80;
   --alert-warning-text: #664d03;
   --alert-danger-bg: #f8d7da;
   --alert-danger-border: #f5c2c7;
   --alert-danger-text: #842029;
+  --alert-success-bg: #d1e7dd;
+  --alert-success-border: #badbcc;
+  --alert-success-text: #0f5132;
 }
 
 BODY {
@@ -153,7 +156,7 @@ a:hover {
 
 .warning, .error, .message {
   padding: 0.75rem 1rem;
-  margin: 0.5rem 0;
+  margin: 1rem 0;
   border: 1px solid transparent;
   border-radius: 0.375rem;
 }
@@ -171,9 +174,9 @@ a:hover {
 }
 
 .message {
-  color: var(--alert-info-text);
-  background-color: var(--alert-info-bg);
-  border-color: var(--alert-info-border);
+  color: var(--alert-success-text);
+  background-color: var(--alert-success-bg);
+  border-color: var(--alert-success-border);
   cursor: pointer;
 }
 
