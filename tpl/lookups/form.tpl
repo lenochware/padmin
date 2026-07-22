@@ -11,6 +11,6 @@ button delete lb "Smazat" noprint
 ?>
 
 <TABLE>
-<tr><td><h1>Položka číselníku {GET.lookup}</h1></td></tr>
+<tr><td colspan="3"><h1>Položka číselníku {GET.lookup}</h1></td></tr>
 {form.fields}
 </TABLE>

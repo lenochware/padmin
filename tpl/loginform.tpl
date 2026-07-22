@@ -5,8 +5,8 @@ input password lb "Heslo:" password required
 button login lb "Přihlásit"
 ?>
 
-<TABLE>
-<tr><td><h1>Přihlášení</h1></td></tr>
+<TABLE class="loginform">
+<tr><td colspan="3"><h1>Přihlášení</h1></td></tr>
 {form.fields}
 </TABLE>
 <script language="JavaScript">

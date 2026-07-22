@@ -48,9 +48,9 @@ button back lb "Zpět" onclick "history.back()"
 <td>
 &nbsp;{ROLE1} <a  href="#" onclick="$('#roleplus').toggle()">další...</a>
   <div id="roleplus" class="hidden">
-  <table style="border-width:0px;">
-  <tr><td>{ROLE2} {ROLE3}</td></tr>
-  <tr><td>{ROLE4} {ROLE5}</td></tr>
+  <table style="border-width:0px; border-spacing: 0.5rem 0.25rem; width:100%;">
+  <tr><td>{ROLE2}</td><td>{ROLE3}</td></tr>
+  <tr><td>{ROLE4}</td><td>{ROLE5}</td></tr>
   </table>
   </div>
 </td></tr>

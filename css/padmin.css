@@ -20,6 +20,8 @@
   --input-border: #ced4da;
   --input-focus-border: #86b7fe;
   --focus-ring: rgba(13, 110, 253, 0.25);
+  --btn-hover-bg: #446395;
+  --btn-active-bg: #3a557f;
 
   /* alerts (bootstrap) */
   --alert-info-bg: #cff4fc;
@@ -245,6 +247,16 @@ form.padmin > table, form.padmin > div.form {
   margin: 0.5rem 0;
 }
 
+/* record form panel spans full width */
+form.padmin > table:not(.searchform) {
+  width: 100%;
+}
+
+/* login form is narrower than a full-width record form */
+form.padmin > table.loginform {
+  max-width: 720px;
+}
+
 /* form controls (both form types) */
 form.padmin input:not([type=checkbox]):not([type=radio]):not([type=submit]):not([type=button]),
 form.padmin select,
@@ -282,6 +294,7 @@ form.padmin button,
 form.padmin input[type=submit],
 form.padmin input.button {
   padding: 0.25rem 0.75rem;
+  font-weight: 500;
   color: var(--body-color);
   background-color: var(--surface);
   border: 1px solid var(--input-border);
@@ -292,14 +305,17 @@ form.padmin input.button {
 form.padmin button:hover,
 form.padmin input[type=submit]:hover,
 form.padmin input.button:hover {
-  background-color: var(--surface-muted);
-  border-color: var(--text-muted);
+  color: #fff;
+  background-color: var(--btn-hover-bg);
+  border-color: var(--btn-hover-bg);
 }
 
 form.padmin button:active,
 form.padmin input[type=submit]:active,
 form.padmin input.button:active {
-  background-color: var(--border-color);
+  color: #fff;
+  background-color: var(--btn-active-bg);
+  border-color: var(--btn-active-bg);
 }
 
 form.padmin button:focus-visible,
