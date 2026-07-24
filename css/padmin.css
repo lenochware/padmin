@@ -14,6 +14,7 @@
   --bg: #fff;
   --surface: #fff;
   --surface-muted: #f8f9fa;
+  --grid-header-bg: #f6f8fa;
   --text-muted: #6c757d;
 
   /* form controls */
@@ -51,6 +52,7 @@
   --bg: #1b1e21;
   --surface: #2b3035;
   --surface-muted: #23272b;
+  --grid-header-bg: #2b3035;
   --text-muted: #9aa0a6;
 
   --input-bg: #2b3035;
@@ -245,22 +247,46 @@ a:hover {
 /* PREHLEDY */
 
 TABLE.grid {
-border-collapse: collapse;
-empty-cells: show;
-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  empty-cells: show;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
 }
 
+/* round the outer corners (no wrapping div needed) */
+TABLE.grid tr:first-child th:first-child { border-top-left-radius: 0.5rem; }
+TABLE.grid tr:first-child th:last-child  { border-top-right-radius: 0.5rem; }
+TABLE.grid tr:last-child td:first-child  { border-bottom-left-radius: 0.5rem; }
+TABLE.grid tr:last-child td:last-child   { border-bottom-right-radius: 0.5rem; }
+TABLE.grid tr:last-child td { border-bottom: 0; }
+
 TABLE.grid TH {
-  background-color: var(--surface);
-  border-bottom: 2px solid var(--border-color);
+  background-color: var(--grid-header-bg);
+  border-bottom: 1px solid var(--border-color);
   text-align: left;
-  padding: 0.25rem 0.5rem;
+  padding: 0.55rem 0.5rem;
   font-weight: 600;
 }
 
 TABLE.grid TD {
   border-bottom: 1px solid var(--border-color);
   padding: 0.25rem 0.5rem;
+}
+
+/* github-style links (incl. sort links in header): bold, dark, underline on hover */
+TABLE.grid td a,
+TABLE.grid th a {
+  color: var(--body-color);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+TABLE.grid td a:hover,
+TABLE.grid th a:hover {
+  color: var(--link-color);
+  text-decoration: underline;
 }
 
 TABLE.grid TR.link {
@@ -271,7 +297,8 @@ TABLE.grid TR:hover {
   background-color: var(--row-hover);
 }
 
-TABLE.strips tr:nth-child(even) {
+/* start striping from the 2nd data row, so the first row stays white */
+TABLE.strips tr:nth-child(odd) {
   background-color: var(--row-stripe);
 }
 
@@ -319,6 +346,7 @@ form.padmin > table, form.padmin > div.form {
 /* record form panel spans full width */
 form.padmin > table:not(.searchform) {
   width: 100%;
+  max-width: 1320px;
 }
 
 /* login form is narrower than a full-width record form */
